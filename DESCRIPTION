@@ -1,5 +1,5 @@
 Package: mapmate
-Title: Make Still Image Sequences For Data Animations.
+Title: Make Still Image Sequences For Data Animations
 Version: 0.0.0.9000
 Authors@R: person("Matthew", "Leonawicz", email = "mfleonawicz@alaska.edu", role = c("aut", "cre"))
 Description: mapmate is an R package for generating and saving a sequence of
@@ -7,13 +7,17 @@ Description: mapmate is an R package for generating and saving a sequence of
     production.
 Depends:
     R (>= 3.2.3)
-License: What license is it under?
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports:
+    magrittr,
+    data.table,
+    dplyr,
     dtplyr,
     purrr,
-    ggplot2
+    ggplot2,
+    RcppRoll
 Suggests:
     testthat,
     parallel,
