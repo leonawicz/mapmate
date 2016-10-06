@@ -13,7 +13,7 @@ pad_frames(x, n.period = 360, rotation = "add", force = TRUE)
 
 \item{rotation}{character, one of \code{"add"} or \code{"pad"}.}
 
-\item{force}{}
+\item{force}{When the length of \code{x} is greater than or equal to \code{n.period} still force padding to occur. Defaults to \code{TRUE}. Otherwise return \code{x}.}
 }
 \value{
 returns \code{x} but padded with it's final element appended repeatedly based on a specified period and type of padding method.
