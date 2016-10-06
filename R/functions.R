@@ -1,5 +1,4 @@
 globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean"))
-
 #' Obtain a list of monthly climatologies
 #'
 #' \code{get_clim} subsets and summarizes a data frame of monthly map data over a specified time period.
@@ -15,7 +14,6 @@ globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "grou
 #'
 #' @examples
 #' #not run
-#'
 #' @importFrom magrittr %>%
 get_clim <- function(x, limits=c(1961, 1990)){
   x <- purrr::map(x, ~as.matrix(.x))
