@@ -11,11 +11,10 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-    dplyr,
+    dtplyr,
     purrr,
     ggplot2
 Suggests:
     testthat,
-    parallel,
-    data.table
+    parallel
 RoxygenNote: 5.0.1
