@@ -45,14 +45,15 @@ get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
   if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type.")
   if(type=="monthly"){
     x <- mclapply(x,
-                  function(x, size) group_by(x, Month, long, lat) %>%
-                    mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>% filter(!is.na(z)),
+                  function(x, size) dplyr::group_by(x, Month, long, lat) %>%
+                    dplyr::mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>%
+                    dplyr::filter(!is.na(z)),
                   size=size, mc.cores=n.cores)
   }
   if(type=="annual"){
     x <- mclapply(x,
-                  function(x, size) group_by(x, long, lat, Year) %>%
-                    summarise(z=mean(z)) %>% mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>% filter(!is.na(z)),
+                  function(x, size) dplyr::group_by(x, long, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
+                    dplyr::mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z)),
                   size=size, mc.cores=n.cores)
   }
   if(type=="seasonal"){
@@ -62,13 +63,13 @@ get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
     yr.lim <- range(x[[1]]$Year)
     x <- mclapply(x,
                   function(x, size){
-                    mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
-                      filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
-                      group_by(long, lat, Month, Year) %>% summarise(z=mean(z)) %>%
-                      mutate(z=roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% filter(!is.na(z))
+                    dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
+                      dplyr::filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
+                      dplyr::group_by(long, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
+                      dplyr::mutate(z=roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
                   }, size=size, mc.cores=n.cores)
   }
-  x <- bind_rows(x) %>% group_by # %>% arrange_(.dots=arr)
+  x <- dplyr::bind_rows(x) %>% dplyr::group_by
   x <- if(type %in% c("seasonal", "annual")) x %>% split(.$Year) else x %>% split(paste(.$Year, .$Month+9))
   x
 }
@@ -77,24 +78,27 @@ get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
 #'
 #' Given a global hemispheric field of view defined by a single latitudinal and longitudinal centroid focal point, project geographic points onto the hemishpere.
 #'
-#' \code{project_to_hemisphere} identifies whether each pair of coordinates in the \code{lat} and \code{long} vectors is in a field of view defined by a centroid focal point \code{(lat0, long0)}
+#' \code{project_to_hemisphere} identifies whether each pair of coordinates in the \code{lat} and \code{lon} vectors is in a field of view defined by a centroid focal point \code{(lat0, lon0)}
 #' and returns a data table containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
 #'
+#' @param lon vector of longitudes.
 #' @param lat vector of latitudes.
-#' @param long vector of longitudes.
+#' @param lon0 longitude of focus coordinates.
 #' @param lat0 latitude of focus coordinates.
-#' @param long0 longitude of focus coordinates.
 #'
 #' @return returns a data table.
 #' @export
 #'
 #' @examples
 #' #not run
-project_to_hemisphere <- function(lat, long, lat0, long0){
-  hold <- cbind(lat, long)
-  x <- purrr::map(list(lat, lat0, long-long0), ~.x*pi/180)
+project_to_hemisphere <- function(lon, lat, lon0, lat0){
+  if(length(lon)!=length(lat)) stop("lon and lat must be equal length")
+  if(lat0 < -90 || lat0 > 90 | any(lat < -90 | lat > 90)) stop("latitudes must be >= -90 and <= 90")
+  if(lon0 < -180 || lon0 > 180 | any(lon < -180 | lon > 180)) stop("longitudes must be >= -180 and <= 180")
+  hold <- cbind(lon, lat)
+  x <- purrr::map(list(lat, lat0, lon-lon0), ~.x*pi/180)
   inview <- sin(x[[1]])*sin(x[[2]]) + cos(x[[1]])*cos(x[[2]])*cos(x[[3]]) > 0
-  data.table(long=hold[,2], lat=hold[,1], inview=inview)
+  data.table::data.table(lon=hold[,1], lat=hold[,2], inview=inview) %>% dtplyr::tbl_dt()
 }
 
 #' Pad the end of list of data frames
@@ -113,7 +117,7 @@ project_to_hemisphere <- function(lat, long, lat0, long0){
 #' @param x list of data frames.
 #' @param n.period An integer, the known period of rotation that will be part of an animation in which the map data frames in \code{x} will be sequentially plotted over. Default is 360 (1-degree increment rotations).
 #' @param rotation character, one of \code{"add"} or \code{"pad"}.
-#' @param force
+#' @param force When the length of \code{x} is greater than or equal to \code{n.period} still force padding to occur. Defaults to \code{TRUE}. Otherwise return \code{x}.
 #'
 #' @return returns \code{x} but padded with it's final element appended repeatedly based on a specified period and type of padding method.
 #' @export
