@@ -1,3 +1,5 @@
+globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean"))
+
 #' Obtain a list of monthly climatologies
 #'
 #' \code{get_clim} subsets and summarizes a data frame of monthly map data over a specified time period.
@@ -13,6 +15,8 @@
 #'
 #' @examples
 #' #not run
+#'
+#' @importFrom magrittr %>%
 get_clim <- function(x, limits=c(1961, 1990)){
   x <- purrr::map(x, ~as.matrix(.x))
   x <- purrr::map(unique(mo), ~x[yr >= limits[1] & yr <= limits[2] & mo==.x])
@@ -44,16 +48,16 @@ get_clim <- function(x, limits=c(1961, 1990)){
 get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
   if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type.")
   if(type=="monthly"){
-    x <- mclapply(x,
-                  function(x, size) dplyr::group_by(x, Month, long, lat) %>%
-                    dplyr::mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>%
+    x <- parallel::mclapply(x,
+                  function(x, size) dplyr::group_by(x, Month, lon, lat) %>%
+                    dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>%
                     dplyr::filter(!is.na(z)),
                   size=size, mc.cores=n.cores)
   }
   if(type=="annual"){
-    x <- mclapply(x,
-                  function(x, size) dplyr::group_by(x, long, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
-                    dplyr::mutate(z=roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z)),
+    x <- parallel::mclapply(x,
+                  function(x, size) dplyr::group_by(x, lon, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
+                    dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z)),
                   size=size, mc.cores=n.cores)
   }
   if(type=="seasonal"){
@@ -61,12 +65,12 @@ get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
       stop("If res='seasonal', season must be 'winter', 'spring', 'summer' or 'autumn'.")
     idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
     yr.lim <- range(x[[1]]$Year)
-    x <- mclapply(x,
+    x <- parallel::mclapply(x,
                   function(x, size){
                     dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
                       dplyr::filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
-                      dplyr::group_by(long, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
-                      dplyr::mutate(z=roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
+                      dplyr::group_by(lon, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
+                      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
                   }, size=size, mc.cores=n.cores)
   }
   x <- dplyr::bind_rows(x) %>% dplyr::group_by
@@ -127,8 +131,8 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
 pad_frames <- function(x, n.period=360, rotation="add", force=TRUE){
   n <- length(x)
   if(n >= n.period & !force) return(x)
-  if(rotation=="add") x2 <- purrr::map(1:(n.period-1), ~x[[n]] %>% mutate(frameID=.x + n))
-  if(rotation=="pad") x2 <- purrr::map(1:(n.period-n), ~x[[n]] %>% mutate(frameID=.x + n))
+  if(rotation=="add") x2 <- purrr::map(1:(n.period-1), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
+  if(rotation=="pad") x2 <- purrr::map(1:(n.period-n), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
   c(x, x2)
 }
 
@@ -192,16 +196,16 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
   i <- x$frameID[1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
-  left_join(x, project_to_hemisphere(x$lat, x$long, lonlat$lat[i], lonlat$lon[i])) %>%
-    filter(inview) %>% dplyr::select(-inview)
+  dplyr::left_join(x, project_to_hemisphere(x$lat, x$long, lonlat$lat[i], lonlat$lon[i])) %>%
+    dplyr::filter(inview) %>% dplyr::select(-inview)
 }
 
 theme_blank <- function(){
-  eb <- element_blank()
-  theme(axis.line=eb, axis.text.x=eb, axis.text.y=eb,
+  eb <- ggplot2::element_blank()
+  ggplot2::theme(axis.line=eb, axis.text.x=eb, axis.text.y=eb,
     axis.ticks=eb, axis.title.x=eb, axis.title.y=eb, legend.position="none",
     panel.background=eb, panel.border=eb, panel.grid.major=eb, panel.grid.minor=eb,
-    plot.background=element_rect(colour="transparent", fill="transparent"))
+    plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
 }
 
 #' Blank ggplot2 theme with optional axes
@@ -223,12 +227,12 @@ theme_blank <- function(){
 #' @examples
 #' # not run
 theme_blank_plus <- function(col="transparent"){
-  eb <- element_blank()
-  el <- element_line(colour=col)
-  theme(axis.line=el, axis.line.x=el, axis.line.y=el, axis.ticks=el,
-        axis.text=element_text(colour=col, size=18), legend.position="none",
+  eb <- ggplot2::element_blank()
+  el <- ggplot2::element_line(colour=col)
+  ggplot2::theme(axis.line=el, axis.line.x=el, axis.line.y=el, axis.ticks=el,
+        axis.text=ggplot2::element_text(colour=col, size=18), legend.position="none",
         panel.background=eb, panel.border=eb, panel.grid.major=eb, panel.grid.minor=eb,
-        plot.background=element_rect(colour="transparent", fill="transparent"))
+        plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
 }
 
 
@@ -273,22 +277,22 @@ save_map <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRU
     maplines="white")
   i <- x$frameID[1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
-  if(type=="network") x.lead <- group_by(x, group) %>% slice(n())
-  g <- ggplot(x, aes(long, lat))
+  if(type=="network") x.lead <- dplyr::group_by(x, group) %>% dplyr::slice(dplyr::n())
+  g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat"))
   if(type=="maptiles"){
     if(is.null(z.range)) z.range <- range(x$z, na.rm=TRUE)
-    g <- ggplot(x, aes(long, lat, fill=z)) + geom_tile() +
-      scale_fill_gradientn(colors=col, limits=z.range)
+    g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat", fill="z")) + ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradientn(colors=col, limits=z.range)
   } else {
-    g <- ggplot(x, aes(long, lat, group=group))
-    if(type=="maplines") g <- g + geom_path(colour=col[1])
-    if(type=="network") g <- g + geom_path(colour=col[2]) + geom_path(colour=col[1]) +
-        geom_point(data=x.lead, colour=col[3], size=0.6) +
-        geom_point(data=x.lead, colour=col[4], size=0.3)
+    g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat", group="group"))
+    if(type=="maplines") g <- g + ggplot2::geom_path(colour=col[1])
+    if(type=="network") g <- g + ggplot2::geom_path(colour=col[2]) + ggplot2::geom_path(colour=col[1]) +
+        ggplot2::geom_point(data=x.lead, colour=col[3], size=0.6) +
+        ggplot2::geom_point(data=x.lead, colour=col[4], size=0.3)
   }
 
   g <- g + theme_blank()
-  if(ortho) g <- g + coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
+  if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
   if(is.character(suffix)) type <- paste(type, suffix, sep="_")
   dir.create(outDir <- file.path("frames", type), recursive=TRUE, showWarnings=FALSE)
   png(sprintf(paste0(outDir, "/", type, "_%04d.png"), i),
@@ -316,19 +320,19 @@ save_map <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRU
 #' @examples
 #' # not run
 save_ts <- function(i, x, label, col, xlm, ylm, axes_only=FALSE){
-  x <- filter(x, frameID <= i)
-  g <- ggplot(x, aes(Year, Mean))
+  x <- dplyr::filter(x, frameID <= i)
+  g <- ggplot2::ggplot(x, ggplot2::aes_string("Year", "Mean"))
   if(axes_only){
     if(i!=1) return()
-    g <- g + scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
-      scale_y_continuous(name="", limits=ylm) + theme_blank_plus(col)
+    g <- g + ggplot2::scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
+      ggplot2::scale_y_continuous(name="", limits=ylm) + theme_blank_plus(col)
     dir.create(outDir <- "frames", showWarnings=FALSE)
     png(paste0(outDir, "/ts_axes_fixed_bkgd.png"), width=4*1920, height=4*1080, res=300, bg="transparent")
     print(g)
     dev.off()
     return()
   }
-  g <- g + geom_line(colour=col, size=1) + xlim(xlm) + ylim(ylm) + theme_blank()
+  g <- g + ggplot2::geom_line(colour=col, size=1) + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + theme_blank()
   dir.create(outDir <- file.path("frames", label), recursive=TRUE, showWarnings=FALSE)
   png(sprintf(paste0(outDir, "/", label, "_%04d.png"), i),
       width=4*1920, height=4*1080, res=300, bg="transparent")
