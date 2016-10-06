@@ -16,5 +16,6 @@ Imports:
     ggplot2
 Suggests:
     testthat,
-    parallel
+    parallel,
+    covr
 RoxygenNote: 5.0.1
