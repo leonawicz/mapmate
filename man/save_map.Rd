@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{save_map}
 \alias{save_map}
-\title{Save map to disk}
+\title{Save maps to disk}
 \usage{
 save_map(x, lon = 0, lat = 0, n.period = 360, n.frames = n.period,
   ortho = TRUE, col = NULL, type = "network", suffix = NULL,

@@ -228,7 +228,7 @@ theme_blank_plus <- function(col="transparent"){
 }
 
 
-#' Save map to disk
+#' Save maps to disk
 #'
 #' Save a map to disk intended to be part of a as a still image sequence of one of three types: networks, tiles, or lines.
 #'
@@ -294,13 +294,30 @@ save_map <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRU
   NULL
 }
 
+#' Save time series plots
+#'
+#'Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
+#'
+#' @param i current time index used to subset \code{x}.
+#' @param x data frame for plotting, currently assuming columns of \code{Year} and \code{Mean} as the x and y plotting variables.
+#' @param label a subdirectory label. Plots are saved in the working directory under \code{frames/{label}}.
+#' @param col color of the time series line or the axes lines, ticks, and text.
+#' @param xlm x axis limits.
+#' @param ylm y axis limits.
+#' @param axes_only only plot axis information, no data. Defaults to \code{FALSE}.
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#' # not run
 save_ts <- function(i, x, label, col, xlm, ylm, axes_only=FALSE){
   x <- filter(x, frameID <= i)
   g <- ggplot(x, aes(Year, Mean))
   if(axes_only){
     if(i!=1) return()
     g <- g + scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
-      scale_y_continuous(name="", limits=ylm) + theme_axes_only(col)
+      scale_y_continuous(name="", limits=ylm) + theme_blank_plus(col)
     dir.create(outDir <- "frames", showWarnings=FALSE)
     png(paste0(outDir, "/ts_axes_fixed_bkgd.png"), width=4*1920, height=4*1080, res=300, bg="transparent")
     print(g)
