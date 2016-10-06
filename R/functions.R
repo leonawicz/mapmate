@@ -36,41 +36,37 @@ get_clim <- function(x, limits=c(1961, 1990)){
 #' @param type character, one of \code{"monthly"}, \code{"annual"}, or \code{"seasonal"}.
 #' @param season \code{NULL} or character, one of \code{"winter"}, \code{"spring"}, \code{"summer"}, or \code{"autumn"}. Default is \code{NULL}.
 #' @param size number of years for the moving average window. Default \code{10}.
-#' @param n.cores number of CPUs for parallel processing.
+#' @param use_mclapply use \code{mclapply} from the \code{parallel} package (Linux). Defaults to \code{FALSE}.
+#' @param mc.cores number of CPUs for parallel processing when \code{use_mclapply=TRUE}.
 #'
 #' @return returns a list of data frames.
 #' @export
 #'
 #' @examples
 #' # not run
-get_ma <- function(x, type, season=NULL, size=10, n.cores=32){
+get_ma <- function(x, type, season=NULL, size=10, use_mclapply=FALSE, mc.cores=32){
   if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type.")
+  if(!"data.table" %in% class(x)) x <- tbl_dt(data.table(x)) else if(!"tbl_dt" %in% class(x)) x <- tbl_dt(x)
   if(type=="monthly"){
-    x <- parallel::mclapply(x,
-                  function(x, size) dplyr::group_by(x, Month, lon, lat) %>%
-                    dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>%
-                    dplyr::filter(!is.na(z)),
-                  size=size, mc.cores=n.cores)
+    f <- function(x, size) dplyr::group_by(x, Month, lon, lat) %>%
+      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>%
+      dplyr::filter(!is.na(z))
   }
   if(type=="annual"){
-    x <- parallel::mclapply(x,
-                  function(x, size) dplyr::group_by(x, lon, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
-                    dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z)),
-                  size=size, mc.cores=n.cores)
+    f <- function(x, size) dplyr::group_by(x, lon, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
+      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z))
   }
   if(type=="seasonal"){
     if(is.null(season) || !(season %in% c("winter", "spring", "summer", "autumn")))
       stop("If res='seasonal', season must be 'winter', 'spring', 'summer' or 'autumn'.")
     idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
     yr.lim <- range(x[[1]]$Year)
-    x <- parallel::mclapply(x,
-                  function(x, size){
-                    dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
-                      dplyr::filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
-                      dplyr::group_by(lon, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
-                      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
-                  }, size=size, mc.cores=n.cores)
+    f <- function(x, size) dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
+        dplyr::filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
+        dplyr::group_by(lon, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
+        dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
   }
+  x <- if(use_mclapply) parallel::mclapply(x, f, size=size, mc.cores=mc.cores) else purrr::map(x, ~f(.x, size))
   x <- dplyr::bind_rows(x) %>% dplyr::group_by
   x <- if(type %in% c("seasonal", "annual")) x %>% split(.$Year) else x %>% split(paste(.$Year, .$Month+9))
   x
