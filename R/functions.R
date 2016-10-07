@@ -276,7 +276,11 @@ theme_blank_plus <- function(col="transparent"){
 #' There are also changes in the range of values for a fixed data frame when it is plotted repeatedly as the globe is rotated and different hemispheres of the map
 #' (different data subsets) are in view across the image sequence.
 #'
+#' The png output directory will be created if it does not exist, recursively if necessary. The default is the working directory.
+#' This is ignored if \code{save.plot=FALSE}.
+#'
 #' @param x a data frame containing networks, tiles, or lines information.
+#' @param dir png output directory. Defaults to working directory.
 #' @param lon starting longitude for rotation sequence or vector of arbitrary longitude sequence.
 #' @param lat fixed latitude or vector of arbitrary latitude sequence.
 #' @param n.period intended length of the period.
@@ -287,13 +291,17 @@ theme_blank_plus <- function(col="transparent"){
 #' @param suffix character, optional suffix to be pasted onto output filename.
 #' @param z.range the full known range for the data values across all \code{x} objects, not just the current one.
 #' @param rotation.axis the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.
+#' @param png.args a list of arguments passed to \code{png}.
+#' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
+#' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
 #'
-#' @return NULL
+#' @return usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 #' @export
 #'
 #' @examples
 #' # not run
-save_map <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type="network", suffix=NULL, z.range=NULL, rotation.axis=23.4){
+save_map <- function(x, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type="network", suffix=NULL, z.range=NULL, rotation.axis=23.4,
+                     png.args=list(width=1080, height=1920, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE){
   if(is.null(col)) col <- switch(type,
     network=c("#FFFFFF25", "#1E90FF25", "#FFFFFF", "#1E90FF50"),
     maptiles=c("black", "steelblue4"),
@@ -316,12 +324,15 @@ save_map <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRU
 
   g <- g + theme_blank()
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
-  if(is.character(suffix)) type <- paste(type, suffix, sep="_")
-  dir.create(outDir <- file.path("frames", type), recursive=TRUE, showWarnings=FALSE)
-  png(sprintf(paste0(outDir, "/", type, "_%04d.png"), i),
-      width=4*1920, height=4*1080, res=300, bg="transparent")
-  print(g)
-  dev.off()
+  if(save.plot){
+    if(is.character(suffix)) type <- paste(type, suffix, sep="_")
+    dir.create(dir, recursive=TRUE, showWarnings=FALSE)
+    filename <- sprintf(paste0(dir, "/", type, "_%04d.png"), i)
+    do.call(png, c(filename=filename, png.args))
+    print(g)
+    dev.off()
+  }
+  if(return.plot) return(g)
   NULL
 }
 
