@@ -15,6 +15,7 @@ globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "grou
 #' @examples
 #' #not run
 #' @importFrom magrittr %>%
+#' @importFrom grDevices png dev.off
 get_clim <- function(x, limits=c(1961, 1990)){
   x <- purrr::map(x, ~as.matrix(.x))
   x <- purrr::map(unique(mo), ~x[yr >= limits[1] & yr <= limits[2] & mo==.x])
@@ -25,49 +26,77 @@ get_clim <- function(x, limits=c(1961, 1990)){
 #'
 #' Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.
 #'
-#' \code{get_ma} takes a list of data frames and for each data frame computes and returns the moving or rolling average
+#' \code{get_ma} takes a single data frame or a list of data frames.
+#' A list is useful for example if the table is very large and is pre-split into a list of smaller data frames for parallel processing on a Linux cluster with many CPU cores available.
+#' If \code{x} is a data frame rather than a data table, it will be converted to a data table.
+#'
+#' For each data frame \code{get_ma} computes and returns the moving or rolling average,
 #' after first summarizing monthly data to seasonal or annual averages if applicable.
 #' Winter begins in December and each season is three consecutive months (DJF, MAM, JJA, SON).
+#' Whether \code{x} is a data frame or list of data frames, the output can be returned as a single data frame or list of data frames
+#'
 #' Parallel processing is Linux-only (uses \code{mclapply}) and the default of 32 CPU cores will have to be changed if you don't have that many.
 #' It is convenient for my usage and this package version is not intended for general use.
 #' Most other users will probably not be using parallel processing at all, in which case \code{n.cores} is ignored.
 #'
-#' @param x list of data frames.
+#' @param x a data frame (or data table) or a list of these.
 #' @param type character, one of \code{"monthly"}, \code{"annual"}, or \code{"seasonal"}.
 #' @param season \code{NULL} or character, one of \code{"winter"}, \code{"spring"}, \code{"summer"}, or \code{"autumn"}. Default is \code{NULL}.
 #' @param size number of years for the moving average window. Default \code{10}.
+#' @param format return results as a single data frame with \code{format="table"} (default)
+#' or a as a list split either on unique year for seasonal and annual moving averages or on unique year and month combination for monthly moving averages.
 #' @param use_mclapply use \code{mclapply} from the \code{parallel} package (Linux). Defaults to \code{FALSE}.
 #' @param mc.cores number of CPUs for parallel processing when \code{use_mclapply=TRUE}.
 #'
-#' @return returns a list of data frames.
+#' @return returns a single data frame or a list of data frames.
 #' @export
 #'
 #' @examples
+#' data(monthlytemps)
+#' res <- "seasonal" # annual, seasonal, monthly
+#' season <- "winter" # winter, spring, summer, autumn
+#' idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
+#' if(res=="seasonal") monthlytemps <- dplyr::filter(monthlytemps, Month %in% idx)
+#' get_ma(monthlytemps, res, season)
+#' get_ma(list(monthlytemps, monthlytemps), res, season)
+#' get_ma(monthlytemps, res, season, format="list")
+#'
 #' # not run
-get_ma <- function(x, type, season=NULL, size=10, use_mclapply=FALSE, mc.cores=32){
-  if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type.")
-  if(!"data.table" %in% class(x)) x <- tbl_dt(data.table(x)) else if(!"tbl_dt" %in% class(x)) x <- tbl_dt(x)
+#' \dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
+get_ma <- function(x, type, season=NULL, size=10, format="table", use_mclapply=FALSE, mc.cores=32){
+  if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type")
+  if(!format %in% c("table", "list")) stop("format must be 'table' or 'list'")
+  is_list <- "list" %in% class(x)
+  if(!is_list && "data.table" %in% class(x)) x <- dplyr::tbl_df(x)
   if(type=="monthly"){
     f <- function(x, size) dplyr::group_by(x, Month, lon, lat) %>%
-      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>%
+      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA)) %>%
       dplyr::filter(!is.na(z))
   }
   if(type=="annual"){
     f <- function(x, size) dplyr::group_by(x, lon, lat, Year) %>% dplyr::summarise(z=mean(z)) %>%
-      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), idx=NULL) %>% dplyr::filter(!is.na(z))
+      dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA)) %>% dplyr::filter(!is.na(z))
   }
   if(type=="seasonal"){
     if(is.null(season) || !(season %in% c("winter", "spring", "summer", "autumn")))
       stop("If res='seasonal', season must be 'winter', 'spring', 'summer' or 'autumn'.")
     idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
-    yr.lim <- range(x[[1]]$Year)
-    f <- function(x, size) dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
+    yr.lim <- if(is_list) range(x[[1]]$Year) else range(x$Year)
+    f <- function(x, size) {
+      x <- dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
         dplyr::filter(Year > yr.lim[1] & Year <= yr.lim[2] & Month==1) %>%
         dplyr::group_by(lon, lat, Month, Year) %>% dplyr::summarise(z=mean(z)) %>%
-        dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA), Month=NULL, idx=NULL) %>% dplyr::filter(!is.na(z))
+        dplyr::mutate(z=RcppRoll::roll_mean(z, size, fill=NA)) %>% dplyr::ungroup() %>%
+        dplyr::mutate(Month=NULL) %>% dplyr::filter(!is.na(z))
+    }
   }
-  x <- if(use_mclapply) parallel::mclapply(x, f, size=size, mc.cores=mc.cores) else purrr::map(x, ~f(.x, size))
-  x <- dplyr::bind_rows(x) %>% dplyr::group_by
+  if(!is_list){
+    x <- f(x, size)
+  } else if(use_mclapply) {
+    x <- parallel::mclapply(x, f, size=size, mc.cores=mc.cores)
+  } else x <- purrr::map(x, ~f(.x, size))
+  x <- dplyr::bind_rows(x) %>% dplyr::ungroup()
+  if(format=="table") return(x)
   x <- if(type %in% c("seasonal", "annual")) x %>% split(.$Year) else x %>% split(paste(.$Year, .$Month+9))
   x
 }
@@ -77,14 +106,14 @@ get_ma <- function(x, type, season=NULL, size=10, use_mclapply=FALSE, mc.cores=3
 #' Given a global hemispheric field of view defined by a single latitudinal and longitudinal centroid focal point, project geographic points onto the hemishpere.
 #'
 #' \code{project_to_hemisphere} identifies whether each pair of coordinates in the \code{lat} and \code{lon} vectors is in a field of view defined by a centroid focal point \code{(lat0, lon0)}
-#' and returns a data table containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
+#' and returns a data frame containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
 #'
 #' @param lon vector of longitudes.
 #' @param lat vector of latitudes.
 #' @param lon0 longitude of focus coordinates.
 #' @param lat0 latitude of focus coordinates.
 #'
-#' @return returns a data table.
+#' @return returns a data frame.
 #' @export
 #'
 #' @examples
@@ -96,7 +125,7 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
   hold <- cbind(lon, lat)
   x <- purrr::map(list(lat, lat0, lon-lon0), ~.x*pi/180)
   inview <- sin(x[[1]])*sin(x[[2]]) + cos(x[[1]])*cos(x[[2]])*cos(x[[3]]) > 0
-  data.table::data.table(lon=hold[,1], lat=hold[,2], inview=inview) %>% dtplyr::tbl_dt()
+  data.frame(lon=hold[,1], lat=hold[,2], inview=inview) %>% dplyr::tbl_df()
 }
 
 #' Pad the end of list of data frames
