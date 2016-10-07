@@ -20,5 +20,8 @@ Suggests:
     testthat,
     parallel,
     data.table,
-    covr
+    covr,
+    knitr,
+    rmarkdown
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
