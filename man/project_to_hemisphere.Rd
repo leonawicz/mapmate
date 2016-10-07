@@ -16,14 +16,14 @@ project_to_hemisphere(lon, lat, lon0, lat0)
 \item{lat0}{latitude of focus coordinates.}
 }
 \value{
-returns a data table.
+returns a data frame.
 }
 \description{
 Given a global hemispheric field of view defined by a single latitudinal and longitudinal centroid focal point, project geographic points onto the hemishpere.
 }
 \details{
 \code{project_to_hemisphere} identifies whether each pair of coordinates in the \code{lat} and \code{lon} vectors is in a field of view defined by a centroid focal point \code{(lat0, lon0)}
-and returns a data table containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
+and returns a data frame containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
 }
 \examples{
 #not run

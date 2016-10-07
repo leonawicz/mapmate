@@ -6,7 +6,7 @@
 \title{Spatially aggregated example global bathymetry surface}
 \format{A data table with 5832 rows and 3 variables:
 \describe{
-  \item{long}{longitude}
+  \item{lon}{longitude}
   \item{lat}{latitude}
   \item{z}{depth below sea level}
 }}

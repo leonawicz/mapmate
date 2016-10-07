@@ -4,10 +4,11 @@
 \alias{get_ma}
 \title{Obtain moving average map series}
 \usage{
-get_ma(x, type, season = NULL, size = 10, n.cores = 32)
+get_ma(x, type, season = NULL, size = 10, format = "table",
+  use_mclapply = FALSE, mc.cores = 32)
 }
 \arguments{
-\item{x}{list of data frames.}
+\item{x}{a data frame (or data table) or a list of these.}
 
 \item{type}{character, one of \code{"monthly"}, \code{"annual"}, or \code{"seasonal"}.}
 
@@ -15,23 +16,44 @@ get_ma(x, type, season = NULL, size = 10, n.cores = 32)
 
 \item{size}{number of years for the moving average window. Default \code{10}.}
 
-\item{n.cores}{number of CPUs for parallel processing.}
+\item{format}{return results as a single data frame with \code{format="table"} (default)
+or a as a list split either on unique year for seasonal and annual moving averages or on unique year and month combination for monthly moving averages.}
+
+\item{use_mclapply}{use \code{mclapply} from the \code{parallel} package (Linux). Defaults to \code{FALSE}.}
+
+\item{mc.cores}{number of CPUs for parallel processing when \code{use_mclapply=TRUE}.}
 }
 \value{
-returns a list of data frames.
+returns a single data frame or a list of data frames.
 }
 \description{
 Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.
 }
 \details{
-\code{get_ma} takes a list of data frames and for each data frame computes and returns the moving or rolling average
+\code{get_ma} takes a single data frame or a list of data frames.
+A list is useful for example if the table is very large and is pre-split into a list of smaller data frames for parallel processing on a Linux cluster with many CPU cores available.
+If \code{x} is a data frame rather than a data table, it will be converted to a data table.
+
+For each data frame \code{get_ma} computes and returns the moving or rolling average,
 after first summarizing monthly data to seasonal or annual averages if applicable.
 Winter begins in December and each season is three consecutive months (DJF, MAM, JJA, SON).
+Whether \code{x} is a data frame or list of data frames, the output can be returned as a single data frame or list of data frames
+
 Parallel processing is Linux-only (uses \code{mclapply}) and the default of 32 CPU cores will have to be changed if you don't have that many.
 It is convenient for my usage and this package version is not intended for general use.
 Most other users will probably not be using parallel processing at all, in which case \code{n.cores} is ignored.
 }
 \examples{
+data(monthlytemps)
+res <- "seasonal" # annual, seasonal, monthly
+season <- "winter" # winter, spring, summer, autumn
+idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
+if(res=="seasonal") monthlytemps <- dplyr::filter(monthlytemps, Month \%in\% idx)
+get_ma(monthlytemps, res, season)
+get_ma(list(monthlytemps, monthlytemps), res, season)
+get_ma(monthlytemps, res, season, format="list")
+
 # not run
+\dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
 }
 

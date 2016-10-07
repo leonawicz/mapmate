@@ -3,10 +3,10 @@
 \docType{data}
 \name{borders}
 \alias{borders}
-\title{Global national political borders.}
+\title{Global national political borders}
 \format{A data frame with 99338 rows and 6 variables:
 \describe{
-  \item{long}{longitude}
+  \item{lon}{longitude}
   \item{lat}{latitude}
   \item{group}{grouping for polygon lines}
   \item{order}{order of lines in group}
