@@ -4,12 +4,16 @@
 \alias{save_map}
 \title{Save maps to disk}
 \usage{
-save_map(x, lon = 0, lat = 0, n.period = 360, n.frames = n.period,
-  ortho = TRUE, col = NULL, type = "network", suffix = NULL,
-  z.range = NULL, rotation.axis = 23.4)
+save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
+  n.frames = n.period, ortho = TRUE, col = NULL, type = "network",
+  suffix = NULL, z.range = NULL, rotation.axis = 23.4,
+  png.args = list(width = 1080, height = 1920, res = 300, bg = "transparent"),
+  save.plot = TRUE, return.plot = FALSE)
 }
 \arguments{
 \item{x}{a data frame containing networks, tiles, or lines information.}
+
+\item{dir}{png output directory. Defaults to working directory.}
 
 \item{lon}{starting longitude for rotation sequence or vector of arbitrary longitude sequence.}
 
@@ -30,6 +34,15 @@ save_map(x, lon = 0, lat = 0, n.period = 360, n.frames = n.period,
 \item{z.range}{the full known range for the data values across all \code{x} objects, not just the current one.}
 
 \item{rotation.axis}{the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.}
+
+\item{png.args}{a list of arguments passed to \code{png}.}
+
+\item{save.plot}{save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.}
+
+\item{return.plot}{return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.}
+}
+\value{
+usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 }
 \description{
 Save a map to disk intended to be part of a as a still image sequence of one of three types: networks, tiles, or lines.
@@ -47,6 +60,9 @@ regardless of the length of the series of data frames \code{x} to be plotted or 
 This is not only for the case of changing data values across a series of plots of different data frames \code{x}.
 There are also changes in the range of values for a fixed data frame when it is plotted repeatedly as the globe is rotated and different hemispheres of the map
 (different data subsets) are in view across the image sequence.
+
+The png output directory will be created if it does not exist, recursively if necessary. The default is the working directory.
+This is ignored if \code{save.plot=FALSE}.
 }
 \examples{
 # not run
