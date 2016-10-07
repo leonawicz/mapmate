@@ -5,20 +5,20 @@
 #'
 #' @format A data table with 5832 rows and 3 variables:
 #' \describe{
-#'   \item{long}{longitude}
+#'   \item{lon}{longitude}
 #'   \item{lat}{latitude}
 #'   \item{z}{depth below sea level}
 #' }
 #' @source \url{https://cran.r-project.org/web/packages/marmap/index.html}
 "bathymetry"
 
-#' Global national political borders.
+#' Global national political borders
 #'
 #' A dataset containing global national political boundary lines, modified from the world map in the \code{maps} package.
 #'
 #' @format A data frame with 99338 rows and 6 variables:
 #' \describe{
-#'   \item{long}{longitude}
+#'   \item{lon}{longitude}
 #'   \item{lat}{latitude}
 #'   \item{group}{grouping for polygon lines}
 #'   \item{order}{order of lines in group}
@@ -27,3 +27,38 @@
 #' }
 #' @source \url{https://cran.r-project.org/web/packages/maps/index.html}
 "borders"
+
+#' 2010-2099 global projected annual average temperature anomalies
+#'
+#' A dataset containing low spatial resolution 2010-2099 global projected annual average temperatures.
+#' This is a toy dataset used for example purposes.
+#' Anomalies are element-wise (cell by cell) delta change from a historical baseline.
+#'
+#' @format A data table with 55080 rows and 4 variables:
+#' \describe{
+#'   \item{lon}{longitude}
+#'   \item{lat}{latitude}
+#'   \item{Year}{year}
+#'   \item{z}{annual average temperature in degrees Celcius}
+#' }
+#' @source \url{https://github.com/leonawicz/mapmate}
+"annualtemps"
+
+#' 2010-2099 single map grid cell projected monthly average temperatures anomalies
+#'
+#' A dataset containing 2010-2099 projected annual average temperature anomalies for a single low resolution grid cell
+#' taken from a global monthly data set also used as the basis for the \code{annualtemps} dataset in this package.
+#' This is a toy dataset used for example purposes.
+#' This dataset includes data from only one grid cell because it is sufficient for examples but also keeps the size of the data small.
+#' Anomalies are delta change from a historical baseline.
+#'
+#' @format A data table with 1080 rows and 5 variables:
+#' \describe{
+#'   \item{lon}{longitude}
+#'   \item{lat}{latitude}
+#'   \item{Year}{year}
+#'   \item{Month}{January-December month index 01 through 12}
+#'   \item{z}{annual average temperature in degrees Celcius}
+#' }
+#' @source \url{https://github.com/leonawicz/mapmate}
+"monthlytemps"
