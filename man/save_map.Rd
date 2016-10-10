@@ -7,7 +7,7 @@
 save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
   n.frames = n.period, ortho = TRUE, col = NULL, type = "network",
   suffix = NULL, z.range = NULL, rotation.axis = 23.4,
-  png.args = list(width = 1080, height = 1920, res = 300, bg = "transparent"),
+  png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
   save.plot = TRUE, return.plot = FALSE)
 }
 \arguments{
