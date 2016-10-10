@@ -10,7 +10,7 @@ output:
 #    theme: cosmo
 #    highlight: zenburn
 #    fig_caption: yes
-#    heep_md: true
+#    keep_md: true
 vignette: >
   %\VignetteIndexEntry{Introduction to mapmate}
   %\VignetteEngine{knitr::rmarkdown}
@@ -231,7 +231,7 @@ For larger datasets and longer sequences, this is much faster the more it can be
 `mapmate` is designed to add convenience for making relatively heavy duty animations.
 The emphasis is on images which will look sharp and lend themselves to frame smooth transitions.
 They may also do so while displaying a large amount of data.
-High-resolution images (even larger than 4K) can be used to allowe zooming during animations without loss of quality.
+High-resolution images (even larger than 4K) can be used to allow zooming during animations without loss of quality.
 For all these reasons, processing large amounts of data and generating still image sequences can take a long time
 depending on how large, long, and complex the desired plots sequences are.
 
