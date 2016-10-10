@@ -138,7 +138,7 @@ In this example the globe remains in a fixed position and orientation.
 The default when passing a single, scalar longitude value to the `lon` argument is to use it as a starting point for rotation.
 Therefore, we need to pass our own vector of longitudes defining a custom longitude sequence to override this behavior.
 Since the globe is to remain in a fixed view, set `lon=rep(-70, n)`.
-Note that a scalar `lat` argument does not behave as a starting point for rotation in the perpundicular direction so not explicitly repeating vector is needed.
+Note that a scalar `lat` argument does not behave as a starting point for rotation in the perpendicular direction so not explicitly repeating vector is needed.
 
 Also pay attention to `n.period`, which defines the number of frames or plot iterations required to complete one globe rotation (the degree increment).
 `n.period` can be any amount when providing a scalar `lon` value. The longitude sequence will propagate to a length of `n.period`.
@@ -191,9 +191,9 @@ walk(borders, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = -70, lat = 5
 ```
 
 Using one more example, return to the list of annual temperature anomalies data frames used previously.
-Those were used to show changing data on a fixed-persepctive globe plot.
+Those were used to show changing data on a fixed-perspective globe plot.
 Here we plot the first layer, repeatedly, as was just done with the `borders` dataset, allowing the Earth to rotate.
-Remeber to update the `frameID` values.
+Remember to update the `frameID` values.
 The key difference with this example of fixed data and a changing perspective is that providing `z.range` is crucial to maintaining constant color mapping.
 
 
@@ -223,7 +223,7 @@ walk(temps, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = -70, lat = 50,
 
 Of course, there is no reason to draw static data on a static flat map or static (e.g., non-rotating) globe
 because that would yield a still image sequence of a constant image.
-The utility of the function is in generating a series of plots where either the data changes, the persepctive changes, or both.
+The utility of the function is in generating a series of plots where either the data changes, the perspective changes, or both.
 
 ### Multiple image sequences
 
