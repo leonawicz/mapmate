@@ -117,7 +117,7 @@ rng <- range(annualtemps$z, na.rm=TRUE)
 n <- length(unique(annualtemps$Year))
 suffix <- "annual_2D"
 temps <- temps %>% split(.$frameID)
-walk(temps, ~save_map(.x, dir="C:/github/mapmate/frames", ortho=FALSE, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+walk(temps, ~save_map(.x, ortho=FALSE, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 
 ```
 
@@ -143,7 +143,7 @@ With a custom path defined by `lon` and `lat` vectors, which may not be at all c
 
 ```{r}
 suffix <- "annual_3D_fixed"
-walk(temps, ~save_map(.x, dir="C:/github/mapmate/frames", lon=rep(-70, n), lat=50, n.period=n, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+walk(temps, ~save_map(.x, lon=rep(-70, n), lat=50, n.period=n, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 
 ```
 
@@ -173,7 +173,7 @@ A single color can be used for the lines so the previously used palette for tile
 data(borders)
 borders <- map(1:n, ~mutate(borders, frameID = .x))
 suffix <- "borders_3D_rotating"
-walk(borders, ~save_map(.x, dir="C:/github/mapmate/frames", lon=-70, lat=50, n.period=30, n.frames=n, col="orange", type="maplines", suffix=suffix))
+walk(borders, ~save_map(.x, lon=-70, lat=50, n.period=30, n.frames=n, col="orange", type="maplines", suffix=suffix))
 
 ```
 
@@ -187,7 +187,7 @@ The key difference with this example of fixed data and a changing perspective is
 temps1 <- map(1:n, ~mutate(temps[[1]], frameID = .x))
 rng1 <- range(temps1[[1]]$z, na.rm=TRUE)
 suffix <- "year1_3D_rotating"
-walk(temps1, ~save_map(.x, dir="C:/github/mapmate/frames", lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng1))
+walk(temps1, ~save_map(.x, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng1))
 
 ```
 
@@ -198,7 +198,7 @@ This example plots the full time series list of annual temperature anomalies dat
 
 ```{r}
 suffix <- "annual_3D_rotating"
-walk(temps, ~save_map(.x, dir="C:/github/mapmate/frames", lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+walk(temps, ~save_map(.x, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 
 ```
 
@@ -219,9 +219,9 @@ bath <- map(1:n, ~mutate(bathymetry, frameID = .x))
 rng_bath <- range(bath[[1]]$z, na.rm=TRUE)
 pal_bath <- c("black", "steelblue4")
 
-walk(bath, ~save_map(.x, dir="C:/github/mapmate/frames", n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath))
-walk(borders, ~save_map(.x, dir="C:/github/mapmate/frames", n.frames=n, col="black", type="maplines", suffix="foreground"))
-walk(temps, ~save_map(.x, dir="C:/github/mapmate/frames", n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng))
+walk(bath, ~save_map(.x, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath))
+walk(borders, ~save_map(.x, n.frames=n, col="black", type="maplines", suffix="foreground"))
+walk(temps, ~save_map(.x, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng))
 
 ```
 
