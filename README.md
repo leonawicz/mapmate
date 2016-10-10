@@ -36,11 +36,11 @@ This introduction covers the following toy examples:
 - Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data)
 in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
 - Generate a sequence of still frames of:
-  - map data for use in a flat map animation.
-  - dynamic/temporally changing map data projected onto a static globe (3D Earth)
-  - static map data projected onto rotating globe
-  - dynamic map data projected onto rotating globe
-  - non-map data (time series line growth)
+    - map data for use in a flat map animation.
+    - dynamic/temporally changing map data projected onto a static globe (3D Earth)
+    - static map data projected onto rotating globe
+    - dynamic map data projected onto rotating globe
+    - non-map data (time series line growth)
 
 Other features and functionality will be added in future package versions.
 
@@ -124,8 +124,8 @@ rng <- range(annualtemps$z, na.rm = TRUE)
 n <- length(unique(annualtemps$Year))
 suffix <- "annual_2D"
 temps <- temps %>% split(.$frameID)
-walk(temps, ~save_map(.x, dir = "C:/github/mapmate/frames", ortho = FALSE, col = pal, 
-    type = "maptiles", suffix = suffix, z.range = rng))
+walk(temps, ~save_map(.x, ortho = FALSE, col = pal, type = "maptiles", suffix = suffix, 
+    z.range = rng))
 
 ```
 
@@ -152,9 +152,8 @@ With a custom path defined by `lon` and `lat` vectors, which may not be at all c
 
 ```r
 suffix <- "annual_3D_fixed"
-walk(temps, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = rep(-70, n), 
-    lat = 50, n.period = n, n.frames = n, col = pal, type = "maptiles", suffix = suffix, 
-    z.range = rng))
+walk(temps, ~save_map(.x, lon = rep(-70, n), lat = 50, n.period = n, n.frames = n, 
+    col = pal, type = "maptiles", suffix = suffix, z.range = rng))
 
 ```
 
@@ -185,8 +184,8 @@ A single color can be used for the lines so the previously used palette for tile
 data(borders)
 borders <- map(1:n, ~mutate(borders, frameID = .x))
 suffix <- "borders_3D_rotating"
-walk(borders, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = -70, lat = 50, 
-    n.period = 30, n.frames = n, col = "orange", type = "maplines", suffix = suffix))
+walk(borders, ~save_map(.x, lon = -70, lat = 50, n.period = 30, n.frames = n, 
+    col = "orange", type = "maplines", suffix = suffix))
 
 ```
 
@@ -201,9 +200,8 @@ The key difference with this example of fixed data and a changing perspective is
 temps1 <- map(1:n, ~mutate(temps[[1]], frameID = .x))
 rng1 <- range(temps1[[1]]$z, na.rm = TRUE)
 suffix <- "year1_3D_rotating"
-walk(temps1, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = -70, lat = 50, 
-    n.period = 30, n.frames = n, col = pal, type = "maptiles", suffix = suffix, 
-    z.range = rng1))
+walk(temps1, ~save_map(.x, lon = -70, lat = 50, n.period = 30, n.frames = n, 
+    col = pal, type = "maptiles", suffix = suffix, z.range = rng1))
 
 ```
 
@@ -215,9 +213,8 @@ This example plots the full time series list of annual temperature anomalies dat
 
 ```r
 suffix <- "annual_3D_rotating"
-walk(temps, ~save_map(.x, dir = "C:/github/mapmate/frames", lon = -70, lat = 50, 
-    n.period = 30, n.frames = n, col = pal, type = "maptiles", suffix = suffix, 
-    z.range = rng))
+walk(temps, ~save_map(.x, lon = -70, lat = 50, n.period = 30, n.frames = n, 
+    col = pal, type = "maptiles", suffix = suffix, z.range = rng))
 
 ```
 
@@ -239,12 +236,12 @@ bath <- map(1:n, ~mutate(bathymetry, frameID = .x))
 rng_bath <- range(bath[[1]]$z, na.rm = TRUE)
 pal_bath <- c("black", "steelblue4")
 
-walk(bath, ~save_map(.x, dir = "C:/github/mapmate/frames", n.frames = n, col = pal_bath, 
-    type = "maptiles", suffix = "background", z.range = rng_bath))
-walk(borders, ~save_map(.x, dir = "C:/github/mapmate/frames", n.frames = n, 
-    col = "black", type = "maplines", suffix = "foreground"))
-walk(temps, ~save_map(.x, dir = "C:/github/mapmate/frames", n.frames = n, col = pal, 
-    type = "maptiles", suffix = "timeseries", z.range = rng))
+walk(bath, ~save_map(.x, n.frames = n, col = pal_bath, type = "maptiles", suffix = "background", 
+    z.range = rng_bath))
+walk(borders, ~save_map(.x, n.frames = n, col = "black", type = "maplines", 
+    suffix = "foreground"))
+walk(temps, ~save_map(.x, n.frames = n, col = pal, type = "maptiles", suffix = "timeseries", 
+    z.range = rng))
 
 ```
 
@@ -254,7 +251,7 @@ For larger datasets and longer sequences, this is much faster the more it can be
 `mapmate` is designed to add convenience for making relatively heavy duty animations.
 The emphasis is on images which will look sharp and lend themselves to frame smooth transitions.
 They may also do so while displaying a large amount of data.
-High-resolution images (even larger than 4K) can be used to allowe zooming during animations without loss of quality.
+High-resolution images (even larger than 4K) can be used to allow zooming during animations without loss of quality.
 For all these reasons, processing large amounts of data and generating still image sequences can take a long time
 depending on how large, long, and complex the desired plots sequences are.
 
