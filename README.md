@@ -9,15 +9,15 @@ mapmate (map animate) is an R package for map animation. it is used to generate 
 
 ## Historical and projected global temperature anomalies
 
-[![Historical and projected global temperature anomalies](https://img.youtube.com/vi/xhqEkyJDBho/0.jpg=250x)](https://www.youtube.com/watch?v=xhqEkyJDBho)
+<a href="https://www.youtube.com/watch?v=xhqEkyJDBho"><img hrefsrc="https://img.youtube.com/vi/xhqEkyJDBho/0.jpg" width="200"></a>
 
 ## Global UAF/SNAP Shiny Apps web traffic
 
-[![Global UAF/SNAP Shiny Apps web traffic](https://img.youtube.com/vi/uQYR91qixgo/0.jpg=250x)](https://www.youtube.com/watch?v=uQYR91qixgo)
+<a href="https://www.youtube.com/watch?v=uQYR91qixgo"><img hrefsrc="https://img.youtube.com/vi/uQYR91qixgo/0.jpg" width="200"></a>
 
 ## Flat map great circle animation example
 
-[![Flat map great circle animation example](https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg=250x)](https://www.youtube.com/watch?v=yoyIUMvIP3Q)
+<a href="https://www.youtube.com/watch?v=yoyIUMvIP3Q"><img hrefsrc="https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg" width="200"></a>
 
 # Introduction to mapmate
 Matthew Leonawicz  
