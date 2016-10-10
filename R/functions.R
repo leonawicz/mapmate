@@ -301,10 +301,10 @@ theme_blank_plus <- function(col="transparent"){
 #' @examples
 #' # not run
 save_map <- function(x, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type="network", suffix=NULL, z.range=NULL, rotation.axis=23.4,
-                     png.args=list(width=1080, height=1920, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE){
+                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE){
   if(is.null(col)) col <- switch(type,
     network=c("#FFFFFF25", "#1E90FF25", "#FFFFFF", "#1E90FF50"),
-    maptiles=c("black", "steelblue4"),
+    maptiles=c("black", "white"),
     maplines="white")
   i <- x$frameID[1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
