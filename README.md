@@ -7,7 +7,17 @@ mapmate (map animate) is an R package for map animation. it is used to generate 
 
 # Examples using mapmate
 
-[![Historical and projected global temperature anomalies](https://img.youtube.com/vi/xhqEkyJDBho/0.jpg)](https://www.youtube.com/watch?v=xhqEkyJDBho)
+## Historical and projected global temperature anomalies
+
+[![Historical and projected global temperature anomalies](https://img.youtube.com/vi/xhqEkyJDBho/0.jpg=250x)](https://www.youtube.com/watch?v=xhqEkyJDBho)
+
+## Global UAF/SNAP Shiny Apps web traffic
+
+[![Global UAF/SNAP Shiny Apps web traffic](https://img.youtube.com/vi/uQYR91qixgo/0.jpg=250x)](https://www.youtube.com/watch?v=uQYR91qixgo)
+
+## Flat map great circle animation example
+
+[![Flat map great circle animation example](https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg=250x)](https://www.youtube.com/watch?v=yoyIUMvIP3Q)
 
 # Introduction to mapmate
 Matthew Leonawicz  
@@ -47,52 +57,8 @@ library(dplyr)
 library(purrr)
 data(monthlytemps)
 monthlytemps
-#> # A tibble: 1,080 × 5
-#>          lon      lat  Year Month     z
-#>        <dbl>    <dbl> <int> <int> <dbl>
-#> 1  -176.6667 53.66633  2010     1  1.68
-#> 2  -176.6667 53.66633  2010     2  2.02
-#> 3  -176.6667 53.66633  2010     3  0.55
-#> 4  -176.6667 53.66633  2010     4  1.49
-#> 5  -176.6667 53.66633  2010     5  1.05
-#> 6  -176.6667 53.66633  2010     6  0.76
-#> 7  -176.6667 53.66633  2010     7  0.92
-#> 8  -176.6667 53.66633  2010     8  1.16
-#> 9  -176.6667 53.66633  2010     9  0.79
-#> 10 -176.6667 53.66633  2010    10  0.47
-#> # ... with 1,070 more rows
-
 get_ma(monthlytemps, type = "seasonal", season = "winter")
-#> # A tibble: 80 × 4
-#>          lon      lat  Year         z
-#>        <dbl>    <dbl> <dbl>     <dbl>
-#> 1  -176.6667 53.66633  2015 0.5263333
-#> 2  -176.6667 53.66633  2016 0.4096667
-#> 3  -176.6667 53.66633  2017 0.5216667
-#> 4  -176.6667 53.66633  2018 0.4596667
-#> 5  -176.6667 53.66633  2019 0.5473333
-#> 6  -176.6667 53.66633  2020 0.4766667
-#> 7  -176.6667 53.66633  2021 0.5983333
-#> 8  -176.6667 53.66633  2022 0.7020000
-#> 9  -176.6667 53.66633  2023 0.6650000
-#> 10 -176.6667 53.66633  2024 0.7126667
-#> # ... with 70 more rows
-
 get_ma(monthlytemps, type = "annual", size = 20)
-#> # A tibble: 71 × 4
-#>          lon      lat  Year         z
-#>        <dbl>    <dbl> <int>     <dbl>
-#> 1  -176.6667 53.66633  2019 0.4831667
-#> 2  -176.6667 53.66633  2020 0.4862917
-#> 3  -176.6667 53.66633  2021 0.5216250
-#> 4  -176.6667 53.66633  2022 0.5766250
-#> 5  -176.6667 53.66633  2023 0.5902917
-#> 6  -176.6667 53.66633  2024 0.6125833
-#> 7  -176.6667 53.66633  2025 0.6596250
-#> 8  -176.6667 53.66633  2026 0.6848750
-#> 9  -176.6667 53.66633  2027 0.7130000
-#> 10 -176.6667 53.66633  2028 0.7281250
-#> # ... with 61 more rows
 ```
 
 ## Generate a still image sequence
@@ -106,20 +72,6 @@ This made it small enough to not be a burden to include in the package, but comp
 ```r
 data(annualtemps)
 annualtemps
-#> # A tibble: 55,080 × 4
-#>          lon      lat  Year     z
-#>        <dbl>    <dbl> <int> <dbl>
-#> 1  -176.6667 53.66633  2010  1.09
-#> 2  -176.6667 66.99967  2010  3.21
-#> 3  -176.6667 73.66633  2010  2.76
-#> 4  -170.0000 53.66633  2010  0.91
-#> 5  -170.0000 60.33300  2010  2.47
-#> 6  -170.0000 66.99967  2010  2.73
-#> 7  -163.3333 20.33300  2010  0.19
-#> 8  -163.3333 53.66633  2010  0.79
-#> 9  -163.3333 60.33300  2010  1.43
-#> 10 -163.3333 66.99967  2010  1.28
-#> # ... with 55,070 more rows
 ```
 
 The function below saves png files to disk as a still image sequence. Set your working directory or be explicit about your file destination.
