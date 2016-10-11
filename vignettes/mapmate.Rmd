@@ -116,7 +116,7 @@ and those dealing with displaying data while globe rotation occurs across the im
 rng <- range(annualtemps$z, na.rm=TRUE)
 n <- length(unique(annualtemps$Year))
 suffix <- "annual_2D"
-temps <- temps %>% split(.$frameID)
+temps <- split(temps, temps$frameID)
 walk(temps, ~save_map(.x, ortho=FALSE, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 
 ```
@@ -138,7 +138,7 @@ However, if providing a vector representing a custom path sequence of longitudes
 It could just be a single pass, custom path to change the globe view.
 In this case, `n.period` must be equal to the length of the `lon` and `lat` vectors or an error will be thrown.
 This is more a conceptual restriction than anything.
-With a custom path defined by `lon` and `lat` vectors, which may not be at all cyclical, it only makes sense to define the length of the sequence as the period itself.
+With a custom path defined by `lon` and `lat` vectors, which may not be at all cyclical, it only makes sense to define the period as the length of the sequence itself.
 
 
 ```{r}
@@ -229,7 +229,7 @@ walk(temps, ~save_map(.x, n.frames=n, col=pal, type="maptiles", suffix="timeseri
 
 For larger datasets and longer sequences, this is much faster the more it can be parallelized.
 `mapmate` is designed to add convenience for making relatively heavy duty animations.
-The emphasis is on images which will look sharp and lend themselves to frame smooth transitions.
+The emphasis is on images which will look sharp and lend themselves to smooth frame transitions.
 They may also do so while displaying a large amount of data.
 High-resolution images (even larger than 4K) can be used to allow zooming during animations without loss of quality.
 For all these reasons, processing large amounts of data and generating still image sequences can take a long time
