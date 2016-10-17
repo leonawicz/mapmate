@@ -16,7 +16,8 @@ Imports:
     dplyr,
     purrr,
     ggplot2,
-    RcppRoll
+    RcppRoll,
+    shiny
 Suggests:
     testthat,
     parallel,
