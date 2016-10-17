@@ -255,3 +255,14 @@ mclapply(borders, save_map, n.frames=n, col="orange", type="maplines", suffix="f
 mclapply(temps, save_map, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng, mc.cores=32)
 
 ```
+
+### Time series line plot
+means <- group_by(annualtemps, Year) %>% summarise(Mean=mean(z)) %>%
+  ungroup() %>% mutate(frameID=1:n())
+xlm <- range(means$Year)
+ylm <- range(means$Mean)
+lab <- paste0("ts_", means$frameID[1])
+
+# NOTES: update save_ts to take a directory (dir) arg; make it more like save_maps
+save_ts(1, means, lab=lab, col="black", xlm=xlm, ylm=ylm, axes_only=TRUE)
+map(means$frameID, ~save_ts(.x, means, lab=lab, col="red", xlm=xlm, ylm=ylm))
