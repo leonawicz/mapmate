@@ -257,12 +257,31 @@ mclapply(temps, save_map, n.frames=n, col=pal, type="maptiles", suffix="timeseri
 ```
 
 ### Time series line plot
+
+`save_ts` is similar to `save_map` in function arguments and behavior.
+but the current implementation takes a complete data frame, which is subset based on the iteration during the `walk` process.
+This was simpler than requiring a list of data frames to be passed, one data frame element for each iteration,
+as is done with `save_map`.
+
+The distinction is `save_map` tends to be used for very large data sets containing many rows of spatially explicit data for each time step.
+On the other hand, `save_ts` is used for line charts of time series data.
+Currently, `save_ts` draws one line like in the below example,
+but even if generalized to grouping by factors and drawing multiple lines, the total amount of data will typically remain far less than compared to that passed to `save_map`.
+Therefore, it was convenient to leave `save_ts` as a function which works on a single data frame containing all data.
+
+The example here leaves room for x and y axes but does not draw them.
+This option is available (and is the default) because this represents fixed content, unlike the time series line that grows through the image sequence.
+Since `mapmate` is designed under the assumption that still image sequences are pre-production for data visualization animations
+and are likely to be layered in external video editing software, there is no need to redraw content in an image sequence which may be represented with a single static image
+and layered in later.
+
+See the function documentation for other related arguments and options.
+
+```{r}
 means <- group_by(annualtemps, Year) %>% summarise(Mean=mean(z)) %>%
   ungroup() %>% mutate(frameID=1:n())
 xlm <- range(means$Year)
 ylm <- range(means$Mean)
 lab <- paste0("ts_", means$frameID[1])
-
-# NOTES: update save_ts to take a directory (dir) arg; make it more like save_maps
-save_ts(1, means, lab=lab, col="black", xlm=xlm, ylm=ylm, axes_only=TRUE)
-map(means$frameID, ~save_ts(.x, means, lab=lab, col="red", xlm=xlm, ylm=ylm))
+walk(means$frameID, ~save_ts(means, "Year", "Mean", i=.x, col="blue", xlm=xlm, ylm=ylm))
+```
