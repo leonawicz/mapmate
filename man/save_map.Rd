@@ -68,6 +68,5 @@ This is ignored if \code{save.plot=FALSE}.
 }
 \examples{
 # not run
-\dontrun{}
 }
 

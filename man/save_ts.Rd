@@ -4,13 +4,17 @@
 \alias{save_ts}
 \title{Save time series plots}
 \usage{
-save_ts(x, i = 1, dir = getwd(), col, xlm, ylm, axes.only = FALSE,
-  axes.space = TRUE, suffix = NULL, png.args = list(width = 1920, height =
-  1080, res = 300, bg = "transparent"), save.plot = TRUE,
-  return.plot = FALSE, num.format = 4)
+save_ts(data, x, y, i = 1, dir = getwd(), col, xlm, ylm,
+  axes.only = FALSE, axes.space = TRUE, suffix = NULL,
+  png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
+  save.plot = TRUE, return.plot = FALSE, num.format = 4)
 }
 \arguments{
-\item{x}{data frame for plotting, currently assuming columns of \code{Year} and \code{Mean} as the x and y plotting variables.}
+\item{data}{data frame containing the \code{x} and \code{y} plotting variables.}
+
+\item{x}{character, the column name in \code{data} for the variable plotted along the x axis.}
+
+\item{y}{character, the column name in \code{data} for the variable plotted along the y axis.}
 
 \item{i}{current time index used to subset \code{x}.}
 
@@ -50,6 +54,17 @@ Fixed axis limits must be established in advance by computing the max range or o
 }
 \examples{
 # not run
-\dontrun{}
+\dontrun{
+library(dplyr)
+library(purrr)
+data(annualtemps)
+temps <- mutate(annualtemps, frameID = Year - min(Year) + 1) \%>\%
+  group_by(Year, frameID) \%>\% summarise(z=mean(z))
+xlm <- range(temps$Year)
+ylm <- range(temps$z)
+# should specify a dir or set working dir for file output
+# consider running over a smaller subset of frame IDs
+walk(temps$frameID, ~save_ts(temps, "Year", "z", i=.x, col="blue", xlm, ylm))
+}
 }
 
