@@ -24,6 +24,7 @@ Suggests:
     data.table,
     covr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    RColorBrewer
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
