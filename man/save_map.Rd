@@ -8,7 +8,7 @@ save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
   n.frames = n.period, ortho = TRUE, col = NULL, type = "network",
   suffix = NULL, z.range = NULL, rotation.axis = 23.4,
   png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
-  save.plot = TRUE, return.plot = FALSE)
+  save.plot = TRUE, return.plot = FALSE, num.format = 4)
 }
 \arguments{
 \item{x}{a data frame containing networks, tiles, or lines information.}
@@ -40,6 +40,8 @@ save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
 \item{save.plot}{save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.}
 
 \item{return.plot}{return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.}
+
+\item{num.format}{number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.}
 }
 \value{
 usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
@@ -66,5 +68,6 @@ This is ignored if \code{save.plot=FALSE}.
 }
 \examples{
 # not run
+\dontrun{}
 }
 

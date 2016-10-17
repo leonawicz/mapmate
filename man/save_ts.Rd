@@ -4,14 +4,17 @@
 \alias{save_ts}
 \title{Save time series plots}
 \usage{
-save_ts(i, x, label, col, xlm, ylm, axes_only = FALSE)
+save_ts(x, i = 1, dir = getwd(), col, xlm, ylm, axes.only = FALSE,
+  axes.space = TRUE, suffix = NULL, png.args = list(width = 1920, height =
+  1080, res = 300, bg = "transparent"), save.plot = TRUE,
+  return.plot = FALSE, num.format = 4)
 }
 \arguments{
-\item{i}{current time index used to subset \code{x}.}
-
 \item{x}{data frame for plotting, currently assuming columns of \code{Year} and \code{Mean} as the x and y plotting variables.}
 
-\item{label}{a subdirectory label. Plots are saved in the working directory under \code{frames/{label}}.}
+\item{i}{current time index used to subset \code{x}.}
+
+\item{dir}{png output directory. Defaults to working directory.}
 
 \item{col}{color of the time series line or the axes lines, ticks, and text.}
 
@@ -19,12 +22,34 @@ save_ts(i, x, label, col, xlm, ylm, axes_only = FALSE)
 
 \item{ylm}{y axis limits.}
 
-\item{axes_only}{only plot axis information, no data. Defaults to \code{FALSE}.}
+\item{axes.only}{only plot axis information, no data. Defaults to \code{FALSE}.}
+
+\item{axes.space}{if \code{axes.only=TRUE}, leave room for x and y axes in plot window when \code{axes.space=TRUE}.
+Remove this marginal area so that data are plotted over the full canvas when \code{axes.space=FALSE}.
+Defaults to \code{TRUE}. Ignored when \code{axes.only=TRUE} because of the explicit intent to draw axes.}
+
+\item{suffix}{character, optional suffix to be pasted onto output filename.}
+
+\item{png.args}{a list of arguments passed to \code{png}.}
+
+\item{save.plot}{save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.}
+
+\item{return.plot}{return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.}
+
+\item{num.format}{number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.}
+}
+\value{
+usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 }
 \description{
 Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
 }
+\details{
+\code{i} subsets \code{x} to rows with \code{frameID <= i}. \code{i} defaults to 1, which is sufficient and convenient for the \code{axes_only=TRUE} case but not required.
+Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
+}
 \examples{
 # not run
+\dontrun{}
 }
 
