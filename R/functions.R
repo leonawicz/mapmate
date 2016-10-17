@@ -223,7 +223,7 @@ do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
     dplyr::filter(inview) %>% dplyr::select(-inview)
 }
 
-theme_blank <- function(){
+.theme_blank <- function(){
   eb <- ggplot2::element_blank()
   ggplot2::theme(axis.line=eb, axis.text.x=eb, axis.text.y=eb,
     axis.ticks=eb, axis.title.x=eb, axis.title.y=eb, legend.position="none",
@@ -235,21 +235,19 @@ theme_blank <- function(){
 #'
 #' A blank ggplot2 theme which will draw only data, but can include axes lines, ticks, and text is the color is not set to transparent.
 #'
-#' \code{theme_blank_plus} is intended for plotting data, e.g., a line plot on a blank canvas (nothing drawn but the line itself)
+#' \code{.theme_blank_plus} is intended for plotting data, e.g., a line plot on a blank canvas (nothing drawn but the line itself)
 #' while still retaining space for axes which may be added later so that everything will line up easily in overlaid plots.
 #' Hence, the other time it is used is to plot visible axes, but perhaps no data.
 #'
-#' A common use case is as follows: use \code{theme_blank_plus} repeatedly while saving high-resolution images to disk of a sequence of time series plots
+#' A common use case is as follows: use \code{.theme_blank_plus} repeatedly while saving high-resolution images to disk of a sequence of time series plots
 #' where the time series line grows from left to right through the still image sequence. The axes are fixed across all plots so there is no need to draw them every time, but space is left for them.
 #' Subsequently, only a simgle plot is saved to disk of the axes (with no data drawn) and this image in layered with the sequence of data images when an animation is made.
 #'
 #' @param col axis line, tick and text color. Defaults to \code{"transparent"}.
 #'
-#' @export
-#'
 #' @examples
 #' # not run
-theme_blank_plus <- function(col="transparent"){
+.theme_blank_plus <- function(col="transparent"){
   eb <- ggplot2::element_blank()
   el <- ggplot2::element_line(colour=col)
   ggplot2::theme(axis.line=el, axis.line.x=el, axis.line.y=el, axis.ticks=el,
@@ -294,14 +292,18 @@ theme_blank_plus <- function(col="transparent"){
 #' @param png.args a list of arguments passed to \code{png}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
+#' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
 #' @return usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 #' @export
 #'
 #' @examples
 #' # not run
+#' \dontrun{}
 save_map <- function(x, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type="network", suffix=NULL, z.range=NULL, rotation.axis=23.4,
-                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE){
+                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
+  if(n.frames >= eval(parse(text=paste0("1e", num.format))))
+    warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
   if(is.null(col)) col <- switch(type,
     network=c("#FFFFFF25", "#1E90FF25", "#FFFFFF", "#1E90FF50"),
     maptiles=c("black", "white"),
@@ -327,7 +329,7 @@ save_map <- function(x, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.peri
   if(save.plot){
     if(is.character(suffix)) type <- paste(type, suffix, sep="_")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
-    filename <- sprintf(paste0(dir, "/", type, "_%04d.png"), i)
+    filename <- sprintf(paste0(dir, "/", type, "_%0", num.format, "d.png"), i)
     do.call(png, c(filename=filename, png.args))
     print(g)
     dev.off()
@@ -338,39 +340,60 @@ save_map <- function(x, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.peri
 
 #' Save time series plots
 #'
-#'Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
+#' Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
 #'
-#' @param i current time index used to subset \code{x}.
+#' \code{i} subsets \code{x} to rows with \code{frameID <= i}. \code{i} defaults to 1, which is sufficient and convenient for the \code{axes_only=TRUE} case but not required.
+#' Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
+#'
 #' @param x data frame for plotting, currently assuming columns of \code{Year} and \code{Mean} as the x and y plotting variables.
-#' @param label a subdirectory label. Plots are saved in the working directory under \code{frames/{label}}.
+#' @param i current time index used to subset \code{x}.
+#' @param dir png output directory. Defaults to working directory.
 #' @param col color of the time series line or the axes lines, ticks, and text.
 #' @param xlm x axis limits.
 #' @param ylm y axis limits.
-#' @param axes_only only plot axis information, no data. Defaults to \code{FALSE}.
+#' @param axes.only only plot axis information, no data. Defaults to \code{FALSE}.
+#' @param axes.space if \code{axes.only=TRUE}, leave room for x and y axes in plot window when \code{axes.space=TRUE}.
+#' Remove this marginal area so that data are plotted over the full canvas when \code{axes.space=FALSE}.
+#' Defaults to \code{TRUE}. Ignored when \code{axes.only=TRUE} because of the explicit intent to draw axes.
+#' @param suffix character, optional suffix to be pasted onto output filename.
+#' @param png.args a list of arguments passed to \code{png}.
+#' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
+#' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
+#' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
-#' @return NULL
+#' @return usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 #' @export
 #'
 #' @examples
 #' # not run
-save_ts <- function(i, x, label, col, xlm, ylm, axes_only=FALSE){
+#' \dontrun{}
+save_ts <- function(x, i=1, dir=getwd(), col, xlm, ylm, axes.only=FALSE, axes.space=TRUE, suffix=NULL,
+                    png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
+  if(!axes.only & axes.space) .theme <- .theme_blank_plus()
+  if(!axes.only & !axes.space) .theme <- .theme_blank()
+  if(max(x$frameID) >= eval(parse(text=paste0("1e", num.format))))
+    warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
   x <- dplyr::filter(x, frameID <= i)
   g <- ggplot2::ggplot(x, ggplot2::aes_string("Year", "Mean"))
-  if(axes_only){
-    if(i!=1) return()
+  if(length(col) > 1){
+    warning("'col' has length > 1. Only first element will be used.")
+    col <- col[1]
+  }
+  if(axes.only){
     g <- g + ggplot2::scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
-      ggplot2::scale_y_continuous(name="", limits=ylm) + theme_blank_plus(col)
-    dir.create(outDir <- "frames", showWarnings=FALSE)
-    png(paste0(outDir, "/ts_axes_fixed_bkgd.png"), width=4*1920, height=4*1080, res=300, bg="transparent")
+      ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col)
+  } else {
+    g <- g + ggplot2::geom_line(colour=col, size=1) + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + .theme
+  }
+  if(save.plot){
+    ext <- if(axes_only) "_axesOnly.png" else paste0("_%0", num.format, "d.png")
+    if(is.character(suffix)) type <- paste(type, suffix, sep="_")
+    dir.create(dir, recursive=TRUE, showWarnings=FALSE)
+    filename <- sprintf(paste0(dir, "/", type, ext), i)
+    do.call(png, c(filename=filename, png.args))
     print(g)
     dev.off()
-    return()
   }
-  g <- g + ggplot2::geom_line(colour=col, size=1) + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + theme_blank()
-  dir.create(outDir <- file.path("frames", label), recursive=TRUE, showWarnings=FALSE)
-  png(sprintf(paste0(outDir, "/", label, "_%04d.png"), i),
-      width=4*1920, height=4*1080, res=300, bg="transparent")
-  print(g)
-  dev.off()
+  if(return.plot) return(g)
   NULL
 }
