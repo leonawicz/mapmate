@@ -280,6 +280,35 @@ mclapply(temps, save_map, n.frames = n, col = pal, type = "maptiles", suffix = "
 
 ```
 
+Previous examples made use of `type="maptiles"` and `type="maplines"`.
+Here is an example using `type="polygons"`. While polygon borders were drawn earlier with `maplines`,
+they didn't need to be polygon borders and could have been any data suitable to be passed on to `ggplot2::geom_path`.
+In the example below, a data frame originating from a `SpatialPolygonsDataFrame` is expected and the intent is to fill polygons with colors based on data values.
+A convenient example can be shown making use of the `rworldmap` package.
+
+```{r}
+library(rworldmap)
+library(rworldxtra) # required for "high" resolution map
+library(maptools) # required for fortify to work
+spdf <- joinCountryData2Map(countryExData, mapResolution="high")
+spdf@data$id <- rownames(spdf@data)
+dat <- ggplot2::fortify(spdf, region="id") %>%
+  left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by="id")
+n <- 30
+dat <- map(1:n, ~mutate(dat, frameID = .x) %>% rename(lon=long))
+suffix <- "bioDiv_3D_rotating"
+walk(dat, ~save_map(.x, z.name="BIODIVERSITY", lon=0, lat=20, n.period=n, n.frames=n, type="polygons", suffix=suffix))
+```
+
+Note that `type="polygons"` will work poorly for the orthogrpahic projection. Nation polygons will be clipped at varying points as the globe rotates,
+leading to moving artifacts around the perimeter of the visible hemisphere.
+There is no work around implemented for this within `save_map` when using `type="polygons"` on a globe.
+As a result, it is recommended to only use world polygons with flat maps.
+The external work around is to rasterize source polygon data, e.g. from a `SpatialPolygonsDataFrame` to a satisfactorily high resolution
+and plot the rasterized grid cells data frame using `type="maptiles"`. See the earlier examples using the `annualtemps` data set.
+Of course, this will lead to much greater processing time, as `geom_tile` from `ggplot2` is essentially plotting many tiny square polygons
+rather than the small number of larger polygons in the original data if using `geom_polygon`.
+
 ### Time series line plot
 
 `save_ts` is similar to `save_map` in function arguments and behavior.
