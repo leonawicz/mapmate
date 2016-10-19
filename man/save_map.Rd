@@ -4,14 +4,18 @@
 \alias{save_map}
 \title{Save maps to disk}
 \usage{
-save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
-  n.frames = n.period, ortho = TRUE, col = NULL, type = "network",
-  suffix = NULL, z.range = NULL, rotation.axis = 23.4,
+save_map(x, z.name = NULL, z.range = NULL, dir = getwd(), lon = 0,
+  lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
+  col = NULL, type, suffix = NULL, rotation.axis = 23.4,
   png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
   save.plot = TRUE, return.plot = FALSE, num.format = 4)
 }
 \arguments{
 \item{x}{a data frame containing networks, tiles, or lines information.}
+
+\item{z.name}{character, the column name of the data (\code{z}) variable in \code{x}. Only needed for \code{type="maptiles"} and \code{type="polygons"}}
+
+\item{z.range}{numeric vector, the full known range for the data values across all \code{x} objects, not just the current one, e.g. \code{c(0, 5)}.}
 
 \item{dir}{png output directory. Defaults to working directory.}
 
@@ -27,11 +31,9 @@ save_map(x, dir = getwd(), lon = 0, lat = 0, n.period = 360,
 
 \item{col}{sensible default colors provided for each \code{type}}
 
-\item{type}{the type of plot, one of \code{"network"}, \code{maptiles}, or \code{maplines}.}
+\item{type}{the type of plot, one of \code{"network"}, \code{maptiles}, \code{maplines}, or \code{polygons}.}
 
 \item{suffix}{character, optional suffix to be pasted onto output filename.}
-
-\item{z.range}{the full known range for the data values across all \code{x} objects, not just the current one.}
 
 \item{rotation.axis}{the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.}
 
@@ -58,13 +60,24 @@ For plotting on a globe, \code{lon} and \code{lat} are used to describe the fiel
 \code{n.frames} is always the explicit number of frames that will make up an animation
 regardless of the length of the series of data frames \code{x} to be plotted or the length of the rotational period or coordinates sequence.
 
+\code{z.name} is relevant only for fill color when drawing tiles or polygons.
 \code{z.range} is important for \code{type="maptiles"} because it is used to ensure colors are mapped to values consistently across all plots.
 This is not only for the case of changing data values across a series of plots of different data frames \code{x}.
 There are also changes in the range of values for a fixed data frame when it is plotted repeatedly as the globe is rotated and different hemispheres of the map
-(different data subsets) are in view across the image sequence.
+(different data subsets) are in view across the image sequence. \code{z.range} will default to the range of the given \code{x} if not provided.
+
+The \code{color} argument is used differently depending on \code{type}.
+For \code{maplines} it is a single color. Additional colors in a vector are ignored. For other plot types it must be a vector.
+\code{maptiles} and \code{polygons} require a vector of at least two colors to produce a palette for their color gradient.
+\code{network} is a special case which assumes four colors in the following order: background line, foreground line, background point, foreground point.
+The four colors are layered in the plot in this order. Semi-transparent colors can work well in this context. Additional colors are ignored.
+If \code{col=NULL} (default) sensible default colors are provided for each plot type.
 
 The png output directory will be created if it does not exist, recursively if necessary. The default is the working directory.
 This is ignored if \code{save.plot=FALSE}.
+
+\code{type="polygons"} is only recommended for use with flat maps, not the orthographic projection. See the vignette for an example and description of the issue.
+For globe plots it is best to rasterize polygons and use \code{type="maptiles"} for better results in exchange for increased processing time.
 }
 \examples{
 # not run
