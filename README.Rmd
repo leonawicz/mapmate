@@ -1,0 +1,65 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-", message=F, warning=F, error=F, eval=F, tidy=T, fig.width=0.8*5.33, fig.height=0.8*3) # for html_document only
+```
+
+# mapmate
+
+[![Travis-CI Build Status](https://travis-ci.org/leonawicz/mapmate.svg?branch=master)](https://travis-ci.org/leonawicz/mapmate)
+[![Coverage Status](https://img.shields.io/codecov/c/github/leonawicz/mapmate/master.svg)](https://codecov.io/github/leonawicz/mapmate?branch=master)
+
+`mapmate` (map animate) is an R package for map animation. It is used to generate and save a sequence of plots to disk as a still image sequence intended for later use in data animation production.
+
+## Install
+
+```{r}
+devtools::install_github("leonawicz/mapmate")
+```
+
+This installs the current early development version. Functionality is highly subject to change.
+
+## Examples using mapmate
+
+### Historical and projected global temperature anomalies
+
+<a href="https://www.youtube.com/watch?v=xhqEkyJDBho"><img src="https://img.youtube.com/vi/xhqEkyJDBho/0.jpg" width="200"></a>
+
+### Global UAF/SNAP Shiny Apps web traffic
+
+<a href="https://www.youtube.com/watch?v=uQYR91qixgo"><img src="https://img.youtube.com/vi/uQYR91qixgo/0.jpg" width="200"></a>
+
+### Flat map great circle animation example
+
+<a href="https://www.youtube.com/watch?v=yoyIUMvIP3Q"><img src="https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg" width="200"></a>
+
+The `mapmate` package is used for map- and globe-based data animation pre-production.
+Specifically, `mapmate` functions are used to generate and save to disk a series of map graphics that make up a still image sequence,
+which can then be used in video editing and rendering software of the user's choice. This package does not make simple animations directly within R, which can be done with packages like `animation`.
+`mapmate` is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth.
+Functionality and fine-grain user control of inputs and outputs are limited in the current package version.
+
+See the introduction vignette for usage examples:
+
+- Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data)
+in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
+- Generate a sequence of still frames of:
+    - map data for use in a flat map animation.
+    - dynamic/temporally changing map data projected onto a static globe (3D Earth)
+    - static map data projected onto rotating globe
+    - dynamic map data projected onto rotating globe
+    - non-map data (time series line growth)
+- Parallel processing examples using `mclapply`
+- Comparison of map tiles, map lines, and polygons
+
+```{r}
+browseVignettes(package="mapmapte")
+```
+
+Other features and functionality will be added in future package versions.
