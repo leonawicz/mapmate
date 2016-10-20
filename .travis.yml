@@ -3,14 +3,9 @@
 language: R
 sudo: false
 cache: packages
-addons:
-  apt:
-    packages:
-      - libgeos
-      - libgeos-dev
 
 r_packages:
   - covr
-  - rgeos
+
 after_success:
   - Rscript -e 'covr::codecov()'
