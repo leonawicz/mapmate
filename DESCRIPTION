@@ -29,6 +29,7 @@ Suggests:
     maptools,
     rworldmap,
     rworldxtra,
-    raster
+    raster,
+    rgeos
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
