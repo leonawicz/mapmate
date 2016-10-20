@@ -12,7 +12,7 @@
 
 <meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-10-19" />
+<meta name="date" content="2016-10-20" />
 
 <title>Introduction to mapmate</title>
 
@@ -70,10 +70,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Introduction to mapmate</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-10-19</em></h4>
+<h4 class="date"><em>2016-10-20</em></h4>
 
 
 
+<!-- mapmate.md is generated from README.Rmd. Please edit that file -->
 <p>The <code>mapmate</code> package is used for map- and globe-based data animation pre-production. Specifically, <code>mapmate</code> functions are used to generate and save to disk a series of map graphics that make up a still image sequence, which can then be used in video editing and rendering software of the user’s choice. This package does not make simple animations directly within R, which can be done with packages like <code>animation</code>. <code>mapmate</code> is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth. Functionality and fine-grain user control of inputs and outputs are limited in the current package version.</p>
 <p>This introduction covers the following toy examples:</p>
 <ul>
@@ -86,6 +87,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>dynamic map data projected onto rotating globe</li>
 <li>non-map data (time series line growth)</li>
 </ul></li>
+<li>Parallel processing examples using <code>mclapply</code></li>
+<li>Comparison of map tiles, map lines, and polygons</li>
 </ul>
 <p>Other features and functionality will be added in future package versions.</p>
 <div id="computing-moving-averages" class="section level2">
