@@ -3,3 +3,5 @@
 ^data-raw$
 ^\.travis\.yml$
 ^codecov\.yml$
+^README\.Rmd$
+^README-.*\.png$
