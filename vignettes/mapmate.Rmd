@@ -288,7 +288,7 @@ clrs <- c("royalblue", "purple", "orange", "yellow")
 save_map(bio[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 ```
 
-![](mapmate_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](hc_rgeos_ex_1.png)<!-- -->
 
 ```{r}
 # Walk over all maps
@@ -322,7 +322,7 @@ suffix <- "bioDivMaptiles_3D_rotating"
 save_map(bio2[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 ```
 
-![](mapmate_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](hc_rgeos_ex_2.png)<!-- -->
 
 ```{r}
 # Walk over all maps

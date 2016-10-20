@@ -76,39 +76,41 @@ save_map(frame1, z.name="z", col=pal, type="maptiles", save.plot=FALSE, return.p
 #  mclapply(temps, save_map, z.name="z", n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng, mc.cores=32)
 #  
 
-## ---- eval=TRUE----------------------------------------------------------
-library(rworldmap)
-library(rworldxtra) # required for "high" resolution map
-library(maptools) # required for fortify to work
-spdf <- joinCountryData2Map(countryExData, mapResolution="high")
-spdf@data$id <- rownames(spdf@data)
-bio <- ggplot2::fortify(spdf, region="id") %>%
-  left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by="id")
-n <- 30
-bio <- map(1:n, ~mutate(bio, frameID = .x) %>% rename(lon=long))
-suffix <- "bioDivPolygons_3D_rotating"
-x1 <- "BIODIVERSITY"
-clrs <- c("royalblue", "purple", "orange", "yellow")
-
-# Return a test map
-save_map(bio[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
+## ------------------------------------------------------------------------
+#  library(rworldmap)
+#  library(rworldxtra) # required for "high" resolution map
+#  library(maptools) # required for fortify to work
+#  # also recommend installing rgeos
+#  
+#  spdf <- joinCountryData2Map(countryExData, mapResolution="high")
+#  spdf@data$id <- rownames(spdf@data)
+#  bio <- ggplot2::fortify(spdf, region="id") %>%
+#    left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by="id")
+#  n <- 30
+#  bio <- map(1:n, ~mutate(bio, frameID = .x) %>% rename(lon=long))
+#  suffix <- "bioDivPolygons_3D_rotating"
+#  x1 <- "BIODIVERSITY"
+#  clrs <- c("royalblue", "purple", "orange", "yellow")
+#  
+#  # Return a test map
+#  save_map(bio[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 
 ## ------------------------------------------------------------------------
 #  # Walk over all maps
 #  walk(bio, ~save_map(.x, z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix))
 #  
 
-## ---- eval=TRUE----------------------------------------------------------
-library(raster)
-proj4 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"
-r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
-bio2 <- rasterize(spdf, r, field=x1) %>% rasterToPoints %>%
-  tbl_df() %>% setNames(c("lon", "lat", x1))
-bio2 <- map(1:n, ~mutate(bio2, frameID = .x))
-suffix <- "bioDivMaptiles_3D_rotating"
-
-# Return a test map
-save_map(bio2[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
+## ------------------------------------------------------------------------
+#  library(raster)
+#  proj4 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"
+#  r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
+#  bio2 <- rasterize(spdf, r, field=x1) %>% rasterToPoints %>%
+#    tbl_df() %>% setNames(c("lon", "lat", x1))
+#  bio2 <- map(1:n, ~mutate(bio2, frameID = .x))
+#  suffix <- "bioDivMaptiles_3D_rotating"
+#  
+#  # Return a test map
+#  save_map(bio2[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 
 ## ------------------------------------------------------------------------
 #  # Walk over all maps

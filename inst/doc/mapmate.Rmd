@@ -268,10 +268,12 @@ they didn't need to be polygon borders and could have been any data suitable to 
 In the example below, a data frame originating from a `SpatialPolygonsDataFrame` is expected and the intent is to fill polygons with colors based on data values.
 A convenient example can be shown making use of the `rworldmap` package.
 
-```{r, eval=TRUE}
+```{r}
 library(rworldmap)
 library(rworldxtra) # required for "high" resolution map
 library(maptools) # required for fortify to work
+# also recommend installing rgeos
+
 spdf <- joinCountryData2Map(countryExData, mapResolution="high")
 spdf@data$id <- rownames(spdf@data)
 bio <- ggplot2::fortify(spdf, region="id") %>%
@@ -285,6 +287,9 @@ clrs <- c("royalblue", "purple", "orange", "yellow")
 # Return a test map
 save_map(bio[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 ```
+
+![](hc_rgeos_ex_1.png)<!-- -->
+
 ```{r}
 # Walk over all maps
 walk(bio, ~save_map(.x, z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix))
@@ -304,7 +309,7 @@ rather than the small number of larger polygons in the original data if using `g
 The version using tiles is below. Tiles are one sqaure degree, which will still appear a somewhat coarse resolution.
 Much higher resolutions are painfully slow to render with `geom_tile`.
 
-```{r, eval=TRUE}
+```{r}
 library(raster)
 proj4 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"
 r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
@@ -316,6 +321,9 @@ suffix <- "bioDivMaptiles_3D_rotating"
 # Return a test map
 save_map(bio2[[1]], z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
 ```
+
+![](hc_rgeos_ex_2.png)<!-- -->
+
 ```{r}
 # Walk over all maps
 walk(bio2, ~save_map(.x, z.name=x1, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix))
