@@ -25,7 +25,7 @@ devtools::install_github("leonawicz/mapmate")
 
 This installs the current early development version. Functionality is highly subject to change.
 
-## Examples using mapmate
+## Example videos that based on mapmate
 
 ### Historical and projected global temperature anomalies
 
@@ -39,13 +39,33 @@ This installs the current early development version. Functionality is highly sub
 
 <a href="https://www.youtube.com/watch?v=yoyIUMvIP3Q"><img src="https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg" width="200"></a>
 
+## Introduction and basic example
+
 The `mapmate` package is used for map- and globe-based data animation pre-production.
 Specifically, `mapmate` functions are used to generate and save to disk a series of map graphics that make up a still image sequence,
 which can then be used in video editing and rendering software of the user's choice. This package does not make simple animations directly within R, which can be done with packages like `animation`.
 `mapmate` is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth.
 Functionality and fine-grain user control of inputs and outputs are limited in the current package version.
 
-See the introduction vignette for usage examples:
+
+```{r, eval=TRUE, fig.show='hold', fig.cap="2D flat map and 3D globe"}
+library(mapmate)
+library(dplyr)
+data(annualtemps)
+annualtemps
+
+library(RColorBrewer)
+pal <- rev(brewer.pal(11,"RdYlBu"))
+
+temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
+frame1 <- filter(temps, frameID==1) # subset to first frame
+
+save_map(frame1, z.name="z", ortho=FALSE, col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
+save_map(frame1, z.name="z", col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
+
+```
+
+The above is only a very basic initial example of static 2D and 3D maps. See the introduction vignette for more complete and more typical usage examples:
 
 - Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data)
 in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
