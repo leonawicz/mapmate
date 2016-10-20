@@ -4,4 +4,3 @@
 .Ruserdata
 data-raw/*
 !data-raw/*.R
-inst/doc
