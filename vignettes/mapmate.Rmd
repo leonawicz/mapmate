@@ -17,6 +17,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<!-- mapmate.md is generated from README.Rmd. Please edit that file -->
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse=TRUE, comment="#>", message=F, warning=F, error=F, eval=F, tidy=T) # for html_vignette only
 #knitr::opts_chunk$set(collapse=TRUE, comment="#>", message=F, warning=F, error=F, eval=F, tidy=T, fig.width=0.8*5.33, fig.height=0.8*3) # for html_document only
@@ -38,6 +40,8 @@ in the form of an n-year moving or rolling average based on an input data frame 
     - static map data projected onto rotating globe
     - dynamic map data projected onto rotating globe
     - non-map data (time series line growth)
+- Parallel processing examples using `mclapply`
+- Comparison of map tiles, map lines, and polygons
 
 Other features and functionality will be added in future package versions.
 
