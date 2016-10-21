@@ -25,7 +25,7 @@ devtools::install_github("leonawicz/mapmate")
 
 This installs the current early development version. Functionality is highly subject to change.
 
-## Example videos that based on mapmate
+## Example videos based on mapmate
 
 ### Historical and projected global temperature anomalies
 
