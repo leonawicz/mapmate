@@ -1,27 +1,4 @@
 globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean"))
-#' Obtain a list of monthly climatologies
-#'
-#' \code{get_clim} subsets and summarizes a data frame of monthly map data over a specified time period.
-#'
-#' \code{get_clim} takes a five-column data frames containing map data (long, lat, z, Year, Month) describing a temporal sequence of map data.
-#' The data frame is subset to a specified range of years. The data (z) is summarized over time for each month and a length-12 list of data frames containing period average map data is returned.
-#'
-#' @param x a data frame.
-#' @param limits inclusive lower and upper bound limits for subsetting the years (climatology period).
-#'
-#' @return returns a list of data frames.
-#' @export
-#'
-#' @examples
-#' #not run
-#' @importFrom magrittr %>%
-#' @importFrom grDevices png dev.off
-get_clim <- function(x, limits=c(1961, 1990)){
-  x <- purrr::map(x, ~as.matrix(.x))
-  x <- purrr::map(unique(mo), ~x[yr >= limits[1] & yr <= limits[2] & mo==.x])
-  purrr::map(x, ~Reduce("+", .x)[,3]/(diff(limits) + 1))
-}
-
 #' Obtain moving average map series
 #'
 #' Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.
