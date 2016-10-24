@@ -4,10 +4,12 @@
 \alias{pad_frames}
 \title{Pad the end of list of data frames}
 \usage{
-pad_frames(x, n.period = 360, rotation = "add", force = TRUE)
+pad_frames(x, id, n.period = 360, rotation = "add", force = TRUE)
 }
 \arguments{
 \item{x}{list of data frames.}
+
+\item{id}{character, column name referring to column of \code{x} representing frame sequence integer IDs.}
 
 \item{n.period}{An integer, the known period of rotation that will be part of an animation in which the map data frames in \code{x} will be sequentially plotted over. Default is 360 (1-degree increment rotations).}
 
