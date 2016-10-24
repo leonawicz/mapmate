@@ -40,6 +40,8 @@ globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "grou
 #'
 #' # not run
 #' \dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
+#' @importFrom magrittr %>%
+#' @importFrom grDevices png dev.off
 get_ma <- function(x, type, season=NULL, size=10, format="table", use_mclapply=FALSE, mc.cores=32){
   if(!(type %in% c("monthly", "annual", "seasonal"))) stop("invalid type")
   if(!format %in% c("table", "list")) stop("format must be 'table' or 'list'")
@@ -119,6 +121,7 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
 #' With \code{rotation="add"}, a full period is added to the end of the \code{x} rather than padding only far enough to make the length of the data series factorable by the rotation period length.
 #'
 #' @param x list of data frames.
+#' @param id character, column name referring to column of \code{x} representing frame sequence integer IDs.
 #' @param n.period An integer, the known period of rotation that will be part of an animation in which the map data frames in \code{x} will be sequentially plotted over. Default is 360 (1-degree increment rotations).
 #' @param rotation character, one of \code{"add"} or \code{"pad"}.
 #' @param force When the length of \code{x} is greater than or equal to \code{n.period} still force padding to occur. Defaults to \code{TRUE}. Otherwise return \code{x}.
@@ -128,12 +131,23 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
 #'
 #' @examples
 #' # not run
-pad_frames <- function(x, n.period=360, rotation="add", force=TRUE){
+pad_frames <- function(x, id, n.period=360, rotation="add", force=TRUE){
+  if(!is.list(x) || is.data.frame(x)) stop("'x' must be a list.")
+  if(missing(id)) stop("'id' column is missing.")
+  if(!id %in% names(x[[1]])) stop("'id' must refer to a column name.")
   n <- length(x)
   if(n >= n.period & !force) return(x)
+  if(id != "frameID") x <- purrr::map(x, ~rename_(.x, frameID=id))
   if(rotation=="add") x2 <- purrr::map(1:(n.period-1), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
   if(rotation=="pad") x2 <- purrr::map(1:(n.period-n), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
-  c(x, x2)
+  x <- c(x, x2)
+  #if(id != "frameID"){
+  if(id != "frameID"){
+    idx <- which(names(x[[1]])=="frameID")
+    f <- function(x, idx, id){ names(x)[idx] <- id; x }
+    x <- purrr::map(x, ~f(.x, idx, id))
+  }
+  x
 }
 
 #' Generate a sequence of coordinates
@@ -162,12 +176,13 @@ pad_frames <- function(x, n.period=360, rotation="add", force=TRUE){
 get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
   if(length(lon) != 1 & length(lon) != n.period) stop("lon must be length one or length n.period")
   if(length(lat) != 1 & length(lat) != n.period) stop("lat must be length one or length n.period")
+  if(any(lon < -180 || lon > 180)) stop("lon invalid")
+  if(any(lat < -90 || lat > 90)) stop("lat invalid")
   if(length(lon)==1){
     lon <- rep(rev(seq(lon, lon+360, length.out=n.period + 1)[-(n.period + 1)]), length=n.frames)
     lon[lon >= 360] <- lon[lon >= 360] - 360
   }
   if(length(lat)==1){
-    if(lat < -90 || lat > 90) stop("lat invalid")
     lat <- rep(lat, n.frames)
   }
   list(lon=lon, lat=lat)
