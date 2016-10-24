@@ -1,4 +1,5 @@
 library(mapmate)
+suppressMessages({ library(dplyr); library(purrr) })
 context("functions.R")
 
 test_that("project_to_hemisphere returns valid output", {
@@ -13,4 +14,54 @@ test_that("project_to_hemisphere returns valid output", {
   expect_error(project_to_hemisphere(1:360,1:359,0,0), "lon and lat must be equal length")
   expect_error(project_to_hemisphere(1:91,1:91,0,0), "latitudes must be >= -90 and <= 90")
   expect_error(project_to_hemisphere(-181,0,0,0), "longitudes must be >= -180 and <= 180")
+})
+
+data(annualtemps)
+x <- map(1:4, ~mutate(filter(annualtemps, Year-2009==.x), idx=.x))
+n <- 6
+
+test_that("pad_frames returns valid output", {
+  expect_error(pad_frames(5, n.period=n, rotation="add"), "'x' must be a list.")
+  expect_error(pad_frames(data.frame(a=5), n.period=n, rotation="add"), "'x' must be a list.")
+  expect_error(pad_frames(x, n.period=n, rotation="add"), "'id' column is missing.")
+  expect_error(pad_frames(x, id="idx1", n.period=n, rotation="add"), "'id' must refer to a column name.")
+  x.add <- pad_frames(x, id="idx", n.period=n, rotation="add")
+  x.pad <- pad_frames(x, id="idx", n.period=n, rotation="pad")
+  expect_is(x.add, "list")
+  expect_is(x.add[[1]], "tbl_df")
+  expect_is(x.pad, "list")
+  expect_is(x.pad[[1]], "tbl_df")
+  expect_equal(length(x.add), length(x) + n - 1)
+  expect_equal(length(x.pad), n)
+  expect_identical(x[[length(x)]] %>% dplyr::select(-idx), x.add[[length(x) + n - 1]]  %>% dplyr::select(-idx))
+  expect_error(x.add[[length(x) + n]], "subscript out of bounds")
+  expect_identical(x[[length(x)]]  %>% dplyr::select(-idx), x.pad[[n]]  %>% dplyr::select(-idx))
+  expect_error(x.add[[length(x) + n + 1]], "subscript out of bounds")
+})
+
+test_that("get_lonlat_seq returns valid output", {
+  expect_error(get_lonlat_seq(c(1,2), c(1,2)), "lon must be length one or length n.period")
+  expect_error(get_lonlat_seq(1, c(1,2)), "lat must be length one or length n.period")
+  expect_error(get_lonlat_seq(180.1, -90.1), "lon invalid")
+  expect_error(get_lonlat_seq(0, -90.1), "lat invalid")
+
+  ll <- get_lonlat_seq(0, 0, n.period=360, n.frames=40)
+  expect_is(ll, "list")
+  expect_equal(length(ll), 2)
+  expect_equal(length(ll[[1]]), length(ll[[2]]))
+  expect_equal(length(ll[[1]]), 40)
+
+  ll <- get_lonlat_seq(0, 0, n.period=60)
+  expect_is(ll, "list")
+  expect_equal(length(ll), 2)
+  expect_equal(length(ll[[1]]), length(ll[[2]]))
+  expect_equal(length(ll[[1]]), 60)
+
+  ll <- get_lonlat_seq(1:60, 2:61, n.period=60)
+  expect_is(ll, "list")
+  expect_equal(length(ll), 2)
+  expect_equal(length(ll[[1]]), length(ll[[2]]))
+  expect_equal(length(ll[[1]]), 60)
+  expect_identical(ll[[1]], 1:60)
+  expect_identical(ll[[2]], 2:61)
 })
