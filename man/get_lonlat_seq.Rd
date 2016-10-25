@@ -32,6 +32,13 @@ It also makes sense in this case for \code{n.frames} to remain equal to \code{n.
 After this check the custom vectors are simply bound in a list.
 }
 \examples{
-# not run
+# default 360 frames of 360-length period rotation,
+get_lonlat_seq(0, 0) # beginning from lon 0, at lat 0
+
+get_lonlat_seq(0, 0, n.frames=40) # same but only first 40 frames
+get_lonlat_seq(0, 0, n.frames=400) # same but looping for 40 additional frames
+get_lonlat_seq(-20, 30, n.period=60) # quicker period, begin from lon -20, at lat 30
+
+get_lonlat_seq(1:60, 2:61, n.period=60) # custom sequence is simply put in list
 }
 

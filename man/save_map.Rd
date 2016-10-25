@@ -4,18 +4,20 @@
 \alias{save_map}
 \title{Save maps to disk}
 \usage{
-save_map(x, z.name = NULL, z.range = NULL, dir = getwd(), lon = 0,
-  lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
+save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
+  lon = 0, lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
   col = NULL, type, suffix = NULL, rotation.axis = 23.4,
   png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
   save.plot = TRUE, return.plot = FALSE, num.format = 4)
 }
 \arguments{
-\item{x}{a data frame containing networks, tiles, or lines information.}
+\item{data}{a data frame containing networks, tiles, lines or polygons information.}
 
-\item{z.name}{character, the column name of the data (\code{z}) variable in \code{x}. Only needed for \code{type="maptiles"} and \code{type="polygons"}}
+\item{z.name}{character, the column name of the data (\code{z}) variable in \code{data}. Only needed for \code{type="maptiles"} and \code{type="polygons"}}
 
-\item{z.range}{numeric vector, the full known range for the data values across all \code{x} objects, not just the current one, e.g. \code{c(0, 5)}.}
+\item{z.range}{numeric vector, the full known range for the data values across all \code{data} objects, not just the current one, e.g. \code{c(0, 5)}.}
+
+\item{id}{character, column name referring to column of \code{data} representing frame sequence integer IDs.}
 
 \item{dir}{png output directory. Defaults to working directory.}
 
@@ -58,13 +60,13 @@ For flat maps, \code{lon}, \code{lat}, \code{n.period}, \code{n.frames}, and \co
 For plotting on a globe, \code{lon} and \code{lat} are used to describe the field of view or the visible hemisphere.
 \code{n.period} relates is eithe the period of rotation of the globe or the length of the non-repeating, arbitrary coordinates sequence.
 \code{n.frames} is always the explicit number of frames that will make up an animation
-regardless of the length of the series of data frames \code{x} to be plotted or the length of the rotational period or coordinates sequence.
+regardless of the length of the series of data frames \code{data} to be plotted or the length of the rotational period or coordinates sequence.
 
 \code{z.name} is relevant only for fill color when drawing tiles or polygons.
 \code{z.range} is important for \code{type="maptiles"} because it is used to ensure colors are mapped to values consistently across all plots.
-This is not only for the case of changing data values across a series of plots of different data frames \code{x}.
+This is not only for the case of changing data values across a series of plots of different data frames \code{data}.
 There are also changes in the range of values for a fixed data frame when it is plotted repeatedly as the globe is rotated and different hemispheres of the map
-(different data subsets) are in view across the image sequence. \code{z.range} will default to the range of the given \code{x} if not provided.
+(different data subsets) are in view across the image sequence. \code{z.range} will default to the range of the given \code{data} if not provided.
 
 The \code{color} argument is used differently depending on \code{type}.
 For \code{maplines} it is a single color. Additional colors in a vector are ignored. For other plot types it must be a vector.
@@ -81,5 +83,24 @@ For globe plots it is best to rasterize polygons and use \code{type="maptiles"} 
 }
 \examples{
 # not run
+\dontrun{
+library(dplyr)
+library(purrr)
+library(RColorBrewer)
+
+data(annualtemps)
+pal <- rev(brewer.pal(11,"RdYlBu"))
+
+temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
+temps <- split(temps, temps$frameID)
+rng <- range(annualtemps$z, na.rm=TRUE)
+n <- length(unique(annualtemps$Year))
+suffix <- "annual_3D_rotating"
+
+# should specify a dir or set working dir for file output
+# consider running over a smaller subset of frame IDs
+walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
+  n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+}
 }
 

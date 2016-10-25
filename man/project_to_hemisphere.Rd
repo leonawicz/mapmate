@@ -26,6 +26,8 @@ Given a global hemispheric field of view defined by a single latitudinal and lon
 and returns a data frame containing the original coordinates and a column indicating if the coordinates are in the field of view (\code{TRUE} or \code{FALSE}).
 }
 \examples{
-#not run
+lon <- seq(-180, 180, length.out=60)
+lat <- rep(seq(-90, 90, length.out=30), 2)
+project_to_hemisphere(lon, lat , 0, 0)
 }
 

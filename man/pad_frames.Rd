@@ -34,6 +34,12 @@ and "hang" on the terminal map data set until a final complete rotation is compl
 With \code{rotation="add"}, a full period is added to the end of the \code{x} rather than padding only far enough to make the length of the data series factorable by the rotation period length.
 }
 \examples{
-# not run
+library(dplyr)
+library(purrr)
+data(annualtemps)
+x <- map(1:4, ~mutate(filter(annualtemps, Year-2009==.x), idx=.x))
+n <- 6
+pad_frames(x, id="idx", n.period=n, rotation="add")
+pad_frames(x, id="idx", n.period=n, rotation="pad")
 }
 

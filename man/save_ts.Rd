@@ -4,7 +4,7 @@
 \alias{save_ts}
 \title{Save time series plots}
 \usage{
-save_ts(data, x, y, i = 1, dir = getwd(), col, xlm, ylm,
+save_ts(data, x, y, id, cap, dir = getwd(), col = "black", xlm, ylm,
   axes.only = FALSE, axes.space = TRUE, suffix = NULL,
   png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
   save.plot = TRUE, return.plot = FALSE, num.format = 4)
@@ -16,11 +16,13 @@ save_ts(data, x, y, i = 1, dir = getwd(), col, xlm, ylm,
 
 \item{y}{character, the column name in \code{data} for the variable plotted along the y axis.}
 
-\item{i}{current time index used to subset \code{x}.}
+\item{id}{character, column name referring to column of \code{data} representing frame sequence integer IDs.}
+
+\item{cap}{current time index/frame ID used to subset \code{data}. Defaults to all data if missing.}
 
 \item{dir}{png output directory. Defaults to working directory.}
 
-\item{col}{color of the time series line or the axes lines, ticks, and text.}
+\item{col}{color of the time series line or the axes lines, ticks, and text. Defaults to black.}
 
 \item{xlm}{x axis limits.}
 
@@ -49,7 +51,13 @@ usually returns NULL after writing file to disk as a side effect. May return a g
 Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
 }
 \details{
-\code{i} subsets \code{x} to rows with \code{frameID <= i}. \code{i} defaults to 1, which is sufficient and convenient for the \code{axes_only=TRUE} case but not required.
+For  \code{id} column frame ID values \code{i}, \code{cap} subsets \code{data} to rows where \code{i <= cap}.
+Sequential application of \code{save_ts} should involve iterating \code{cap} over the values \code{i}.
+A data frame passed to \code{save_map} need not be subset based on the current frame ID in advance so providing \code{cap} values is important. See example.
+
+When calling \code{save_map} from the \code{save_seq} wrapper function, \code{save_map} receives a list of sequentially subsetted data frames based on the frame IDs.
+In this case, specifying \code{cap} is not needed.
+
 Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
 }
 \examples{
@@ -62,9 +70,11 @@ temps <- mutate(annualtemps, frameID = Year - min(Year) + 1) \%>\%
   group_by(Year, frameID) \%>\% summarise(z=mean(z))
 xlm <- range(temps$Year)
 ylm <- range(temps$z)
+
 # should specify a dir or set working dir for file output
 # consider running over a smaller subset of frame IDs
-walk(temps$frameID, ~save_ts(temps, "Year", "z", i=.x, col="blue", xlm, ylm))
+walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
+  cap=.x, col="blue", xlm=xlm, ylm=ylm))
 }
 }
 
