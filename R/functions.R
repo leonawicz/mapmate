@@ -96,7 +96,9 @@ get_ma <- function(x, type, season=NULL, size=10, format="table", use_mclapply=F
 #' @export
 #'
 #' @examples
-#' #not run
+#' lon <- seq(-180, 180, length.out=60)
+#' lat <- rep(seq(-90, 90, length.out=30), 2)
+#' project_to_hemisphere(lon, lat , 0, 0)
 project_to_hemisphere <- function(lon, lat, lon0, lat0){
   if(length(lon)!=length(lat)) stop("lon and lat must be equal length")
   if(lat0 < -90 || lat0 > 90 | any(lat < -90 | lat > 90)) stop("latitudes must be >= -90 and <= 90")
@@ -130,7 +132,13 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
 #' @export
 #'
 #' @examples
-#' # not run
+#' library(dplyr)
+#' library(purrr)
+#' data(annualtemps)
+#' x <- map(1:4, ~mutate(filter(annualtemps, Year-2009==.x), idx=.x))
+#' n <- 6
+#' pad_frames(x, id="idx", n.period=n, rotation="add")
+#' pad_frames(x, id="idx", n.period=n, rotation="pad")
 pad_frames <- function(x, id, n.period=360, rotation="add", force=TRUE){
   if(!is.list(x) || is.data.frame(x)) stop("'x' must be a list.")
   if(missing(id)) stop("'id' column is missing.")
@@ -172,15 +180,22 @@ pad_frames <- function(x, id, n.period=360, rotation="add", force=TRUE){
 #' @export
 #'
 #' @examples
-#' # not run
+#' # default 360 frames of 360-length period rotation,
+#' get_lonlat_seq(0, 0) # beginning from lon 0, at lat 0
+#'
+#' get_lonlat_seq(0, 0, n.frames=40) # same but only first 40 frames
+#' get_lonlat_seq(0, 0, n.frames=400) # same but looping for 40 additional frames
+#' get_lonlat_seq(-20, 30, n.period=60) # quicker period, begin from lon -20, at lat 30
+#'
+#' get_lonlat_seq(1:60, 2:61, n.period=60) # custom sequence is simply put in list
 get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
   if(length(lon) != 1 & length(lon) != n.period) stop("lon must be length one or length n.period")
   if(length(lat) != 1 & length(lat) != n.period) stop("lat must be length one or length n.period")
   if(any(lon < -180 || lon > 180)) stop("lon invalid")
   if(any(lat < -90 || lat > 90)) stop("lat invalid")
   if(length(lon)==1){
-    lon <- rep(rev(seq(lon, lon+360, length.out=n.period + 1)[-(n.period + 1)]), length=n.frames)
-    lon[lon >= 360] <- lon[lon >= 360] - 360
+    lon <- rep(rev(seq(lon, lon+360, length.out=n.period + 1)[-1]), length=n.frames)
+    lon[lon > 180] <- lon[lon > 180] - 360
   }
   if(length(lat)==1){
     lat <- rep(lat, n.frames)
@@ -263,13 +278,13 @@ do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
 #' For plotting on a globe, \code{lon} and \code{lat} are used to describe the field of view or the visible hemisphere.
 #' \code{n.period} relates is eithe the period of rotation of the globe or the length of the non-repeating, arbitrary coordinates sequence.
 #' \code{n.frames} is always the explicit number of frames that will make up an animation
-#' regardless of the length of the series of data frames \code{x} to be plotted or the length of the rotational period or coordinates sequence.
+#' regardless of the length of the series of data frames \code{data} to be plotted or the length of the rotational period or coordinates sequence.
 #'
 #' \code{z.name} is relevant only for fill color when drawing tiles or polygons.
 #' \code{z.range} is important for \code{type="maptiles"} because it is used to ensure colors are mapped to values consistently across all plots.
-#' This is not only for the case of changing data values across a series of plots of different data frames \code{x}.
+#' This is not only for the case of changing data values across a series of plots of different data frames \code{data}.
 #' There are also changes in the range of values for a fixed data frame when it is plotted repeatedly as the globe is rotated and different hemispheres of the map
-#' (different data subsets) are in view across the image sequence. \code{z.range} will default to the range of the given \code{x} if not provided.
+#' (different data subsets) are in view across the image sequence. \code{z.range} will default to the range of the given \code{data} if not provided.
 #'
 #' The \code{color} argument is used differently depending on \code{type}.
 #' For \code{maplines} it is a single color. Additional colors in a vector are ignored. For other plot types it must be a vector.
@@ -284,9 +299,10 @@ do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
 #' \code{type="polygons"} is only recommended for use with flat maps, not the orthographic projection. See the vignette for an example and description of the issue.
 #' For globe plots it is best to rasterize polygons and use \code{type="maptiles"} for better results in exchange for increased processing time.
 #'
-#' @param x a data frame containing networks, tiles, or lines information.
-#' @param z.name character, the column name of the data (\code{z}) variable in \code{x}. Only needed for \code{type="maptiles"} and \code{type="polygons"}
-#' @param z.range numeric vector, the full known range for the data values across all \code{x} objects, not just the current one, e.g. \code{c(0, 5)}.
+#' @param data a data frame containing networks, tiles, lines or polygons information.
+#' @param z.name character, the column name of the data (\code{z}) variable in \code{data}. Only needed for \code{type="maptiles"} and \code{type="polygons"}
+#' @param z.range numeric vector, the full known range for the data values across all \code{data} objects, not just the current one, e.g. \code{c(0, 5)}.
+#' @param id character, column name referring to column of \code{data} representing frame sequence integer IDs.
 #' @param dir png output directory. Defaults to working directory.
 #' @param lon starting longitude for rotation sequence or vector of arbitrary longitude sequence.
 #' @param lat fixed latitude or vector of arbitrary latitude sequence.
@@ -307,37 +323,59 @@ do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
 #'
 #' @examples
 #' # not run
-save_map <- function(x, z.name=NULL, z.range=NULL, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type, suffix=NULL, rotation.axis=23.4,
+#' \dontrun{
+#' library(dplyr)
+#' library(purrr)
+#' library(RColorBrewer)
+#'
+#' data(annualtemps)
+#' pal <- rev(brewer.pal(11,"RdYlBu"))
+#'
+#' temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
+#' temps <- split(temps, temps$frameID)
+#' rng <- range(annualtemps$z, na.rm=TRUE)
+#' n <- length(unique(annualtemps$Year))
+#' suffix <- "annual_3D_rotating"
+#'
+#' # should specify a dir or set working dir for file output
+#' # consider running over a smaller subset of frame IDs
+#' walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
+#'   n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+#' }
+save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type, suffix=NULL, rotation.axis=23.4,
                      png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
+  if(missing(id)) stop("'id' column is missing.")
+  if(!id %in% names(data)) stop("'id' must refer to a column name.")
+  if(id != "frameID") data <- dplyr::rename_(data, frameID=id)
   if(is.null(col)) col <- switch(type,
     network=c("#1E90FF25", "#FFFFFF25", "#FFFFFF", "#1E90FF50"),
     maptiles=c("black", "white"),
     maplines="white",
     polygons=c("royalblue", "purple", "orange", "yellow"))
-  i <- x$frameID[1]
+  i <- data$frameID[1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
   if(type=="maptiles"){
     if(is.null(z.name)) stop("Must provide 'z.name'.")
     if(length(col) < 2) stop("'col' must be a vector of at least two colors for map tiles color palette gradient.")
-    if(is.null(z.range)) z.range <- range(x[[z.name]], na.rm=TRUE)
-    g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat", fill=z.name)) + ggplot2::geom_tile() +
+    if(is.null(z.range)) z.range <- range(data[[z.name]], na.rm=TRUE)
+    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", fill=z.name)) + ggplot2::geom_tile() +
       ggplot2::scale_fill_gradientn(colors=col, limits=z.range)
   } else if(type=="polygons"){
     if(is.null(z.name)) stop("Must provide 'z.name'.")
     if(length(col) < 2) stop("'col' must be a vector of at least two colors for polygon fill color palette gradient.")
-    if(is.null(z.range)) z.range <- range(x[[z.name]], na.rm=TRUE)
-    g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat", group="group", fill=z.name)) + ggplot2::geom_polygon() +
+    if(is.null(z.range)) z.range <- range(data[[z.name]], na.rm=TRUE)
+    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group", fill=z.name)) + ggplot2::geom_polygon() +
       ggplot2::geom_path(color="white") + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
   } else {
-    g <- ggplot2::ggplot(x, ggplot2::aes_string("lon", "lat", group="group"))
+    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group"))
     if(type=="maplines") g <- g + ggplot2::geom_path(colour=col[1])
     if(type=="network"){
-      x.lead <- dplyr::group_by(x, group) %>% dplyr::slice(dplyr::n())
+      data.lead <- dplyr::group_by(data, group) %>% dplyr::slice(dplyr::n())
       g <- g + ggplot2::geom_path(colour=col[1]) + ggplot2::geom_path(colour=col[2]) +
-        ggplot2::geom_point(data=x.lead, colour=col[3], size=0.6) +
-        ggplot2::geom_point(data=x.lead, colour=col[4], size=0.3)
+        ggplot2::geom_point(data=data.lead, colour=col[3], size=0.6) +
+        ggplot2::geom_point(data=data.lead, colour=col[4], size=0.3)
     }
   }
 
@@ -355,19 +393,97 @@ save_map <- function(x, z.name=NULL, z.range=NULL, dir=getwd(), lon=0, lat=0, n.
   NULL
 }
 
+#' Save a sequence of still images to disk
+#'
+#' Save a sequence of still images to disk with a single function call and data frame.
+#'
+#' \code{save_seq} is a convenient wrapper function for \code{save_map} and \code{save_ts}. It provides some moderate generality and abstraction
+#' by moving the most proximal aspects of data preparation inside the function, i.e., breaking a data frame into a list of data frame subsets by plot ID
+#' and passing each explicitly to iterative calls to either \code{save_map} or \code{save_ts}.
+#' The option for parallel processing on Linux systems (by forking with \code{parallel::mclapply}) is also part of \code{save_seq}.
+#' Using \code{mclapply} was chosen for convenience and may be changed in a future package version.
+#'
+#' It does not save much in the way of gross typing, but calling a single wrapper function, passing mostly the same arguments,
+#' and not having to explicitly call \code{save_map} or \code{save_ts} withing the context of \code{map} or \code{walk} calls is arguably
+#' cleaner, simpler, and less complex for some use cases.
+#'
+#' The additional arguments \code{...} passed to \code{save_map} or \code{save_ts} are required, not optional.
+#' Any call to \code{save_seq} will consist mostly of these arguments.
+#' It is best to first make sure you can successfully call \code{save_map} and \code{save_ts} directly. Then try this wrapper function.
+#' See the intoductory vignette for details: \code{browseVignettes(package="mapmate")}.
+#'
+#' @param data a data frame containing networks, tiles, lines or polygons information.
+#' @param style character, must be \code{style="map"} for maps (uses \code{save_map}) or \code{style="tsline"} for time series line graphs (uses \code{save_ts}).
+#' @param use_mclapply \code{TRUE} for parallel processing. Must be \code{FALSE} (default) for non-Unix-alikes (e.g., Windows systems).
+#' @param mc.cores integer, the number of CPU cores requested for parallel processing, passed to \code{mclapply}.
+#' @param ... additional arguments passed to \code{save_map} or \code{save_ts}.
+#'
+#' @return usually returns NULL after writing files to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+#' @export
+#'
+#' @examples
+#' # not run
+#' \dontrun{
+#' library(dplyr)
+#' library(purrr)
+#' data(annualtemps)
+#' temps <- mutate(annualtemps, frameID = Year - min(Year) + 1) %>%
+#'   group_by(Year, frameID) %>% summarise(z=mean(z))
+#' xlm <- range(temps$Year)
+#' ylm <- range(temps$z)
+#'
+#' # should specify a dir or set working dir for file output
+#' # consider running over a smaller subset of frame IDs
+#' save_seq(temps, style="tsline", x="Year", y="z", id="frameID",
+#'   col="blue", xlm=xlm, ylm=ylm))
+#' }
+save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
+  if(!style %in% c("map", "tsline")) stop("'style' must be 'map' or 'tsline'.")
+  if(Sys.info()["sysname"]!="Linux" & use_mclapply) stop("parallel::mclapply only available on Unix-alike systems.")
+  dots <- list(...)
+  id <- dots$id
+  if(is.null(id)) stop("'id' column is missing.")
+  return.plot <- dots$return.plot
+  if(is.null(return.plot)) return.plot <- FALSE
+  if(style=="map"){
+    if(use_mclapply){
+      return(parallel::mclapply(data, save_map, ..., mc.cores=mc.cores))
+    } else {
+      if(return.plot) return(purrr::map(data, ~save_map(.x, ...))) else return(purrr::walk(data, ~save_map(.x, ...)))
+    }
+  } else if(style=="tsline"){
+    if(!is.null(dots$cap)) stop("When calling 'save_seq' with style='tsline', do not pass argument 'id' on to 'save_ts'.")
+    iters <- sort(unique(data[[id]]))
+    if(id != "frameID") data <- dplyr::rename_(data, frameID=id)
+    data <- purrr::map(iters, ~dplyr::filter(data, frameID <= .x))
+    if(use_mclapply){
+      return(parallel::mclapply(data, save_ts, ..., mc.cores=mc.cores))
+    } else {
+      if(return.plot) return(purrr::map(data, ~save_ts(.x, ...))) else return(purrr::walk(data, ~save_ts(.x, ...)))
+    }
+  }
+}
+
 #' Save time series plots
 #'
 #' Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.
 #'
-#' \code{i} subsets \code{x} to rows with \code{frameID <= i}. \code{i} defaults to 1, which is sufficient and convenient for the \code{axes_only=TRUE} case but not required.
+#' For  \code{id} column frame ID values \code{i}, \code{cap} subsets \code{data} to rows where \code{i <= cap}.
+#' Sequential application of \code{save_ts} should involve iterating \code{cap} over the values \code{i}.
+#' A data frame passed to \code{save_map} need not be subset based on the current frame ID in advance so providing \code{cap} values is important. See example.
+#'
+#' When calling \code{save_map} from the \code{save_seq} wrapper function, \code{save_map} receives a list of sequentially subsetted data frames based on the frame IDs.
+#' In this case, specifying \code{cap} is not needed.
+#'
 #' Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
 #'
 #' @param data data frame containing the \code{x} and \code{y} plotting variables.
 #' @param x character, the column name in \code{data} for the variable plotted along the x axis.
 #' @param y character, the column name in \code{data} for the variable plotted along the y axis.
-#' @param i current time index used to subset \code{x}.
+#' @param id character, column name referring to column of \code{data} representing frame sequence integer IDs.
+#' @param cap current time index/frame ID used to subset \code{data}. Defaults to all data if missing.
 #' @param dir png output directory. Defaults to working directory.
-#' @param col color of the time series line or the axes lines, ticks, and text.
+#' @param col color of the time series line or the axes lines, ticks, and text. Defaults to black.
 #' @param xlm x axis limits.
 #' @param ylm y axis limits.
 #' @param axes.only only plot axis information, no data. Defaults to \code{FALSE}.
@@ -393,18 +509,27 @@ save_map <- function(x, z.name=NULL, z.range=NULL, dir=getwd(), lon=0, lat=0, n.
 #'   group_by(Year, frameID) %>% summarise(z=mean(z))
 #' xlm <- range(temps$Year)
 #' ylm <- range(temps$z)
+#'
 #' # should specify a dir or set working dir for file output
 #' # consider running over a smaller subset of frame IDs
-#' walk(temps$frameID, ~save_ts(temps, "Year", "z", i=.x, col="blue", xlm, ylm))
+#' walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
+#'   cap=.x, col="blue", xlm=xlm, ylm=ylm))
 #' }
-save_ts <- function(data, x, y, i=1, dir=getwd(), col, xlm, ylm, axes.only=FALSE, axes.space=TRUE, suffix=NULL,
+save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, suffix=NULL,
                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
   type <- "tsline"
+  if(missing(id)) stop("'id' column is missing.")
+  if(!id %in% names(data)) stop("'id' must refer to a column name.")
+  if(id != "frameID") data <- dplyr:::rename_(data, frameID=id)
+  if(missing(cap)) cap <- max(data$frameID)
+  mx <- max(data$frameID)
+  if(cap <1) stop("'cap' must be >= 1.")
+
   if(!axes.only & axes.space) .theme <- .theme_blank_plus()
   if(!axes.only & !axes.space) .theme <- .theme_blank()
-  if(max(data$frameID) >= eval(parse(text=paste0("1e", num.format))))
+  if(mx >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the max frameID value.")
-  data <- dplyr::filter(data, frameID <= i)
+  data <- dplyr::filter(data, frameID <= cap)
   g <- ggplot2::ggplot(data, ggplot2::aes_string(x, y))
   if(length(col) > 1){
     warning("'col' has length > 1. Only first element will be used.")
@@ -415,13 +540,13 @@ save_ts <- function(data, x, y, i=1, dir=getwd(), col, xlm, ylm, axes.only=FALSE
       ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col)
   } else {
     g <- g + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + .theme
-    if(i != 1) g <- g + ggplot2::geom_line(colour=col, size=1)
+    if(cap != 1) g <- g + ggplot2::geom_line(colour=col, size=1)
   }
   if(save.plot){
     ext <- if(axes.only) "_axesOnly.png" else paste0("_%0", num.format, "d.png")
     if(is.character(suffix)) type <- paste(type, suffix, sep="_")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
-    filename <- sprintf(paste0(dir, "/", type, ext), i)
+    filename <- sprintf(paste0(dir, "/", type, ext), cap)
     do.call(png, c(filename=filename, png.args))
     print(g)
     dev.off()
