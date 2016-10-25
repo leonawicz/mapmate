@@ -39,9 +39,10 @@ in the form of an n-year moving or rolling average based on an input data frame 
     - dynamic/temporally changing map data projected onto a static globe (3D Earth)
     - static map data projected onto rotating globe
     - dynamic map data projected onto rotating globe
-    - non-map data (time series line growth)
 - Parallel processing examples using `mclapply`
+- Convenient iterator wrapper function
 - Comparison of map tiles, map lines, and polygons
+- Non-map data example (time series line growth)
 
 Other features and functionality will be added in future package versions.
 
