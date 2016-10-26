@@ -60,10 +60,11 @@ pal <- rev(brewer.pal(11, "RdYlBu"))
 
 temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
 frame1 <- filter(temps, frameID == 1)  # subset to first frame
+id <- "frameID"
 
-save_map(frame1, z.name = "z", ortho = FALSE, col = pal, type = "maptiles", 
+save_map(frame1, z.name = "z", id = id, ortho = FALSE, col = pal, type = "maptiles", 
     save.plot = FALSE, return.plot = TRUE)
-save_map(frame1, z.name = "z", col = pal, type = "maptiles", save.plot = FALSE, 
+save_map(frame1, z.name = "z", id = id, col = pal, type = "maptiles", save.plot = FALSE, 
     return.plot = TRUE)
 ```
 
@@ -77,9 +78,10 @@ The above is only a very basic initial example of static 2D and 3D maps. See the
     -   dynamic/temporally changing map data projected onto a static globe (3D Earth)
     -   static map data projected onto rotating globe
     -   dynamic map data projected onto rotating globe
-    -   non-map data (time series line growth)
 -   Parallel processing examples using `mclapply`
+-   Convenient iterator wrapper function
 -   Comparison of map tiles, map lines, and polygons
+-   Non-map data example (time series line growth)
 
 ``` r
 browseVignettes(package = "mapmapte")
