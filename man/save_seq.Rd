@@ -18,7 +18,7 @@ save_seq(data, style = "map", use_mclapply = FALSE, mc.cores = 1L, ...)
 \item{...}{additional arguments passed to \code{save_map} or \code{save_ts}.}
 }
 \value{
-usually returns NULL after writing files to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+usually returns NULL after writing files to disk. May optionally return a list of ggplot objects with or without the file writing side effect.
 }
 \description{
 Save a sequence of still images to disk with a single function call and data frame.
@@ -53,7 +53,7 @@ ylm <- range(temps$z)
 # should specify a dir or set working dir for file output
 # consider running over a smaller subset of frame IDs
 save_seq(temps, style="tsline", x="Year", y="z", id="frameID",
-  col="blue", xlm=xlm, ylm=ylm))
+  col="blue", xlm=xlm, ylm=ylm)
 }
 }
 

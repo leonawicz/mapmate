@@ -46,7 +46,7 @@ Defaults to \code{TRUE}. Ignored when \code{axes.only=TRUE} because of the expli
 \item{num.format}{number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.}
 }
 \value{
-usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
 }
 \description{
 Save a time series plot to disk intended to be part of a as a still image sequence of a growing time series.

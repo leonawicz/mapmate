@@ -48,7 +48,7 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
 \item{num.format}{number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.}
 }
 \value{
-usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
 }
 \description{
 Save a map to disk intended to be part of a as a still image sequence of one of four types: networks, tiles, lines, or polygons.
