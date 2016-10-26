@@ -236,6 +236,7 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 #' do_projection(temps, id="frameID", keep=TRUE)
 do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.period, keep=FALSE){
   if(missing(id)) stop("'id' column is missing.")
+  if(!id %in% names(data)) stop("'id' must refer to a column name.")
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
   data <- dplyr::left_join(data,
     dplyr::group_by_(data, id) %>%
