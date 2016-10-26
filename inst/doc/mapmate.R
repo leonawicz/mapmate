@@ -72,6 +72,7 @@ save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, r
 #  
 
 ## ------------------------------------------------------------------------
+#  library(parallel)
 #  mclapply(bath, save_map, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath, mc.cores=32)
 #  mclapply(borders, save_map, id=id, n.frames=n, col="orange", type="maplines", suffix="foreground", mc.cores=32)
 #  mclapply(temps, save_map, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng, mc.cores=32)
@@ -84,12 +85,12 @@ save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, r
 #  save_seq(temps, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng)
 #  
 #  # Parallel, Linux, with 32 CPU cores available
-#  mclapply(bath, save_seq, use_mclapply=TRUE, mc.cores=32,
-#           z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath, mc.cores=32)
-#  mclapply(borders, save_seq, use_mclapply=TRUE, mc.cores=32,
-#           id=id, n.frames=n, col="orange", type="maplines", suffix="foreground", mc.cores=32)
-#  mclapply(temps, save_seq, use_mclapply=TRUE, mc.cores=32,
-#           z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng, mc.cores=32)
+#  save_seq(bath, use_mclapply=TRUE, mc.cores=32,
+#    z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath)
+#  save_seq(borders, use_mclapply=TRUE, mc.cores=32,
+#    id=id, n.frames=n, col="black", type="maplines", suffix="foreground")
+#  save_seq(temps, use_mclapply=TRUE, mc.cores=32,
+#    z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng)
 #  
 
 ## ------------------------------------------------------------------------
