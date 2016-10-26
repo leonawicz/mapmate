@@ -223,10 +223,10 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 #'
 #' @examples
 #' # not run
-do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
-  i <- x$frameID[1]
+do_projection <- function(x, id, lon=0, lat=0, n.period=360, n.frames=n.period){
+  i <- x[[id]][1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
-  dplyr::left_join(x, project_to_hemisphere(x$lat, x$long, lonlat$lat[i], lonlat$lon[i])) %>%
+  dplyr::left_join(x, project_to_hemisphere(x$lon, x$lat, lonlat$lon[i], lonlat$lat[i])) %>%
     dplyr::filter(inview) %>% dplyr::select(-inview)
 }
 
@@ -267,12 +267,11 @@ do_projection <- function(x, lon=0, lat=0, n.period=360, n.frames=n.period){
         plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
 }
 
-
 #' Save maps to disk
 #'
-#' Save a map to disk intended to be part of a as a still image sequence of one of three types: networks, tiles, or lines.
+#' Save a map to disk intended to be part of a as a still image sequence of one of four types: networks, tiles, lines, or polygons.
 #'
-#' \code{save_map} takes a specific type of data frame catering to networks, tiles, or lines.
+#' \code{save_map} takes a specific type of data frame catering to networks, tiles, lines, or polygons.
 #' It plots a 3D globe map with \code{ortho=TRUE} (default) or a flat map (\code{ortho=FALSE}).
 #' For flat maps, \code{lon}, \code{lat}, \code{n.period}, \code{n.frames}, and \code{rotation.axis} are ignored.
 #' For plotting on a globe, \code{lon} and \code{lat} are used to describe the field of view or the visible hemisphere.
@@ -348,13 +347,12 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
     warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
   if(missing(id)) stop("'id' column is missing.")
   if(!id %in% names(data)) stop("'id' must refer to a column name.")
-  if(id != "frameID") data <- dplyr::rename_(data, frameID=id)
   if(is.null(col)) col <- switch(type,
     network=c("#1E90FF25", "#FFFFFF25", "#FFFFFF", "#1E90FF50"),
     maptiles=c("black", "white"),
     maplines="white",
     polygons=c("royalblue", "purple", "orange", "yellow"))
-  i <- data$frameID[1]
+  i <- data[[id]][1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
   if(type=="maptiles"){
     if(is.null(z.name)) stop("Must provide 'z.name'.")
@@ -452,10 +450,10 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
       if(return.plot) return(purrr::map(data, ~save_map(.x, ...))) else return(purrr::walk(data, ~save_map(.x, ...)))
     }
   } else if(style=="tsline"){
-    if(!is.null(dots$cap)) stop("When calling 'save_seq' with style='tsline', do not pass argument 'id' on to 'save_ts'.")
+    if(!is.null(dots$cap)) stop("When calling 'save_seq' with style='tsline', do not pass argument 'cap' on to 'save_ts'.")
     iters <- sort(unique(data[[id]]))
-    if(id != "frameID") data <- dplyr::rename_(data, frameID=id)
-    data <- purrr::map(iters, ~dplyr::filter(data, frameID <= .x))
+    data <- purrr::map(iters, ~dplyr::filter_(data,
+      .dots=list(lazyeval::interp(~y <= x, .values=list(y=as.name(id), x=as.name(".x"))))))
     if(use_mclapply){
       return(parallel::mclapply(data, save_ts, ..., mc.cores=mc.cores))
     } else {
@@ -472,8 +470,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' Sequential application of \code{save_ts} should involve iterating \code{cap} over the values \code{i}.
 #' A data frame passed to \code{save_map} need not be subset based on the current frame ID in advance so providing \code{cap} values is important. See example.
 #'
-#' When calling \code{save_map} from the \code{save_seq} wrapper function, \code{save_map} receives a list of sequentially subsetted data frames based on the frame IDs.
-#' In this case, specifying \code{cap} is not needed.
+#' When calling \code{save_ts} iteratively from the \code{save_seq} wrapper function, \code{save_ts} is applied over a list of sequentially subsetted data frames based on the frame IDs.
+#' In this case, specifying \code{cap} is not needed and an error will be thrown if provided.
 #'
 #' Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
 #'
@@ -481,7 +479,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' @param x character, the column name in \code{data} for the variable plotted along the x axis.
 #' @param y character, the column name in \code{data} for the variable plotted along the y axis.
 #' @param id character, column name referring to column of \code{data} representing frame sequence integer IDs.
-#' @param cap current time index/frame ID used to subset \code{data}. Defaults to all data if missing.
+#' @param cap time index/frame ID used to subset \code{data}.
+#' The rows of data retained are all those where \code{p <= cap}, where \code{p} represents the frame ID values in column \code{id}. Defaults to all data if missing.
 #' @param dir png output directory. Defaults to working directory.
 #' @param col color of the time series line or the axes lines, ticks, and text. Defaults to black.
 #' @param xlm x axis limits.
@@ -520,16 +519,16 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   type <- "tsline"
   if(missing(id)) stop("'id' column is missing.")
   if(!id %in% names(data)) stop("'id' must refer to a column name.")
-  if(id != "frameID") data <- dplyr:::rename_(data, frameID=id)
-  if(missing(cap)) cap <- max(data$frameID)
-  mx <- max(data$frameID)
+  mx <- max(data[[id]])
+  if(missing(cap)) cap <- mx
   if(cap <1) stop("'cap' must be >= 1.")
 
   if(!axes.only & axes.space) .theme <- .theme_blank_plus()
   if(!axes.only & !axes.space) .theme <- .theme_blank()
   if(mx >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the max frameID value.")
-  data <- dplyr::filter(data, frameID <= cap)
+  .dots <- list(lazyeval::interp(~y <= x, .values=list(y=as.name(id), x=cap)))
+  data <- dplyr::filter_(data, .dots=.dots)
   g <- ggplot2::ggplot(data, ggplot2::aes_string(x, y))
   if(length(col) > 1){
     warning("'col' has length > 1. Only first element will be used.")
