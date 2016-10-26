@@ -65,3 +65,21 @@ test_that("get_lonlat_seq returns valid output", {
   expect_identical(ll[[1]], 1:60)
   expect_identical(ll[[2]], 2:61)
 })
+
+test_that("do_projection returns valid output", {
+  x0 <- mutate(annualtemps, frameID = Year - min(Year) + 1)
+  x1 <- do_projection(x0, id="frameID")
+  x2 <- do_projection(x0, id="frameID", keep=TRUE)
+
+  expect_error(do_projection(x0), "'id' column is missing.")
+  expect_error(do_projection(x0, id="a"), "'id' must refer to a column name.")
+
+  expect_is(x1, "data.frame")
+  expect_is(x2, "data.frame")
+  expect_equal(nrow(x0), nrow(x2))
+  expect_equal(ncol(x0), ncol(x1))
+  expect_equal(ncol(x0), ncol(x2) - 1)
+  expect_is(x2$inview, "logical")
+  expect_identical(x1, dplyr::filter(x2, inview==TRUE) %>% dplyr::select(-inview))
+  expect_identical(x0, dplyr::select(x2, -inview))
+})
