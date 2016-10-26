@@ -1,4 +1,4 @@
-# mapmate 0.0.2 (Release date: ...)
+# mapmate 0.0.2 (Release date: 2016-10-26)
 
 * Updated functions, help documentation and examples.
 * Refactored introductory vignette.
