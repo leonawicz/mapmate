@@ -278,6 +278,7 @@ The serial and parallel equivalents to the previous examples is shown below.
 It won't always save much in the way of gross typing because the wrapper is used to pass along the same arguments that would otherwise be passed to `save_map` or `save_ts` directly,
 along with some of its own arguments.
 But it allows focusing on calling a single plotting iterator function instead of requiring iteration be done explicitly, the iterative aspect being abstracted away to some small degree.
+Since the function is primarily used for map sequences, `style="map"` is the default. Later we will see `style="tsline"` for time series line growth sequences.
 
 ```{r}
 # Serial
