@@ -205,29 +205,38 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 
 #' Project points onto globe
 #'
-#' Project points in \code{x} onto the globe and filter \code{x} to points within the current field of view.
+#' Project points in \code{data} onto the globe and filter \code{data} to points within the current field of view.
 #'
-#' \code{do_projection} projects the coordinates in \code{x} onto the globe and filters \code{x} to the subset of rows
+#' \code{do_projection} projects the coordinates in \code{data} onto the globe and filters \code{data} to the subset of rows
 #' containing data which are visible given the current field of view.
 #' The field of view is defined by the centroid focus latitude and longitude pair in the sequence of latitudes and longitudes whose index
-#' corresponds to the frame ID in \code{x}.
+#' corresponds to the frame ID in \code{data}. \code{data} may containing rows with multiple unique frame ID values,
+#' which the function will group the data by.
+#' These values are used to determine position in the user-defined lon/lat sequence and the corresponding in-view subset of data
+#' for each subset of \code{data} grouped by the `id` variable.
 #'
-#' @param x a data frame.
+#' @param data a data frame.
+#' @param id character, column name referring to column of \code{data} representing frame sequence integer IDs.
 #' @param lon starting longitude for rotation sequence or vector of arbitrary longitude sequence.
 #' @param lat fixed latitude or vector of arbitrary latitude sequence.
 #' @param n.period intended length of the period.
 #' @param n.frames intended number of frames in animation.
+#' @param keep, if \code{TRUE}, return the entire input data drame (no subsetting) along with the boolean \code{inview} column.
+#' Otherwise only return the row-filtered data frame with its original columns. Defaults to \code{FALSE}.
 #'
-#' @return returns a data frame containing visible points on the globe.
+#' @return returns a data frame containing visible points on the globe or all points along with a boolean \code{inview} column.
 #' @export
 #'
 #' @examples
 #' # not run
-do_projection <- function(x, id, lon=0, lat=0, n.period=360, n.frames=n.period){
-  i <- x[[id]][1]
+do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.period, keep=FALSE){
+  if(missing(id)) stop("'id' column is missing.")
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
-  dplyr::left_join(x, project_to_hemisphere(x$lon, x$lat, lonlat$lon[i], lonlat$lat[i])) %>%
-    dplyr::filter(inview) %>% dplyr::select(-inview)
+  data <- dplyr::left_join(data,
+    dplyr::group_by_(data, id) %>%
+      dplyr::do(project_to_hemisphere(.$lon, .$lat, lonlat$lon[.[[id]][1]], lonlat$lat[.[[id]][1]])))
+  if(keep) return(data)
+  dplyr::filter(data, inview) %>% dplyr::select(-inview)
 }
 
 .theme_blank <- function(){
