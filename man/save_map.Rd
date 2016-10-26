@@ -51,10 +51,10 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
 usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
 }
 \description{
-Save a map to disk intended to be part of a as a still image sequence of one of three types: networks, tiles, or lines.
+Save a map to disk intended to be part of a as a still image sequence of one of four types: networks, tiles, lines, or polygons.
 }
 \details{
-\code{save_map} takes a specific type of data frame catering to networks, tiles, or lines.
+\code{save_map} takes a specific type of data frame catering to networks, tiles, lines, or polygons.
 It plots a 3D globe map with \code{ortho=TRUE} (default) or a flat map (\code{ortho=FALSE}).
 For flat maps, \code{lon}, \code{lat}, \code{n.period}, \code{n.frames}, and \code{rotation.axis} are ignored.
 For plotting on a globe, \code{lon} and \code{lat} are used to describe the field of view or the visible hemisphere.

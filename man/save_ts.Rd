@@ -18,7 +18,8 @@ save_ts(data, x, y, id, cap, dir = getwd(), col = "black", xlm, ylm,
 
 \item{id}{character, column name referring to column of \code{data} representing frame sequence integer IDs.}
 
-\item{cap}{current time index/frame ID used to subset \code{data}. Defaults to all data if missing.}
+\item{cap}{time index/frame ID used to subset \code{data}.
+The rows of data retained are all those where \code{p <= cap}, where \code{p} represents the frame ID values in column \code{id}. Defaults to all data if missing.}
 
 \item{dir}{png output directory. Defaults to working directory.}
 
@@ -55,8 +56,8 @@ For  \code{id} column frame ID values \code{i}, \code{cap} subsets \code{data} t
 Sequential application of \code{save_ts} should involve iterating \code{cap} over the values \code{i}.
 A data frame passed to \code{save_map} need not be subset based on the current frame ID in advance so providing \code{cap} values is important. See example.
 
-When calling \code{save_map} from the \code{save_seq} wrapper function, \code{save_map} receives a list of sequentially subsetted data frames based on the frame IDs.
-In this case, specifying \code{cap} is not needed.
+When calling \code{save_ts} iteratively from the \code{save_seq} wrapper function, \code{save_ts} is applied over a list of sequentially subsetted data frames based on the frame IDs.
+In this case, specifying \code{cap} is not needed and an error will be thrown if provided.
 
 Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
 }
