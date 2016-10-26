@@ -11,7 +11,7 @@
 
 <meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-10-25" />
+<meta name="date" content="2016-10-26" />
 
 <title>Introduction to mapmate</title>
 
@@ -148,7 +148,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Introduction to mapmate</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-10-25</em></h4>
+<h4 class="date"><em>2016-10-26</em></h4>
 
 </div>
 
@@ -246,8 +246,8 @@ annualtemps
 <span class="co">#&gt; 10 -163.3333 66.99967  2010  1.28</span>
 <span class="co">#&gt; # ... with 55,070 more rows</span></code></pre></div>
 <p>The function below saves png files to disk as a still image sequence. Set your working directory or be explicit about your file destination. Make sure to obtain the range of data across not only space (a single map) but time (all maps). This is to ensure a constant color to value mapping with your chosen color palette across all maps in the set of png files. For simplicity, set the number of still frames to be equal to the number of unique time points in the data frame, in this one frame for each year.</p>
-<p>Since each point in this data frame represents a coarse grid cell, we use <code>type=&quot;maptiles&quot;</code> in the call to <code>save_map</code>. <code>save_map</code> is used for tiles, polygon lines (<code>type=&quot;maplines&quot;</code>) and great circle arcs (<code>type=&quot;network&quot;</code>). One of these three types must be specified and the data must be appropriate for the type.</p>
-<p>Tiles are the simplest, but while we are working with data frames, the data typically would originate from a rasterized object, hence the nice even spacing of the coordinates. Last of all, but important, the data frame must contain a column of still frame sequence IDs. This is simply the integers <code>1, 2, ..., n</code> for <code>n</code> frames or individual plots. It can have any name. Here it is called <code>frameID</code> and is computed baed on the unique years in the example data frame. It is passed to <code>save_map</code> via the <code>id</code> argument. In the current version of <code>mapmate</code> this column in renamed to <code>frameID</code> internally during processing for some conveniences with internal coding. While this may not create much appreciable overhead, it can still be avoid if the column name is already <code>frameID</code>.</p>
+<p>Since each point in this data frame represents a coarse grid cell, we use <code>type=&quot;maptiles&quot;</code> in the call to <code>save_map</code>. <code>save_map</code> is used for tiles, polygon outlines (<code>type=&quot;maplines&quot;</code>), polygon fill (<code>type==&quot;polygons&quot;</code>), and great circle arcs (<code>type=&quot;network&quot;</code>). One of these four types must be specified and the data must be appropriate for the type.</p>
+<p>Tiles are the simplest, but while we are working with data frames, the data typically would originate from a rasterized object, hence the nice even spacing of the coordinates. Last of all, but important, the data frame must contain a column of still frame sequence IDs or plot number IDs. This variable is simply the integers <code>1, 2, ..., n</code> for <code>n</code> frames or individual plots and is used for subsetting data for each plot and for sequential numbering of output files. It can have any name. Here it is called <code>frameID</code> and is computed baed on the unique years in the example data frame. It is passed to <code>save_map</code> via the <code>id</code> argument.</p>
 <p>For these static examples, arguments pertaining specifically to image sequences can be ignored for now (<code>n.period</code>, <code>n.frames</code>, <code>z.range</code>) and since we are not saving files to disk we can also ignore arguments like <code>dir</code> and <code>suffix</code>, but we will return to all these immediately after.</p>
 <div id="initial-static-2d-and-3d-map-examples" class="section level3">
 <h3>Initial static 2D and 3D map examples</h3>
@@ -310,7 +310,7 @@ suffix &lt;-<span class="st"> &quot;year1_3D_rotating&quot;</span>
 <h4>Dynamic data, dynamic map</h4>
 <p>Finally we have the case of changing data drawn on a map with a changing perspective. This example plots the full time series list of annual temperature anomalies data frames with globe rotation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">suffix &lt;-<span class="st"> &quot;annual_3D_rotating&quot;</span>
-<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, 
+<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, 
     <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">z.range =</span> rng))</code></pre></div>
 <p>Of course, there is no reason to draw static data on a static flat map or static (e.g., non-rotating) globe because that would yield a still image sequence of a constant image. The utility of the function is in generating a series of plots where either the data changes, the perspective changes, or both.</p>
 </div>

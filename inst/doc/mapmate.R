@@ -57,7 +57,7 @@ save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, r
 
 ## ------------------------------------------------------------------------
 #  suffix <- "annual_3D_rotating"
-#  walk(temps, ~save_map(.x, z.name="z", lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+#  walk(temps, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 #  
 
 ## ------------------------------------------------------------------------
