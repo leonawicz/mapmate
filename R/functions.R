@@ -332,7 +332,7 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
 #' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
-#' @return usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+#' @return usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
 #' @export
 #'
 #' @examples
@@ -431,7 +431,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
 #' @param mc.cores integer, the number of CPU cores requested for parallel processing, passed to \code{mclapply}.
 #' @param ... additional arguments passed to \code{save_map} or \code{save_ts}.
 #'
-#' @return usually returns NULL after writing files to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+#' @return usually returns NULL after writing files to disk. May optionally return a list of ggplot objects with or without the file writing side effect.
 #' @export
 #'
 #' @examples
@@ -448,7 +448,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
 #' # should specify a dir or set working dir for file output
 #' # consider running over a smaller subset of frame IDs
 #' save_seq(temps, style="tsline", x="Year", y="z", id="frameID",
-#'   col="blue", xlm=xlm, ylm=ylm))
+#'   col="blue", xlm=xlm, ylm=ylm)
 #' }
 save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
   if(!style %in% c("map", "tsline")) stop("'style' must be 'map' or 'tsline'.")
@@ -459,6 +459,7 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
   return.plot <- dots$return.plot
   if(is.null(return.plot)) return.plot <- FALSE
   if(style=="map"){
+    data <- split(data, data[[id]])
     if(use_mclapply){
       return(parallel::mclapply(data, save_map, ..., mc.cores=mc.cores))
     } else {
@@ -510,7 +511,7 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
 #' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
-#' @return usually returns NULL after writing file to disk as a side effect. May return a ggplot object but be careful not to use this option if looping over many plots.
+#' @return usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
 #' @export
 #'
 #' @examples
