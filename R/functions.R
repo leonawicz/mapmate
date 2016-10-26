@@ -149,7 +149,6 @@ pad_frames <- function(x, id, n.period=360, rotation="add", force=TRUE){
   if(rotation=="add") x2 <- purrr::map(1:(n.period-1), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
   if(rotation=="pad") x2 <- purrr::map(1:(n.period-n), ~x[[n]] %>% dplyr::mutate(frameID=.x + n))
   x <- c(x, x2)
-  #if(id != "frameID"){
   if(id != "frameID"){
     idx <- which(names(x[[1]])=="frameID")
     f <- function(x, idx, id){ names(x)[idx] <- id; x }
