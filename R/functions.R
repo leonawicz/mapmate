@@ -228,7 +228,12 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 #' @export
 #'
 #' @examples
-#' # not run
+#' library(dplyr)
+#' library(purrr)
+#' data(annualtemps)
+#' temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
+#' do_projection(temps, id="frameID")
+#' do_projection(temps, id="frameID", keep=TRUE)
 do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.period, keep=FALSE){
   if(missing(id)) stop("'id' column is missing.")
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
