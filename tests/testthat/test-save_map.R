@@ -22,6 +22,28 @@ test_that("save_map returns ggplot objects", {
   expect_is(g1, "ggplot")
   expect_is(g2, "ggplot")
 
+  g3a <- save_map(frame1, z.name=NULL, id=id, col=2, type="points", save.plot=F, return.plot=T, ortho=FALSE)
+  expect_is(g3a, "ggplot")
+  g3b <- save_map(frame1, z.name=NULL, id=id, col=c(2,3), type="points", save.plot=F, return.plot=T, ortho=FALSE)
+  expect_is(g3b, "ggplot")
+  expect_equal(g3a, g3b)
+  expect_error(save_map(frame1, z.name=NULL, id="a", col=pal, type="points", save.plot=F, return.plot=T, ortho=FALSE),
+               "'id' must refer to a column name.")
+  #expect_warning(save_map(frame1, z.name="a", id=id, col=pal, type="points", save.plot=F, return.plot=T, ortho=FALSE),
+  #               "z.name' variable is ignored for point data (type='points').")
+  g3c <- save_map(frame1, id=id, type="points", save.plot=F, return.plot=T, ortho=FALSE)
+  expect_is(g3c, "ggplot")
+
+  geom <- rep(c("polygon", "tile"), each=3)
+  con <- rep(c("none", "overlay", "only"), 3)
+  for(i in seq_along(geom)){
+    expect_error(save_map(frame1, z.name="a", id=id, col=pal, type="density", save.plot=F, return.plot=T, ortho=FALSE), "'z' must refer to a column name.")
+    g4 <- save_map(frame1, z.name="z", id=id, col=pal, type="density", save.plot=F, return.plot=T, density.geom=geom[i], contour=con[i], ortho=FALSE)
+    expect_is(g4, "ggplot")
+    g4 <- save_map(frame1, z.name=NULL, id=id, col=pal, type="density", save.plot=F, return.plot=T, density.geom=geom[i], contour=con[i], ortho=FALSE)
+    expect_is(g4, "ggplot")
+  }
+
   expect_is(gg.list, "list")
   expect_equal(length(gg.list), 2)
   expect_is(gg.list[[1]], "ggplot")
