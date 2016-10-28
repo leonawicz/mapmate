@@ -281,6 +281,11 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
         plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
 }
 
+.colorStop <- function(col, x){
+  if(length(col) < 2)
+    stop(paste("'col' must be a vector of at least two colors for", x, "map color palette gradient."))
+}
+
 #' Save a sequence of still images to disk
 #'
 #' Save a sequence of still images to disk with a single function call and data frame.
