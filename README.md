@@ -84,7 +84,7 @@ The above is only a very basic initial example of static 2D and 3D maps. See the
 -   Non-map data example (time series line growth)
 
 ``` r
-browseVignettes(package = "mapmapte")
+browseVignettes(package = "mapmate")
 ```
 
 Other features and functionality will be added in future package versions.

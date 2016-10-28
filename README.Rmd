@@ -81,7 +81,7 @@ in the form of an n-year moving or rolling average based on an input data frame 
 - Non-map data example (time series line growth)
 
 ```{r}
-browseVignettes(package="mapmapte")
+browseVignettes(package="mapmate")
 ```
 
 Other features and functionality will be added in future package versions.
