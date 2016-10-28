@@ -15,6 +15,7 @@
 #' If you are familiar with \code{ggplot2}, it may help to think of \code{points} as making use of \code{geom_point};
 #' \code{maplines} uses \code{geom_path}; \code{polygons} uses \code{geom_polygon} and \code{geom_path};
 #' \code{maptiles} uses \code{geom_tile}; \code{density} uses \code{stat_density2d} or \code{stat_contour}; and \code{"network"} combines \code{geom_path} and \code{geom_point}.
+#' \code{maptiles} is also a specific case of \code{density}.
 #' }
 #'
 #' \subsection{Location Only Vs. Location Plus Data}{
@@ -40,8 +41,8 @@
 #' The four colors are layered in the plot in this order. Semi-transparent colors can work well in this context. Additional colors are ignored.
 #' If \code{col=NULL} (default) sensible default colors are provided for each plot type.
 #'
-#' For contour lines, overlays are black by default.
-#' In the current package version this is only overridden by the \code{col} argument when \code{contour="only"}.
+#' For contour lines, overlays on density maps are black by default but when layered with points \code{col} applies to both points and contour lines.
+#' In the current package version defaul black for density is only overridden by the \code{col} argument when \code{contour="only"}.
 #' The first color is used and any additional colors in \code{col} are ignored, unless \code{contour="only"} and \code{type="density"} when \code{z.name} is also provided.
 #' In this case, the density map represents a contour map based on all three variables
 #' and since the contour is not filled (only contour lines; no overlay on a filled contour) the color palette defined by a \code{col} vector is allowed to apply to the contour lines themselves.
@@ -63,6 +64,29 @@
 #' 2D densities are drawn as with \code{type="points"}.
 #' When three variables are provided  (\code{lon}, \code{lat}, and \code{z.name}), contour lines are drawn using \code{ggplot2::stat_contour}.
 #' \code{contour} is ignored for any other \code{type}.
+#'
+#' Density maps can be generated using polygons or tiles (rasterized data).
+#' \code{density.geom="tile"} is the default because although it may require more processing power and time to generate map outputs,
+#' tiles generally provides higher quality output with sufficient spatial resolution of the input data.
+#' \code{density.geom="polygon"} may be quicker to render but may provide visually disappointing maps with severe clipping, especially in the orthographic projection, depending on the input data.
+#'
+#' This is analogous to the trade off between using \code{type="polygons"} at all vs. electing to rasterize the input data up front and use it with \code{type="maptiles"} instead.
+#' In fact, \code{type="maptiles"} is a special case of \code{type="density"}; the one which will generally work best, and without the superimposed contour lines.
+#' See the introductory vignette for examples: \code{browseVignettes(package=="mapmate")}
+#'
+#' For these reasons, the \code{polygons} map type and the \code{density.geom="polygon"} option for the \code{density} map type
+#' are potentially useful only if the intent is to eventually zoom in on an area of the globe where no artifacts are visible.
+#' Otherwise these settings serve largely to illustrate their limitations
+#' and it is still best to use \code{type="maptiles"} or the \code{density.geom="tile"} option with \code{type="density"}
+#' if the goal is to achieve artifact-free 3D global plots viewed from any arbitrary persepctive.
+#' Depending on the input data, this may be necessary even for flat maps.
+#'
+#' The costs to avoiding these problems are (1) much greater processing time with increasing resolution of the input data in order to make map pixels satisfactorily small
+#' and (2) the computing resources necessary to run it as well as have it run satisfactorily quickly.
+#'
+#' Finally, drawing polygons and contour lines may yield superior visual results when working with three variables
+#' because this means there potentially can be data values associated uniformly with every spot on the surface of the globe,
+#' whereas density or intensity maps made from only the spatial locations of points themselves may be more likely to reveal clipping issues when projected.
 #' }
 #'
 #' \subsection{Other Details}{
@@ -86,6 +110,7 @@
 #' @param col sensible default colors provided for each \code{type}
 #' @param type the type of plot, one of \code{points}, \code{maplines}, \code{polygons}, \code{maptiles}, \code{density}, or \code{"network"}.
 #' @param contour character, one of \code{none}, \code{overlay}, or \code{only}. Defaults to \code{none}. See details.
+#' @param density.geom character, one of \code{tile} or \code{polygon}. Defaults to \code{tile}. See details.
 #' @param suffix character, optional suffix to be pasted onto output filename.
 #' @param rotation.axis the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.
 #' @param png.args a list of arguments passed to \code{png}.
@@ -118,7 +143,7 @@
 #'   n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 #' }
 save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period,
-                     ortho=TRUE, col=NULL, type, contour="none", suffix=NULL, rotation.axis=23.4,
+                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", suffix=NULL, rotation.axis=23.4,
                      png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
@@ -129,14 +154,16 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
 
   if(is.null(col)) col <- switch(type,
+                                 points="black",
                                  network=c("#1E90FF25", "#FFFFFF25", "#FFFFFF", "#1E90FF50"),
                                  maptiles=c("black", "white"),
                                  maplines="white",
-                                 polygons=c("royalblue", "purple", "orange", "yellow"))
+                                 polygons=c("royalblue", "purple", "orange", "yellow"),
+                                 density=c("royalblue", "purple", "orange", "yellow"))
 
   colorStop <- function(col, x){
     if(length(col) < 2)
-      stop(paste("'col' must be a vector of at least two colors for ", x, " map color palette gradient."))
+      stop(paste("'col' must be a vector of at least two colors for", x, "map color palette gradient."))
   }
 
   z.types <- c("maptiles", "polygons")
@@ -167,31 +194,34 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
 
     if(is.null(z.name)){
       g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat"))
-      if(contour=="none" | contour=="overlay")
-        g <- g + ggplot2::stat_density2d(ggplot2::aes(fill = ..level..), geom="polygon")
-      if(contour=="overlay"){
-        g <- g + ggplot2::stat_density2d(colour="black")
+      if(contour=="none" | contour=="overlay"){
+        colorStop(col, paste("(lon,lat) point density"))
+        g <- g + ggplot2::scale_fill_gradientn(colours=col)
+        if(density.geom=="polygon") g <- g + ggplot2::stat_density2d(geom="polygon", ggplot2::aes(fill = ..level..))
+        if(density.geom=="tile") g <- g + ggplot2::stat_density2d(geom="tile", ggplot2::aes(fill = ..density..), contour = FALSE)
       }
-      if(contour=="only" & length(col)==1) g <- g + ggplot2::stat_density2d(colour=col)
-      if(contour=="only" & length(col) > 1){
-        g <- g + ggplot2::stat_density2d(ggplot2::aes(colour=col)) +
-          ggplot2::scale_fill_gradientn(colours=col)
-      }
+      if(contour=="overlay") g <- g + ggplot2::geom_density2d(colour="black")
+      if(contour=="only" & length(col)==1) g <- g + ggplot2::geom_density2d(colour=col)
+      if(contour=="only" & length(col) > 1) g <- g + ggplot2::geom_density2d(ggplot2::aes(colour = ..level..)) +
+          ggplot2::scale_colour_gradientn(colours=col)
     } else {
       if(is.null(z.range)) z.range <- range(data[[z.name]], na.rm=TRUE)
       g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", z=z.name))
 
-      if(contour=="none" | contour=="overlay")
-        colorStop(col, paste(z.name, "density"))
-      g <- g + ggplot2::stat_contour(geom="polygon", ggplot2::aes(fill=..level..)) +
-        ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
+      if(contour=="none" | contour=="overlay"){
+        colorStop(col, paste(z.name, "data density"))
+        g <- g + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
+        if(density.geom=="polygon") g <- g + ggplot2::stat_contour(geom="polygon", ggplot2::aes(fill = ..level..))
+        if(density.geom=="tile") g <- g + ggplot2::geom_tile(ggplot2::aes_string(fill=z.name))
+
+      }
       if(contour=="overlay"){
         g <- g + ggplot2::stat_contour(colour="black")
       }
       if(contour=="only" & length(col)==1) g <- g + ggplot2::stat_contour(colour=col)
       if(contour=="only" & length(col) > 1){
-        g <- g + ggplot2::stat_contour(ggplot2::aes(colour=col)) +
-          ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
+        g <- g + ggplot2::stat_contour(ggplot2::aes(colour = ..level..)) +
+          ggplot2::scale_colour_gradientn(colours=col, limits=z.range)
       }
     }
 
