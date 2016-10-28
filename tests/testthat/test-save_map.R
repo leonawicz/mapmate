@@ -1,6 +1,6 @@
 library(mapmate)
 suppressMessages({ library(dplyr); library(purrr); library(RColorBrewer) })
-context("save_map [functions.R]")
+context("save_map.R")
 
 data(annualtemps)
 pal <- rev(brewer.pal(11,"RdYlBu"))
