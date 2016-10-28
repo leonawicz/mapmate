@@ -1,4 +1,4 @@
-globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean"))
+globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean", "..level..", "..density.."))
 #' Obtain moving average map series
 #'
 #' Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.
