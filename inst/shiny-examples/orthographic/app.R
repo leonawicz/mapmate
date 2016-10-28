@@ -1,6 +1,7 @@
 library(shiny)
 data(borders)
 borders <- dplyr::mutate(borders, frameID=1)
+id <- "frameID"
 
 ui <- shinyUI(fluidPage(
    titlePanel("Orthographic projection example"),
@@ -19,7 +20,7 @@ ui <- shinyUI(fluidPage(
 
 server <- shinyServer(function(input, output) {
    output$orthoMap <- renderPlot({
-     save_map(borders, lon=input$lon, lat=input$lat, col="black", type="maplines", rotation.axis=input$orientation, save.plot=FALSE, return.plot=TRUE)
+     save_map(borders, id=id, lon=input$lon, lat=input$lat, col="black", type="maplines", rotation.axis=input$orientation, save.plot=FALSE, return.plot=TRUE)
    })
 })
 
