@@ -161,41 +161,37 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
                                  polygons=c("royalblue", "purple", "orange", "yellow"),
                                  density=c("royalblue", "purple", "orange", "yellow"))
 
-  colorStop <- function(col, x){
-    if(length(col) < 2)
-      stop(paste("'col' must be a vector of at least two colors for", x, "map color palette gradient."))
-  }
-
   z.types <- c("maptiles", "polygons")
-  if(is.null(z.name) & type %in% z.types) stop("Must provide 'z.name'.")
-  if(is.null(z.range) & type %in% z.types) z.range <- range(data[[z.name]], na.rm=TRUE)
+  if(type %in% z.types && is.null(z.name)) stop("Must provide 'z.name'.")
+  if(type %in% z.types && !z.name %in% names(data)) stop("'z' must refer to a column name.")
+  if(type %in% z.types && is.null(z.range)) z.range <- range(data[[z.name]], na.rm=TRUE)
 
   if(type=="maptiles"){
 
-    colorStop(col, "map tiles")
+    .colorStop(col, "map tiles")
     g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", fill=z.name)) + ggplot2::geom_tile() +
       ggplot2::scale_fill_gradientn(colors=col, limits=z.range)
 
   } else if(type=="polygons"){
 
-    colorStop(col, "polygon fill")
+    .colorStop(col, "polygon fill")
     g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group", fill=z.name)) + ggplot2::geom_polygon() +
       ggplot2::geom_path(color="white") + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
 
   } else if(type=="points"){
-
+    col <- col[1]
     if(!is.null(z.name)) warning("'z.name' variable is ignored for point data (type='points').")
     g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat"))
-    if(contour=="only") g <- g + ggplot2::stat_density2d(colour=col[1])
-    if(contour=="overlay") g <- g + ggplot2::stat_density2d(colour=col[1])
-    if(contour=="none" | contour=="overlay") g <- g + ggplot2::geom_point(colour=col[1], size=1)
+    if(contour=="only") g <- g + ggplot2::stat_density2d(colour=col)
+    if(contour=="overlay") g <- g + ggplot2::stat_density2d(colour=col)
+    if(contour=="none" | contour=="overlay") g <- g + ggplot2::geom_point(colour=col, size=1)
 
   } else if(type=="density"){
 
     if(is.null(z.name)){
       g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat"))
       if(contour=="none" | contour=="overlay"){
-        colorStop(col, paste("(lon,lat) point density"))
+        .colorStop(col, paste("(lon,lat) point density"))
         g <- g + ggplot2::scale_fill_gradientn(colours=col)
         if(density.geom=="polygon") g <- g + ggplot2::stat_density2d(geom="polygon", ggplot2::aes(fill = ..level..))
         if(density.geom=="tile") g <- g + ggplot2::stat_density2d(geom="tile", ggplot2::aes(fill = ..density..), contour = FALSE)
@@ -205,11 +201,12 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
       if(contour=="only" & length(col) > 1) g <- g + ggplot2::geom_density2d(ggplot2::aes(colour = ..level..)) +
           ggplot2::scale_colour_gradientn(colours=col)
     } else {
+      if(!z.name %in% names(data)) stop("'z' must refer to a column name.")
       if(is.null(z.range)) z.range <- range(data[[z.name]], na.rm=TRUE)
       g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", z=z.name))
 
       if(contour=="none" | contour=="overlay"){
-        colorStop(col, paste(z.name, "data density"))
+        .colorStop(col, paste(z.name, "data density"))
         g <- g + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
         if(density.geom=="polygon") g <- g + ggplot2::stat_contour(geom="polygon", ggplot2::aes(fill = ..level..))
         if(density.geom=="tile") g <- g + ggplot2::geom_tile(ggplot2::aes_string(fill=z.name))
