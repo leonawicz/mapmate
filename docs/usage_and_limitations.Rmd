@@ -2,13 +2,14 @@
 title: "Usage examples and limitations"
 author: "Matthew Leonawicz"
 date: "`r Sys.Date()`"
-output: html_document
+output: html_document:
+  self_contained: false
 ---
 
 <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-", message=F, warning=F, error=F, tidy=T)
+knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "Examples-", message=F, warning=F, error=F, tidy=T)
 ```
 
 To install the package:
@@ -237,14 +238,15 @@ bio <- ggplot2::fortify(spdf, region="id") %>%
 # raster layer
 library(raster)
 proj4 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"
+z <- "BIODIVERSITY"
 # 1-degree resolution, still somewhat coarse
 r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
-bio2 <- rasterize(spdf, r, field=x1) %>% rasterToPoints %>%
-  tbl_df() %>% setNames(c("lon", "lat", x1)) %>% mutate(frameID = 1))
+bio2 <- rasterize(spdf, r, field=z) %>% rasterToPoints %>%
+  tbl_df() %>% setNames(c("lon", "lat", z)) %>% mutate(frameID = 1)
 
-save_map(bio, z.name="z", id=id, lon=-70, lat=50, type="polygons", save.plot=FALSE, return.plot=TRUE)
-
-save_map(bio2, z.name="z", id=id, lon=-70, lat=50, type="maptiles", save.plot=FALSE, return.plot=TRUE)
+clrs <- c("royalblue", "purple", "orange", "yellow")
+save_map(bio, z.name=z, id=id, lon=-10, lat=20, col=pal, type="polygons", save.plot=FALSE, return.plot=TRUE)
+save_map(bio2, z.name=z, id=id, lon=-10, lat=20, col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
 ```
 
 In conclusion, there are a variety of methods available to draw different types of data on the globe from any arbitrary perspective.
