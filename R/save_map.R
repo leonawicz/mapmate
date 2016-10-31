@@ -157,7 +157,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
                                  points="black",
                                  network=c("#1E90FF25", "#FFFFFF25", "#FFFFFF", "#1E90FF50"),
                                  maptiles=c("black", "white"),
-                                 maplines="white",
+                                 maplines="black",
                                  polygons=c("royalblue", "purple", "orange", "yellow"),
                                  density=c("royalblue", "purple", "orange", "yellow"))
 
