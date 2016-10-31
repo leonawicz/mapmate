@@ -2,14 +2,12 @@
 title: "Usage examples and limitations"
 author: "Matthew Leonawicz"
 date: "`r Sys.Date()`"
-output: html_document:
-  self_contained: false
 ---
 
 <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "Examples-", message=F, warning=F, error=F, tidy=T)
+knitr::opts_chunk$set(cache=TRUE, collapse=TRUE, comment=">", fig.path="README-Examples-", message=F, warning=F, error=F, tidy=T)
 ```
 
 To install the package:
@@ -78,7 +76,7 @@ hence why every call to `save_map` in this set of examples must explcitly includ
 
 Use `ortho=TRUE` (default) or `ortho=FALSE`.
 
-```{r}
+```{r flat_vs_globe}
 save_map(temps, id=id, ortho=FALSE, col="dodgerblue", type="points", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, id=id, col="#FF4500", type="points", save.plot=FALSE, return.plot=TRUE)
 ```
@@ -88,7 +86,7 @@ save_map(temps, id=id, col="#FF4500", type="points", save.plot=FALSE, return.plo
 The previous examples use point data. To confirm this works with points everywhere, depending on the resolution of the source data,
 here is another example using the bathymetry surface with `type="points"`.
 
-```{r}
+```{r points}
 save_map(bath, id=id, type="points", save.plot=FALSE, return.plot=TRUE)
 ```
 
@@ -101,13 +99,13 @@ typically you would generate these yourself from your data which were originally
 A common way to do this is by using `ggplot2::fortify` or, alternatively, duplicated functionality in the `broom` package.
 See those for examples or documentation.
 
-```{r}
+```{r maplines1}
 save_map(brdrs, id=id, type="maplines", save.plot=FALSE, return.plot=TRUE)
 ```
 
 While we're here, let's also change the view using `lon`, `lat`, and `rotation.axis`.
 
-```{r}
+```{r maplines2}
 save_map(brdrs, id=id, lon=-70, lat=40, rotation.axis=0, type="maplines", save.plot=FALSE, return.plot=TRUE)
 ```
 
@@ -117,7 +115,7 @@ In the previous examples there was no need to provide a third variable, a data v
 The plots are based on spatial locations only, whether points or paths.
 For gridded data, a `z` variable is needed and is specified with the `z.name` argument.
 
-```{r}
+```{r maptiles}
 save_map(bath, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
 ```
 
@@ -132,19 +130,19 @@ that are relevant to `type="density"`.
 
 Default arguments include `contour="none"` and `density.geom="tile"`.
 
-```{r}
+```{r density_default}
 save_map(bath, z.name="z", id=id, col=pal, type="density", save.plot=FALSE, return.plot=TRUE)
 ```
 
 Explicit contour lines can also be overlayed with the base map type.
 
-```{r}
+```{r density_contour1}
 save_map(bath, z.name="z", id=id, col=pal, type="density", contour="overlay", save.plot=FALSE, return.plot=TRUE)
 ```
 
 Contour lines can also be drawn without including the base layer indicated by `type`.
 
-```{r}
+```{r density_contour2}
 save_map(bath, z.name="z", id=id, col=pal, type="density", contour="only", save.plot=FALSE, return.plot=TRUE)
 ```
 
@@ -154,7 +152,7 @@ As a brief aside, these options also work for `type="points"`.
 Remember that these contour lines are based on the spatial density of lon/lat coordinates,
 unlike the previous contour lines examples that make use of the data variable.
 
-```{r}
+```{r points_contour}
 save_map(temps, id=id, col="red", type="points", contour="overlay", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, id=id, col="blue", type="points", contour="only", save.plot=FALSE, return.plot=TRUE)
 ```
@@ -165,24 +163,20 @@ Contour line overlays will remain as black lines.
 The exception is when `contour="only"`, in which case `col` may still be a vector
 defining a color palette that will be applied to the contour lines in place of the underlying filled density map.
 
-```{r}
-save_map(temps, id=id, col="red", type="points", contour="overlay", save.plot=FALSE, return.plot=TRUE)
-save_map(temps, id=id, col="blue", type="points", contour="only", save.plot=FALSE, return.plot=TRUE)
-```
-
 ## Density maps of locations (no data variable)
 
 True density maps based on lon/lat locations rather than filled contours based on three variables
-can also be plotted by excluding `z.name`.
+can also be plotted by excluding `z.name`. The first call below includes `z.name="z"` and the second does not. 
+As expected, these are completely different maps because they use fundamentally different data in different ways.
 
-```{r}
+```{r density_2Dvs3D}
 save_map(temps, z.name="z", id=id, col=pal, type="density", contour="overlay", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, id=id, col=pal, type="density", contour="overlay", save.plot=FALSE, return.plot=TRUE)
 ```
 
 Of course, this would not be interesting to do when the data frame contains gridded data at all lon/lat locations on the world grid like in `bathymetry`.
 
-```{r}
+```{r density_2D_boring}
 save_map(bath, id=id, lon=-70, lat=50, col=pal, type="density", contour="overlay", save.plot=FALSE, return.plot=TRUE)
 ```
 
@@ -196,7 +190,7 @@ It is what you decide to make of it with the data you choose to map.
 The below examples compare the use of tiles to polygons.
 
 
-```{r}
+```{r tiles_polygons1}
 save_map(temps, z.name="z", id=id, col=pal, type="density", contour="overlay", density.geom="tile", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, z.name="z", id=id, col=pal, type="density", contour="overlay", density.geom="polygon", save.plot=FALSE, return.plot=TRUE)
 save_map(bath, z.name="z", id=id, col=pal, type="density", contour="overlay", density.geom="tile", save.plot=FALSE, return.plot=TRUE)
@@ -208,7 +202,7 @@ e.g., when drawing the continents and interpolating between them but still exclu
 It can lead to confusion about what is the underlying data.
 Yet polygons may still perform much worse, even in flat maps, as shown below.
 
-```{r}
+```{r tiles_polygons2}
 save_map(temps, id=id, col=pal, type="density", contour="overlay", density.geom="tile", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, id=id, col=pal, type="density", contour="overlay", density.geom="polygon", save.plot=FALSE, return.plot=TRUE)
 save_map(temps, id=id, col=pal, type="density", ortho=FALSE, contour="overlay", density.geom="tile", save.plot=FALSE, return.plot=TRUE)
@@ -222,7 +216,7 @@ The former relies on a `SpatialPolygonsDataFrame` object as the data source and 
 Here examples of each are compared and they are prepped from scratch using the appropriate class objects.
 Remember that these two map type options are essentially special cases of the density type option.
 
-```{r}
+```{r polygons_tiles_scratch, results="hide"}
 # polygons
 library(rworldmap)
 library(rworldxtra) # required for "high" resolution map
