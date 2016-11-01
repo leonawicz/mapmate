@@ -1,0 +1,23 @@
+name: "mapmate"
+navbar:
+  title: "mapmate"
+  type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home fa-lg
+      href: index.html
+    - text: "Introduction"
+      icon: fa-info fa-lg
+      href: mapmate.html
+    - text: "Visual examples"
+      icon: fa-globe fa-lg
+      href: usage_and_limitations.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/leonawicz/mapmate
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    keep_md: true
+    fig_caption: yes
