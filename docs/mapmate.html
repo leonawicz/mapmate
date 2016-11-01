@@ -11,7 +11,7 @@
 
 <meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-10-31" />
+<meta name="date" content="2016-11-01" />
 
 <title>Introduction to mapmate</title>
 
@@ -247,7 +247,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Introduction to mapmate</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-10-31</em></h4>
+<h4 class="date"><em>2016-11-01</em></h4>
 
 </div>
 
@@ -470,21 +470,18 @@ pal_bath &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 <span class="co"># also recommend installing rgeos</span>
 
 spdf &lt;-<span class="st"> </span><span class="kw">joinCountryData2Map</span>(countryExData, <span class="dt">mapResolution =</span> <span class="st">&quot;high&quot;</span>)
-&gt;<span class="st"> </span><span class="dv">149</span> codes from your data successfully matched countries in the map
-&gt;<span class="st"> </span><span class="dv">0</span> codes from your data failed to match with a country code in the map
-&gt;<span class="st"> </span><span class="dv">104</span> codes from the map weren<span class="st">&#39;t represented in your data</span>
-<span class="st">spdf@data$id &lt;- rownames(spdf@data)</span>
-<span class="st">bio &lt;- ggplot2::fortify(spdf, region = &quot;id&quot;) %&gt;% left_join(subset(spdf@data, </span>
-<span class="st">    select = c(id, BIODIVERSITY)), by = &quot;id&quot;)</span>
-<span class="st">n &lt;- 30</span>
-<span class="st">bio &lt;- map(1:n, ~mutate(bio, frameID = .x) %&gt;% rename(lon = long))</span>
-<span class="st">suffix &lt;- &quot;bioDivPolygons_3D_rotating&quot;</span>
-<span class="st">x1 &lt;- &quot;BIODIVERSITY&quot;</span>
-<span class="st">clrs &lt;- c(&quot;royalblue&quot;, &quot;purple&quot;, &quot;orange&quot;, &quot;yellow&quot;)</span>
+spdf@data$id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf@data)
+bio &lt;-<span class="st"> </span>ggplot2::<span class="kw">fortify</span>(spdf, <span class="dt">region =</span> <span class="st">&quot;id&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf@data, 
+    <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)
+n &lt;-<span class="st"> </span><span class="dv">30</span>
+bio &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(bio, <span class="dt">frameID =</span> .x) %&gt;%<span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long))
+suffix &lt;-<span class="st"> &quot;bioDivPolygons_3D_rotating&quot;</span>
+x1 &lt;-<span class="st"> &quot;BIODIVERSITY&quot;</span>
+clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;royalblue&quot;</span>, <span class="st">&quot;purple&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;yellow&quot;</span>)
 
-<span class="st"># Return a test map</span>
-<span class="st">save_map(bio[[1]], z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, </span>
-<span class="st">    col = clrs, type = &quot;polygons&quot;, suffix = suffix, save.plot = FALSE, return.plot = TRUE)</span></code></pre></div>
+<span class="co"># Return a test map</span>
+<span class="kw">save_map</span>(bio[[<span class="dv">1</span>]], <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n, 
+    <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;polygons&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Intro-unnamed-chunk-13-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Walk over all maps</span>
 <span class="kw">walk</span>(bio, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, 
