@@ -13,7 +13,7 @@ Install
 devtools::install_github("leonawicz/mapmate")
 ```
 
-This installs the current early development version. Functionality is highly subject to change.
+This installs the current development version. Functionality is subject to change.
 
 Example videos based on mapmate
 -------------------------------
