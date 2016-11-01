@@ -97,6 +97,14 @@ h6 {
 }
 </style>
 
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-46129458-3', 'auto');
+  ga('send', 'pageview');
+</script>
 
 </head>
 
@@ -210,21 +218,21 @@ $(document).ready(function () {
         <li>
   <a href="index.html">
     <span class="fa fa-home fa-lg"></span>
-     
+
     Home
   </a>
 </li>
 <li>
   <a href="mapmate.html">
     <span class="fa fa-info fa-lg"></span>
-     
+
     Introduction
   </a>
 </li>
 <li>
   <a href="usage_and_limitations.html">
     <span class="fa fa-globe fa-lg"></span>
-     
+
     Visual examples
   </a>
 </li>
@@ -233,7 +241,7 @@ $(document).ready(function () {
         <li>
   <a href="https://github.com/leonawicz/mapmate">
     <span class="fa fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul>
@@ -356,9 +364,9 @@ temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, 
 frame1 &lt;-<span class="st"> </span><span class="kw">filter</span>(temps, frameID ==<span class="st"> </span><span class="dv">1</span>)  <span class="co"># subset to first frame</span>
 id &lt;-<span class="st"> &quot;frameID&quot;</span>
 
-<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
-<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>,
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Intro-unnamed-chunk-4-1.png" alt="2D flat map and 3D globe" /><img src="README-Intro-unnamed-chunk-4-2.png" alt="2D flat map and 3D globe" /></p>
 </div>
@@ -372,7 +380,7 @@ id &lt;-<span class="st"> &quot;frameID&quot;</span>
 n &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(annualtemps$Year))
 suffix &lt;-<span class="st"> &quot;annual_2D&quot;</span>
 temps &lt;-<span class="st"> </span><span class="kw">split</span>(temps, temps$frameID)
-<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">suffix =</span> suffix, <span class="dt">z.range =</span> rng))</code></pre></div>
 </div>
 </div>
@@ -383,8 +391,8 @@ temps &lt;-<span class="st"> </span><span class="kw">split</span>(temps, temps$f
 <p>For plotting data on the globe, set <code>ortho=TRUE</code> (default). In this example the globe remains in a fixed position and orientation. The default when passing a single, scalar longitude value to the <code>lon</code> argument is to use it as a starting point for rotation. Therefore, we need to pass our own vector of longitudes defining a custom longitude sequence to override this behavior. Since the globe is to remain in a fixed view, set <code>lon=rep(-70, n)</code>. Note that a scalar <code>lat</code> argument does not behave as a starting point for rotation in the perpendicular direction so not explicitly repeating vector is needed.</p>
 <p>Also pay attention to <code>n.period</code>, which defines the number of frames or plot iterations required to complete one globe rotation (the degree increment). <code>n.period</code> can be any amount when providing a scalar <code>lon</code> value. The longitude sequence will propagate to a length of <code>n.period</code>. However, if providing a vector representing a custom path sequence of longitudes to <code>lon</code>, there is no assumption that the sequence is meant to be cyclical (do your own repetition if necessary). It could just be a single pass, custom path to change the globe view. In this case, <code>n.period</code> must be equal to the length of the <code>lon</code> and <code>lat</code> vectors or an error will be thrown. This is more a conceptual restriction than anything. With a custom path defined by <code>lon</code> and <code>lat</code> vectors, which may not be at all cyclical, it only makes sense to define the period as the length of the sequence itself.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">suffix &lt;-<span class="st"> &quot;annual_3D_fixed&quot;</span>
-<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="kw">rep</span>(-<span class="dv">70</span>, n), <span class="dt">lat =</span> <span class="dv">50</span>, 
-    <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix, 
+<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="kw">rep</span>(-<span class="dv">70</span>, n), <span class="dt">lat =</span> <span class="dv">50</span>,
+    <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix,
     <span class="dt">z.range =</span> rng))</code></pre></div>
 </div>
 <div id="static-data-dynamic-map" class="section level4">
@@ -396,20 +404,20 @@ temps &lt;-<span class="st"> </span><span class="kw">split</span>(temps, temps$f
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(borders)
 borders &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(borders, <span class="dt">frameID =</span> .x))
 suffix &lt;-<span class="st"> &quot;borders_3D_rotating&quot;</span>
-<span class="kw">walk</span>(borders, ~<span class="kw">save_map</span>(.x, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, <span class="dt">n.frames =</span> n, 
+<span class="kw">walk</span>(borders, ~<span class="kw">save_map</span>(.x, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>, <span class="dt">suffix =</span> suffix))</code></pre></div>
 <p>Using one more example, return to the list of annual temperature anomalies data frames used previously. Those were used to show changing data on a fixed-perspective globe plot. Here we plot the first layer, repeatedly, as was just done with the <code>borders</code> data set, allowing the Earth to rotate. Remember to update the plot ID values. The key difference with this example of fixed data and a changing perspective is that providing <code>z.range</code> is crucial to maintaining constant color mapping.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">temps1 &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(temps[[<span class="dv">1</span>]], <span class="dt">frameID =</span> .x))
 rng1 &lt;-<span class="st"> </span><span class="kw">range</span>(temps1[[<span class="dv">1</span>]]$z, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
 suffix &lt;-<span class="st"> &quot;year1_3D_rotating&quot;</span>
-<span class="kw">walk</span>(temps1, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, 
+<span class="kw">walk</span>(temps1, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>,
     <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">z.range =</span> rng1))</code></pre></div>
 </div>
 <div id="dynamic-data-dynamic-map" class="section level4">
 <h4>Dynamic data, dynamic map</h4>
 <p>Finally we have the case of changing data drawn on a map with a changing perspective. This example plots the full time series list of annual temperature anomalies data frames with globe rotation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">suffix &lt;-<span class="st"> &quot;annual_3D_rotating&quot;</span>
-<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>, 
+<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">n.period =</span> <span class="dv">30</span>,
     <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">z.range =</span> rng))</code></pre></div>
 <p>Of course, there is no reason to draw static data on a static flat map or static (e.g., non-rotating) globe because that would yield a still image sequence of a constant image. The utility of the function is in generating a series of plots where either the data changes, the perspective changes, or both.</p>
 </div>
@@ -422,11 +430,11 @@ bath &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">
 rng_bath &lt;-<span class="st"> </span><span class="kw">range</span>(bath[[<span class="dv">1</span>]]$z, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
 pal_bath &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;steelblue4&quot;</span>)
 
-<span class="kw">walk</span>(bath, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath, 
+<span class="kw">walk</span>(bath, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath,
     <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;background&quot;</span>, <span class="dt">z.range =</span> rng_bath))
-<span class="kw">walk</span>(borders, ~<span class="kw">save_map</span>(.x, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>, 
+<span class="kw">walk</span>(borders, ~<span class="kw">save_map</span>(.x, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;foreground&quot;</span>))
-<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">walk</span>(temps, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;timeseries&quot;</span>, <span class="dt">z.range =</span> rng))</code></pre></div>
 </div>
 <div id="parallel-processing" class="section level3">
@@ -435,11 +443,11 @@ pal_bath &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 <p>The toy examples given earlier are not ideal for serious production. The code is provided for simple reproduction and tutorial purposes. The <code>save_map</code> function can be used more powerfully on a Linux server with a large number of CPU cores, and enough RAM to meet the needs of your data. It uses <code>mclapply</code> from the base R <code>parallel</code> package. It will not work on Windows. The choice was made for convenience.</p>
 <p>The example below is like the previous one, but using <code>mclapply</code>. It assumes you have a 32-CPU Linux server node. If you have multiple nodes, you could even go so far as to explore the <code>Rmpi</code> package to link across, say, 10 nodes to yield the power of 320 CPUs. But if you have access to that kind of computing power, you probably already know it and can explore it on your own. It is beyond the scope of this tutorial.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(parallel)
-<span class="kw">mclapply</span>(bath, save_map, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath, 
+<span class="kw">mclapply</span>(bath, save_map, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath,
     <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;background&quot;</span>, <span class="dt">z.range =</span> rng_bath, <span class="dt">mc.cores =</span> <span class="dv">32</span>)
-<span class="kw">mclapply</span>(borders, save_map, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>, 
+<span class="kw">mclapply</span>(borders, save_map, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;foreground&quot;</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>)
-<span class="kw">mclapply</span>(temps, save_map, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">mclapply</span>(temps, save_map, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;timeseries&quot;</span>, <span class="dt">z.range =</span> rng, <span class="dt">mc.cores =</span> <span class="dv">32</span>)</code></pre></div>
 </div>
 <div id="iterator-wrapper-function" class="section level3">
@@ -447,18 +455,18 @@ pal_bath &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 <p>The <code>save_seq</code> function is a convenient wrapper around both <code>save_map</code> and <code>save_ts</code> (documented further below). It also provides the option to process in parallel (on Linux systems only, via <code>parallel::mclapply</code>) with the <code>use_mclapply</code> argument. This wrapper function allows for passing the entire data frame, handling the breaking into a list of data frame subsets by plot ID internally. This spares the user from having to explicitly call functions like <code>map</code> and <code>walk</code> directly and moves some of this data preparation work into <code>save_seq</code>.</p>
 <p>The serial and parallel equivalents to the previous examples is shown below. It won’t always save much in the way of gross typing because the wrapper is used to pass along the same arguments that would otherwise be passed to <code>save_map</code> or <code>save_ts</code> directly, along with some of its own arguments. But it allows focusing on calling a single plotting iterator function instead of requiring iteration be done explicitly, the iterative aspect being abstracted away to some small degree. Since the function is primarily used for map sequences, <code>style=&quot;map&quot;</code> is the default. Later we will see <code>style=&quot;tsline&quot;</code> for time series line growth sequences.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Serial</span>
-<span class="kw">save_seq</span>(bath, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">save_seq</span>(bath, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal_bath, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;background&quot;</span>, <span class="dt">z.range =</span> rng_bath)
 <span class="kw">save_seq</span>(borders, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;foreground&quot;</span>)
-<span class="kw">save_seq</span>(temps, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+<span class="kw">save_seq</span>(temps, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
     <span class="dt">suffix =</span> <span class="st">&quot;timeseries&quot;</span>, <span class="dt">z.range =</span> rng)
 
 <span class="co"># Parallel, Linux, with 32 CPU cores available</span>
-<span class="kw">save_seq</span>(bath, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, 
+<span class="kw">save_seq</span>(bath, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> pal_bath, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;background&quot;</span>, <span class="dt">z.range =</span> rng_bath)
-<span class="kw">save_seq</span>(borders, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, 
+<span class="kw">save_seq</span>(borders, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;foreground&quot;</span>)
-<span class="kw">save_seq</span>(temps, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n, 
+<span class="kw">save_seq</span>(temps, <span class="dt">use_mclapply =</span> <span class="ot">TRUE</span>, <span class="dt">mc.cores =</span> <span class="dv">32</span>, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> <span class="st">&quot;timeseries&quot;</span>, <span class="dt">z.range =</span> rng)</code></pre></div>
 </div>
 <div id="polygon-fill-and-limitations" class="section level3">
@@ -471,7 +479,7 @@ pal_bath &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st
 
 spdf &lt;-<span class="st"> </span><span class="kw">joinCountryData2Map</span>(countryExData, <span class="dt">mapResolution =</span> <span class="st">&quot;high&quot;</span>)
 spdf@data$id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf@data)
-bio &lt;-<span class="st"> </span>ggplot2::<span class="kw">fortify</span>(spdf, <span class="dt">region =</span> <span class="st">&quot;id&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf@data, 
+bio &lt;-<span class="st"> </span>ggplot2::<span class="kw">fortify</span>(spdf, <span class="dt">region =</span> <span class="st">&quot;id&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf@data,
     <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">&quot;id&quot;</span>)
 n &lt;-<span class="st"> </span><span class="dv">30</span>
 bio &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(bio, <span class="dt">frameID =</span> .x) %&gt;%<span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long))
@@ -480,28 +488,28 @@ x1 &lt;-<span class="st"> &quot;BIODIVERSITY&quot;</span>
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;royalblue&quot;</span>, <span class="st">&quot;purple&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;yellow&quot;</span>)
 
 <span class="co"># Return a test map</span>
-<span class="kw">save_map</span>(bio[[<span class="dv">1</span>]], <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n, 
+<span class="kw">save_map</span>(bio[[<span class="dv">1</span>]], <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;polygons&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Intro-unnamed-chunk-13-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Walk over all maps</span>
-<span class="kw">walk</span>(bio, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, 
+<span class="kw">walk</span>(bio, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n,
     <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;polygons&quot;</span>, <span class="dt">suffix =</span> suffix))</code></pre></div>
 <p>Note that <code>type=&quot;polygons&quot;</code> will work poorly for the orthographic projection. Nation polygons will be clipped at varying points as the globe rotates, leading to moving artifacts around the perimeter of the visible hemisphere. In the view above, this is clear over North America. There is no work around implemented for this within <code>save_map</code> when using <code>type=&quot;polygons&quot;</code> on a globe. As a result, it is recommended to only use world polygons with flat maps.</p>
 <p>The external work around is to rasterize source polygon data, e.g. from a <code>SpatialPolygonsDataFrame</code> to a satisfactorily high resolution and plot the rasterized grid cells data frame using <code>type=&quot;maptiles&quot;</code>. See the earlier examples using the <code>annualtemps</code> data set for an introduction to the use of tiles. Of course, this will lead to greater processing time, as <code>geom_tile</code> from <code>ggplot2</code> is essentially plotting many tiny square polygons rather than the small number of larger polygons in the original data if using <code>geom_polygon</code>. The version using tiles is below. Tiles are one square degree, which will still appear a somewhat coarse resolution. Much higher resolutions are painfully slow to render with <code>geom_tile</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(raster)
 proj4 &lt;-<span class="st"> &quot;+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0&quot;</span>
 r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(-<span class="dv">180</span>, <span class="dv">180</span>, -<span class="dv">90</span>, <span class="dv">90</span>), <span class="dt">nrow =</span> <span class="dv">180</span>, <span class="dt">ncol =</span> <span class="dv">360</span>, proj4)
-bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> x1) %&gt;%<span class="st"> </span>rasterToPoints %&gt;%<span class="st"> </span><span class="kw">tbl_df</span>() %&gt;%<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;lon&quot;</span>, 
+bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> x1) %&gt;%<span class="st"> </span>rasterToPoints %&gt;%<span class="st"> </span><span class="kw">tbl_df</span>() %&gt;%<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">&quot;lon&quot;</span>,
     <span class="st">&quot;lat&quot;</span>, x1))
 bio2 &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(bio2, <span class="dt">frameID =</span> .x))
 suffix &lt;-<span class="st"> &quot;bioDivMaptiles_3D_rotating&quot;</span>
 
 <span class="co"># Return a test map</span>
-<span class="kw">save_map</span>(bio2[[<span class="dv">1</span>]], <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n, 
+<span class="kw">save_map</span>(bio2[[<span class="dv">1</span>]], <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, <span class="dt">n.frames =</span> n,
     <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Intro-unnamed-chunk-15-1.png" alt="" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Walk over all maps</span>
-<span class="kw">walk</span>(bio2, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n, 
+<span class="kw">walk</span>(bio2, ~<span class="kw">save_map</span>(.x, <span class="dt">z.name =</span> x1, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="dv">0</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">n.period =</span> n,
     <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">suffix =</span> suffix))</code></pre></div>
 </div>
 <div id="time-series-line-plot" class="section level3">
@@ -515,12 +523,12 @@ suffix &lt;-<span class="st"> &quot;bioDivMaptiles_3D_rotating&quot;</span>
 xlm &lt;-<span class="st"> </span><span class="kw">range</span>(means$Year)
 ylm &lt;-<span class="st"> </span><span class="kw">range</span>(means$Mean)
 lab &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;ts_&quot;</span>, means$frameID[<span class="dv">1</span>])
-<span class="kw">walk</span>(means$frameID, ~<span class="kw">save_ts</span>(means, <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean&quot;</span>, <span class="dt">id =</span> id, <span class="dt">cap =</span> .x, 
+<span class="kw">walk</span>(means$frameID, ~<span class="kw">save_ts</span>(means, <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean&quot;</span>, <span class="dt">id =</span> id, <span class="dt">cap =</span> .x,
     <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">xlm =</span> xlm, <span class="dt">ylm =</span> ylm))
 
 <span class="co"># Using implicit iteration looks like this.  Note that the cap argument is</span>
 <span class="co"># not needed.</span>
-<span class="kw">save_seq</span>(means, <span class="dt">style =</span> <span class="st">&quot;tsline&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>, 
+<span class="kw">save_seq</span>(means, <span class="dt">style =</span> <span class="st">&quot;tsline&quot;</span>, <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>,
     <span class="dt">xlm =</span> xlm, <span class="dt">ylm =</span> ylm)</code></pre></div>
 </div>
 </div>
