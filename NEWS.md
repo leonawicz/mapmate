@@ -1,10 +1,12 @@
-# mapmate 0.1.0 (Release date: 2016-10-31)
+# mapmate 0.1.0 (Release date: 2016-11-01)
 
 * Add `type` argument options to `save_map` for points, contour lines, filled contour maps, density/intensity maps
 * Added ability to choose between tile- and polygon-based plotting with `type="density"`.
 * Contour lines can be added on top of density maps, underneath points, or plotted alone as a substitute for either `type="points"` or `type="density"` maps.
 * Added a new web page document that provides plenty of examples with visuals on the usage of different `save_map` arguments
 and more thorough converage of the limitations associated with using polygons.
+* Remade package website/Github pages to include home page, introductory vignette page, and page showcasing visual examples and current mapping limitations.
+* Added orthographic projection example Shiny app into package website page.
 
 # mapmate 0.0.2 (Release date: 2016-10-26)
 
