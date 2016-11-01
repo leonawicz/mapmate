@@ -10,7 +10,6 @@ output:
 #    theme: cosmo
 #    highlight: zenburn
 #    fig_caption: yes
-#    keep_md: true
 vignette: >
   %\VignetteIndexEntry{Introduction to mapmate}
   %\VignetteEngine{knitr::rmarkdown}
