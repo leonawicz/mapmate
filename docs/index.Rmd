@@ -12,34 +12,34 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-Home-", me
 `mapmate` (map animate) is an R package for map animation. It is used to generate and save a sequence of plots to disk as a still image sequence intended for later use in data animation production.
 
 ##
-## Install
+# Install
 
 ```{r}
 devtools::install_github("leonawicz/mapmate")
 ```
 
-This installs the current early development version. Functionality is highly subject to change.
+This installs the current development version. Functionality is subject to change.
 
 ##
-## Example videos based on mapmate
+# Example videos based on mapmate
 
 ##
-### Historical and projected global temperature anomalies
+## Historical and projected global temperature anomalies
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xhqEkyJDBho" frameborder="0" allowfullscreen></iframe>
 
 ##
-### Global UAF/SNAP Shiny Apps web traffic
+## Global UAF/SNAP Shiny Apps web traffic
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/uQYR91qixgo" frameborder="0" allowfullscreen></iframe>
 
 ##
-### Flat map great circle animation example
+## Flat map great circle animation example
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/yoyIUMvIP3Q" frameborder="0" allowfullscreen></iframe>
 
 ##
-## Introduction and basic example
+# Introduction and basic example
 
 The `mapmate` package is used for map- and globe-based data animation pre-production.
 Specifically, `mapmate` functions are used to generate and save to disk a series of map graphics that make up a still image sequence,
@@ -85,3 +85,15 @@ browseVignettes(package="mapmate")
 ```
 
 Other features and functionality will be added in future package versions.
+
+##
+# How Earth perspective view works in `mapmate`
+
+This application shows how longitude, latitude, and rotation axis are used by the `save_map` function in `mapmate`
+to define the hemispheric field of view for the Earth.
+These three values define an arbitrary perspective.
+Longitude and latitude specify the centroid coordinates for the visible hemisphere
+and the angle given for the rotation axis is used to rotate the circle in the viewing plane.
+The defaults `save_map` defaults for `lon`, `lat`, and `rotation.axis` are `(0, 0, 23.4)`, respectively.
+
+<iframe width="960" height="500" src="https://uasnap.shinyapps.io/mapmate_orthographic/" frameborder="0" allowfullscreen></iframe>
