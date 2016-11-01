@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>mapmate</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">mapmate</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="mapmate.html">
+    <span class="fa fa-info fa-lg"></span>
+     
+    Introduction
+  </a>
+</li>
+<li>
+  <a href="usage_and_limitations.html">
+    <span class="fa fa-globe fa-lg"></span>
+     
+    Visual examples
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leonawicz/mapmate">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">mapmate</h1>
+
+</div>
+
+
+<p><a href="https://travis-ci.org/leonawicz/mapmate"><img src="https://travis-ci.org/leonawicz/mapmate.svg?branch=master" alt="Travis-CI Build Status" /></a> <a href="https://codecov.io/github/leonawicz/mapmate?branch=master"><img src="https://img.shields.io/codecov/c/github/leonawicz/mapmate/master.svg" alt="Coverage Status" /></a></p>
+<p><code>mapmate</code> (map animate) is an R package for map animation. It is used to generate and save a sequence of plots to disk as a still image sequence intended for later use in data animation production.</p>
+<div id="section" class="section level2">
+<h2></h2>
+</div>
+<div id="install" class="section level2">
+<h2>Install</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;leonawicz/mapmate&quot;</span>)</code></pre></div>
+<p>This installs the current early development version. Functionality is highly subject to change.</p>
+</div>
+<div id="section-1" class="section level2">
+<h2></h2>
+</div>
+<div id="example-videos-based-on-mapmate" class="section level2">
+<h2>Example videos based on mapmate</h2>
+</div>
+<div id="section-2" class="section level2">
+<h2></h2>
+<div id="historical-and-projected-global-temperature-anomalies" class="section level3">
+<h3>Historical and projected global temperature anomalies</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xhqEkyJDBho" frameborder="0" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="section-3" class="section level2">
+<h2></h2>
+<div id="global-uafsnap-shiny-apps-web-traffic" class="section level3">
+<h3>Global UAF/SNAP Shiny Apps web traffic</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uQYR91qixgo" frameborder="0" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="section-4" class="section level2">
+<h2></h2>
+<div id="flat-map-great-circle-animation-example" class="section level3">
+<h3>Flat map great circle animation example</h3>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yoyIUMvIP3Q" frameborder="0" allowfullscreen>
+</iframe>
+</div>
+</div>
+<div id="section-5" class="section level2">
+<h2></h2>
+</div>
+<div id="introduction-and-basic-example" class="section level2">
+<h2>Introduction and basic example</h2>
+<p>The <code>mapmate</code> package is used for map- and globe-based data animation pre-production. Specifically, <code>mapmate</code> functions are used to generate and save to disk a series of map graphics that make up a still image sequence, which can then be used in video editing and rendering software of the user’s choice. This package does not make simple animations directly within R, which can be done with packages like <code>animation</code>. <code>mapmate</code> is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth. Functionality and fine-grain user control of inputs and outputs are limited in the current package version.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mapmate)
+<span class="kw">library</span>(dplyr)
+<span class="kw">data</span>(annualtemps)
+annualtemps
+<span class="co">#&gt; # A tibble: 55,080 × 4</span>
+<span class="co">#&gt;          lon      lat  Year     z</span>
+<span class="co">#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  -176.6667 53.66633  2010  1.09</span>
+<span class="co">#&gt; 2  -176.6667 66.99967  2010  3.21</span>
+<span class="co">#&gt; 3  -176.6667 73.66633  2010  2.76</span>
+<span class="co">#&gt; 4  -170.0000 53.66633  2010  0.91</span>
+<span class="co">#&gt; 5  -170.0000 60.33300  2010  2.47</span>
+<span class="co">#&gt; 6  -170.0000 66.99967  2010  2.73</span>
+<span class="co">#&gt; 7  -163.3333 20.33300  2010  0.19</span>
+<span class="co">#&gt; 8  -163.3333 53.66633  2010  0.79</span>
+<span class="co">#&gt; 9  -163.3333 60.33300  2010  1.43</span>
+<span class="co">#&gt; 10 -163.3333 66.99967  2010  1.28</span>
+<span class="co">#&gt; # ... with 55,070 more rows</span>
+
+<span class="kw">library</span>(RColorBrewer)
+pal &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">brewer.pal</span>(<span class="dv">11</span>, <span class="st">&quot;RdYlBu&quot;</span>))
+
+temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, <span class="dt">frameID =</span> Year -<span class="st"> </span><span class="kw">min</span>(Year) +<span class="st"> </span><span class="dv">1</span>)
+frame1 &lt;-<span class="st"> </span><span class="kw">filter</span>(temps, frameID ==<span class="st"> </span><span class="dv">1</span>)  <span class="co"># subset to first frame</span>
+id &lt;-<span class="st"> &quot;frameID&quot;</span>
+
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
+    <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
+    <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="README-Home-unnamed-chunk-3-1.png" alt="2D flat map and 3D globe" /><img src="README-Home-unnamed-chunk-3-2.png" alt="2D flat map and 3D globe" /></p>
+<p>The above is only a very basic initial example of static 2D and 3D maps. See the <a href="mapmate.html">introduction vignette</a> for more complete and more typical usage examples:</p>
+<ul>
+<li>Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data) in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.</li>
+<li>Generate a sequence of still frames of:
+<ul>
+<li>map data for use in a flat map animation.</li>
+<li>dynamic/temporally changing map data projected onto a static globe (3D Earth)</li>
+<li>static map data projected onto rotating globe</li>
+<li>dynamic map data projected onto rotating globe</li>
+</ul></li>
+<li>Parallel processing examples using <code>mclapply</code></li>
+<li>Convenient iterator wrapper function</li>
+<li>Comparison of map tiles, map lines, and polygons</li>
+<li>Non-map data example (time series line growth)</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">browseVignettes</span>(<span class="dt">package =</span> <span class="st">&quot;mapmate&quot;</span>)</code></pre></div>
+<p>Other features and functionality will be added in future package versions.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
