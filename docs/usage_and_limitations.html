@@ -11,7 +11,7 @@
 
 <meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-10-31" />
+<meta name="date" content="2016-11-01" />
 
 <title>Usage examples and limitations</title>
 
@@ -247,7 +247,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Usage examples and limitations</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-10-31</em></h4>
+<h4 class="date"><em>2016-11-01</em></h4>
 
 </div>
 
@@ -261,8 +261,9 @@ $(document).ready(function () {
 <p>The motivation for the package is to assist with heavy data processing and image production for large, complex data animation videos that can require a signifcant amount of computing resources to create. It is best suited to use on a Linux server with a significant number of CPU cores and a significant amount of RAM. It is all about video pre-production. Still image sequences created by R are meant to be rendered into video subsequently by dedicated video editing software. It makes the most sense to leverage the power of both programs for what they are best designed for: R for data analysis and plotting and something else for high quality video rendering.</p>
 <p>As mentioned, there are other solutions for producing animations completely from R with only implicit external software dependencies (e.g., using the <code>rgl</code> package or relying on <code>ImageMagick convert</code>). The only restriction is that you have to want to create an animation that is small and simple enough for other solutions to remain realistic options. At some point the size of data or the images or the total number of frame or some other limitation may creep in and stop you if your animation is just simply too big or complex. At that point, this package has the value of being dedicated to generating still image sequences to pass to another program. If you ever make videos which require the use of video editing software, then you will know at what point it makes sense to just make still image sequences that you can drop on your timeline to finish your video project rather than trying to force R to do the entire job itself.</p>
 <p>Nevertheless, while the strength of R for pre-production lies in its data analysis, processing and graphing capabilities, there are some limitations to how well <code>save_map</code> in the <code>mapmate</code> package will draw certain types of maps of certain types of data sets. The biggest limitation is in attempting to draw filled in polygons on a map using an orthographic projection; the 3D Earth globe view.</p>
-<p>Below is a series of usage examples of <code>save_map</code> applied to example data included in the package. The examples show how to make different maps based on the different arguments that can be passed to <code>save_map</code>. They also show how some of the options for map types included <code>save_map</code> are primarily included to reveal their current limitation in drawing maps. Points, paths and tiles tend to work well, as do contour lines, but polygons often display serious clipping issues.</p>
-<p>Also, since these examples are simply intended to display what kind of map outputs are made given the various arguments that can be passed to <code>save_map</code>, the plot or image frame number or ID value never goes beyond <code>1</code> and <code>save_map</code> is not called iteratively. For code related to typical map sequence generation see the introductory vignette for examples: <code>browseVignettes(package=&quot;mapmate&quot;)</code> or <a href="https://leonawicz.github.io/mapmate/mapmate.html">view it here</a>.</p>
+<p>Below is a series of usage examples of <code>save_map</code> applied to example data included in the package. The examples show how to make different maps based on the different arguments that can be passed to <code>save_map</code>. They also show how some of the options for map types included <code>save_map</code> are primarily included to reveal their current limitations in drawing maps. Points, paths and tiles tend to work well, as do contour lines for the most part, but polygons often display serious clipping issues.</p>
+<p>This package depends heavily on <code>ggplot2</code> for plotting. While it is easy enough to write a function that returns an ordered set of lon/lat coordinates defining the circle that represents the edge the hemisphere in view for orthographically projected data, I have not yet found a way in this context to use that circle to essentially reclip the polygons. If I could do so, then I could potentially apply the reclipping inside <code>save_map</code> when <code>ortho=TRUE</code> prior to the reprojection done by <code>ggplot2::coord_map</code>. But not so easily, if the data are not actually projected to the orthographic projection until passed to and as done so by <code>coord_map</code>. The reliance on <code>coord_map</code> could cripple my ability to insert a reclipping step where I need to, but I haven’t delved into it yet since my main use of the package is not for polygons.</p>
+<p>Lastly, since these examples are simply intended to display what kind of map outputs are made given the various arguments that can be passed to <code>save_map</code>, the plot or image frame number/ID value never goes beyond <code>1</code> and <code>save_map</code> is not called iteratively. For code related to typical map sequence generation see the introductory vignette for examples: <code>browseVignettes(package=&quot;mapmate&quot;)</code> or <a href="mapmate.html">view it here</a>.</p>
 </div>
 <div id="setup" class="section level1">
 <h1>Setup</h1>
