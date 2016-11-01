@@ -4,3 +4,5 @@
 .Ruserdata
 data-raw/*
 !data-raw/*.R
+rsconnect/
+docs/*_cache/
