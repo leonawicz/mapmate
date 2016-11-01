@@ -10,7 +10,6 @@ output:
 #    theme: cosmo
 #    highlight: zenburn
 #    fig_caption: yes
-#    keep_md: true
 vignette: >
   %\VignetteIndexEntry{Introduction to mapmate}
   %\VignetteEngine{knitr::rmarkdown}
@@ -68,7 +67,7 @@ get_ma(monthlytemps, type="annual", size=20)
 
 To keep the data size minimal, the `monthlytemps` data set only includes data from one map cell, which is sufficient for the moving average example.
 But for mapping we need more complete map data.
-The `annualtemps` dataset below is not subsampled, though it is highly spatially aggregated as well as consisting of annual averages of monthly data.
+The `annualtemps` data set below is not subsampled, though it is highly spatially aggregated as well as consisting of annual averages of monthly data.
 This made it small enough to not be a burden to include in the package, but complete enough to use for mapping examples.
 
 ```{r, eval=TRUE}
@@ -88,7 +87,7 @@ One of these four types must be specified and the data must be appropriate for t
 Tiles are the simplest, but while we are working with data frames, the data typically would originate from a rasterized object, hence the nice even spacing of the coordinates.
 Last of all, but important, the data frame must contain a column of still frame sequence IDs or plot number IDs.
 This variable is simply the integers `1, 2, ..., n` for `n` frames or individual plots and is used for subsetting data for each plot and for sequential numbering of output files.
-It can have any name. Here it is called `frameID` and is computed baed on the unique years in the example data frame.
+It can have any name. Here it is called `frameID` and is computed based on the unique years in the example data frame.
 It is passed to `save_map` via the `id` argument.
 
 For these static examples, arguments pertaining specifically to image sequences can be ignored for now (`n.period`, `n.frames`, `z.range`)
@@ -162,9 +161,9 @@ Now let the globe rotate, drawing static data on the surface.
 In this example the nation borders are drawn repeatedly while allowing the Earth to spin through the still image sequence from frame to frame.
 `walk` from the `purrr` package is used to easily duplicate the `borders` data frame in a list while adding an plot number ID column that increments over the list.
 
-It's quite redundant and this is worse if the dataset is large, but this is how `save_map` currently accepts the data.
+It's quite redundant and this is worse if the data set is large, but this is how `save_map` currently accepts the data.
 Fortunately, it would make little difference if the data change from frame to frame, which is the main purpose of `save_map`.
-Datasets which do not vary from frame to frame generally serve the role of providing a background layer to other data being plotted,
+Data sets which do not vary from frame to frame generally serve the role of providing a background layer to other data being plotted,
 as with the nation borders here and as we will see later with a bathymetric surface.
 
 In the case of repeating data passed to `save_map`, it only makes sense when plotting on a globe and when using a perspective that has some kind of periodicity to it.
@@ -188,7 +187,7 @@ walk(borders, ~save_map(.x, id=id, lon=-70, lat=50, n.period=30, n.frames=n, col
 
 Using one more example, return to the list of annual temperature anomalies data frames used previously.
 Those were used to show changing data on a fixed-perspective globe plot.
-Here we plot the first layer, repeatedly, as was just done with the `borders` dataset, allowing the Earth to rotate.
+Here we plot the first layer, repeatedly, as was just done with the `borders` data set, allowing the Earth to rotate.
 Remember to update the plot ID values.
 The key difference with this example of fixed data and a changing perspective is that providing `z.range` is crucial to maintaining constant color mapping.
 
@@ -236,7 +235,7 @@ walk(temps, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal, type="maptiles
 
 ### Parallel processing
 
-For larger datasets and longer sequences, this is much faster the more it can be parallelized.
+For larger data sets and longer sequences, this is much faster the more it can be parallelized.
 `mapmate` is designed to add convenience for making relatively heavy duty animations.
 The emphasis is on images which will look sharp and lend themselves to smooth frame transitions.
 They may also do so while displaying a large amount of data.
@@ -332,7 +331,7 @@ walk(bio, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n,
 
 ```
 
-Note that `type="polygons"` will work poorly for the orthogrpahic projection. Nation polygons will be clipped at varying points as the globe rotates,
+Note that `type="polygons"` will work poorly for the orthographic projection. Nation polygons will be clipped at varying points as the globe rotates,
 leading to moving artifacts around the perimeter of the visible hemisphere. In the view above, this is clear over North America.
 There is no work around implemented for this within `save_map` when using `type="polygons"` on a globe.
 As a result, it is recommended to only use world polygons with flat maps.
@@ -342,7 +341,7 @@ and plot the rasterized grid cells data frame using `type="maptiles"`.
 See the earlier examples using the `annualtemps` data set for an introduction to the use of tiles.
 Of course, this will lead to greater processing time, as `geom_tile` from `ggplot2` is essentially plotting many tiny square polygons
 rather than the small number of larger polygons in the original data if using `geom_polygon`.
-The version using tiles is below. Tiles are one sqaure degree, which will still appear a somewhat coarse resolution.
+The version using tiles is below. Tiles are one square degree, which will still appear a somewhat coarse resolution.
 Much higher resolutions are painfully slow to render with `geom_tile`.
 
 ```{r}

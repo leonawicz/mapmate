@@ -23,7 +23,7 @@ Specifically, `mapmate` functions are used to generate and save to disk a series
 which can then be used in video editing and rendering software of the user's choice. This package does not make simple animations directly within R, which can be done with packages like `animation`.
 `mapmate` is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth.
 
-The motivation for the package is to assist with heavy data processing and image production for large, complex data animation videos that can require a signifcant amount of computing resources to create.
+The motivation for the package is to assist with heavy data processing and image production for large, complex data animation videos that can require a significant amount of computing resources to create.
 It is best suited to use on a Linux server with a significant number of CPU cores and a significant amount of RAM.
 It is all about video pre-production. Still image sequences created by R are meant to be rendered into video subsequently by dedicated video editing software.
 It makes the most sense to leverage the power of both programs for what they are best designed for: R for data analysis and plotting and something else for high quality video rendering.
@@ -79,7 +79,7 @@ bath <- mutate(bathymetry, frameID = 1)
 ```
 
 Next for the plots. Note that the aptly named `save_map` is not typically used for returning plot objects but rather for saving them to disk,
-hence why every call to `save_map` in this set of examples must explcitly include the non-default `save.plot` and `return.plot` arguments.
+hence why every call to `save_map` in this set of examples must explicitly include the non-default `save.plot` and `return.plot` arguments.
 
 # Flat world maps vs 3D Earth
 
@@ -143,7 +143,7 @@ Default arguments include `contour="none"` and `density.geom="tile"`.
 save_map(bath, z.name="z", id=id, col=pal, type="density", save.plot=FALSE, return.plot=TRUE)
 ```
 
-Explicit contour lines can also be overlayed with the base map type.
+Explicit contour lines can also be overlaid with the base map type.
 
 ```{r density_contour1}
 save_map(bath, z.name="z", id=id, col=pal, type="density", contour="overlay", save.plot=FALSE, return.plot=TRUE)
