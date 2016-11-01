@@ -97,3 +97,5 @@ and the angle given for the rotation axis is used to rotate the circle in the vi
 The `save_map` argument defaults for `lon`, `lat`, and `rotation.axis` are `(0, 0, 23.4)`, respectively.
 
 <iframe width="960" height="500" src="https://uasnap.shinyapps.io/mapmate_orthographic/" frameborder="0" allowfullscreen></iframe>
+
+[Direct link to app](https://uasnap.shinyapps.io/mapmate_orthographic/)
