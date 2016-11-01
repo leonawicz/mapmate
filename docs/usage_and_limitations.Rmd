@@ -41,12 +41,21 @@ The biggest limitation is in attempting to draw filled in polygons on a map usin
 
 Below is a series of usage examples of `save_map` applied to example data included in the package.
 The examples show how to make different maps based on the different arguments that can be passed to `save_map`.
-They also show how some of the options for map types included `save_map` are primarily included to reveal their current limitation in drawing maps.
-Points, paths and tiles tend to work well, as do contour lines, but polygons often display serious clipping issues.
+They also show how some of the options for map types included `save_map` are primarily included to reveal their current limitations in drawing maps.
+Points, paths and tiles tend to work well, as do contour lines for the most part, but polygons often display serious clipping issues.
 
-Also, since these examples are simply intended to display what kind of map outputs are made given the various arguments that can be passed to `save_map`,
-the plot or image frame number or ID value never goes beyond `1` and `save_map` is not called iteratively.
-For code related to typical map sequence generation see the introductory vignette for examples: `browseVignettes(package="mapmate")` or [view it here](https://leonawicz.github.io/mapmate/mapmate.html).
+This package depends heavily on `ggplot2` for plotting.
+While it is easy enough to write a function that returns an ordered set of lon/lat coordinates
+defining the circle that represents the edge the hemisphere in view for orthographically projected data,
+I have not yet found a way in this context to use that circle to essentially reclip the polygons.
+If I could do so, then I could potentially apply the reclipping inside `save_map` when `ortho=TRUE` prior to the reprojection done by `ggplot2::coord_map`.
+But not so easily, if the data are not actually projected to the orthographic projection until passed to and as done so by `coord_map`.
+The reliance on `coord_map` could cripple my ability to insert a reclipping step where I need to,
+but I haven't delved into it yet since my main use of the package is not for polygons.
+
+Lastly, since these examples are simply intended to display what kind of map outputs are made given the various arguments that can be passed to `save_map`,
+the plot or image frame number/ID value never goes beyond `1` and `save_map` is not called iteratively.
+For code related to typical map sequence generation see the introductory vignette for examples: `browseVignettes(package="mapmate")` or [view it here](mapmate.html).
 
 # Setup
 

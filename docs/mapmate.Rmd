@@ -290,7 +290,7 @@ they didn't need to be polygon borders and could have been any data suitable to 
 In the example below, a data frame originating from a `SpatialPolygonsDataFrame` is expected and the intent is to fill polygons with colors based on data values.
 A convenient example can be shown making use of the `rworldmap` package.
 
-```{r, eval=TRUE}
+```{r, results="hide", eval=TRUE}
 library(rworldmap)
 library(rworldxtra) # required for "high" resolution map
 library(maptools) # required for fortify to work
