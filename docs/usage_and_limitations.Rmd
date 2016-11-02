@@ -24,8 +24,8 @@ which can then be used in video editing and rendering software of the user's cho
 `mapmate` is more specific to maps, hence the name, and particularly suited to 3D globe plots of the Earth.
 
 The motivation for the package is to assist with heavy data processing and image production for large, complex data animation videos that can require a significant amount of computing resources to create.
-It is best suited to use on a Linux server with a significant number of CPU cores and a significant amount of RAM.
-It is all about video pre-production. Still image sequences created by R are meant to be rendered into video subsequently by dedicated video editing software.
+It is best suited to use on a Linux server with a significant number of CPU cores and a significant amount of RAM, but all examples presented here are simple and have no such requirements.
+`mapmate` is all about video pre-production. Still image sequences created by R are meant to be rendered into video subsequently by dedicated video editing software.
 It makes the most sense to leverage the power of both programs for what they are best designed for: R for data analysis and plotting and something else for high quality video rendering.
 
 As mentioned, there are other solutions for producing animations completely from R with only implicit external software dependencies (e.g., using the `rgl` package or relying on `ImageMagick convert`).
@@ -41,20 +41,20 @@ The biggest limitation is in attempting to draw filled in polygons on a map usin
 
 Below is a series of usage examples of `save_map` applied to example data included in the package.
 The examples show how to make different maps based on the different arguments that can be passed to `save_map`.
-They also show how some of the options for map types included `save_map` are primarily included to reveal their current limitations in drawing maps.
+They also show how some of the map type options available in `save_map` are primarily included to reveal their current limitations in drawing maps.
 Points, paths and tiles tend to work well, as do contour lines for the most part, but polygons often display serious clipping issues.
 
 This package depends heavily on `ggplot2` for plotting.
-While it is easy enough to write a function that returns an ordered set of lon/lat coordinates
-defining the circle that represents the edge the hemisphere in view for orthographically projected data,
+While it is easy enough to write a function that takes the lon/lat centroid of the visible hemisphere 
+and returns an ordered set of lon/lat coordinates defining the circle that represents the hemisphere's outer edge for orthographically projected data,
 I have not yet found a way in this context to use that circle to essentially reclip the polygons.
 If I could do so, then I could potentially apply the reclipping inside `save_map` when `ortho=TRUE` prior to the reprojection done by `ggplot2::coord_map`.
-But not so easily, if the data are not actually projected to the orthographic projection until passed to and as done so by `coord_map`.
+But not so easily, if the data are not actually projected to the orthographic projection until passed inside `coord_map`.
 The reliance on `coord_map` could cripple my ability to insert a reclipping step where I need to,
 but I haven't delved into it yet since my main use of the package is not for polygons.
 
 Lastly, since these examples are simply intended to display what kind of map outputs are made given the various arguments that can be passed to `save_map`,
-the plot or image frame number/ID value never goes beyond `1` and `save_map` is not called iteratively.
+the plot or image frame number/ID value never goes beyond `1` and `save_map` is not called iteratively in any of these examples.
 For code related to typical map sequence generation see the introductory vignette for examples: `browseVignettes(package="mapmate")` or [view it here](mapmate.html).
 
 # Setup
@@ -102,11 +102,15 @@ save_map(bath, id=id, type="points", save.plot=FALSE, return.plot=TRUE)
 # Spatial/polygon boundary lines
 
 `type="maplines"` relies on `ggplot2::geom_path` internally, which is why it is suited to drawing ordered polygon border lines
-and why the original `borders` data frame contains the necessary additional variables.
+and why the original `borders` data frame contains the necessary additional variables for grouping and plotting order.
 While the prepared data frames used in this set of examples are provided by the package,
 typically you would generate these yourself from your data which were originally in another form such as `SpatialPolygonsDataFrame` or `RasterLayer` objects.
+
 A common way to do this is by using `ggplot2::fortify` or, alternatively, duplicated functionality in the `broom` package.
-See those for examples or documentation.
+See those packages for examples or documentation.
+Further below I include one example "from scratch" that shows an instance of using `fortify`
+to make the transition from a `SpatialPolygonsDataFrame` to a "fortified" data frame that is ready to be ingested by `ggplot` inside `save_map`
+like the already fortified example data frames provided by `mapmate`.
 
 ```{r maplines1}
 save_map(brdrs, id=id, type="maplines", save.plot=FALSE, return.plot=TRUE)
