@@ -1,3 +1,15 @@
+#' Title
+#'
+#' @param x
+#' @param lon
+#' @param lat
+#' @param distance
+#' @param keep
+#'
+#' @return
+#' @export
+#'
+#' @examples
 expand_table <- function(x, lon, lat, distance=TRUE, keep=TRUE){
   n <- nrow(x)
   if(n %% 10 == 1) n <- n - 1
@@ -24,6 +36,21 @@ expand_table <- function(x, lon, lat, distance=TRUE, keep=TRUE){
   dplyr::sample_n(y, nrow(y))
 }
 
+#' Title
+#'
+#' @param data
+#' @param lon0
+#' @param lat0
+#' @param lon1
+#' @param lat1
+#' @param n
+#' @param breakAtDateLine
+#' @param addStartEnd
+#'
+#' @return
+#' @export
+#'
+#' @examples
 arc_paths <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, addStartEnd=TRUE){
   x <- list(lon0, lat0)
   y <- list(lon1, lat1)
