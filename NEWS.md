@@ -1,3 +1,9 @@
+# mapmate 0.1.9 (Release date: )
+
+* Add functions to assist with network maps: `gc_endpoints`, `gc_arcs`, and `gc_paths`.
+* Add help documentation and runnable examples of the network-related functions.
+* Add `network` data set to package.
+
 # mapmate 0.1.0 (Release date: 2016-11-01)
 
 * Add `type` argument options to `save_map` for points, contour lines, filled contour maps, density/intensity maps
