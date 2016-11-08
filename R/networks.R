@@ -76,35 +76,38 @@ arc_paths <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE,
 #'
 #' @param d
 #' @param size
-#' @param n.frames
 #' @param replicates
 #' @param direction
+#' @param max.offset
 #'
 #' @return
 #' @export
 #'
 #' @examples
-path_segments <- function(d, size, n.frames, replicates=1, direction="fixed"){
+path_segments <- function(d, size, replicates=1, direction="fixed", max.offset=0){
   n <- nrow(d)
   if (n < 3) stop("Data not appropriate for this operation.")
   if (size < 3) stop("Segment size too small.")
-  z <- round(runif(2, 2, size))
-  z[z > n] <- n
-  n1 <- ceiling(diff(c((z[1] - z[2]), n))/z[1])
-  if (n.frames - n1 < 100) stop("Insufficient frames")
-  offset <- sample(0:(n.frames - n1), replicates)
+  if(replicates < 1) stop("'replicates' must be >= 1.")
+  if(replicates - 1 > max.offset) stop("Replicate paths have uniquely staggerred random starting points (frame IDs); 'replicates' must be <= 'max.offset' + 1.")
+  offset <- sample(0:max.offset, replicates)
+  if(direction == "reverse") d <- dplyr::mutate(d, lon = rev(lon), lat = rev(lat))
+  if(direction == "random" && rnorm(1) < 0) d <- dplyr::mutate(d, lon = rev(lon), lat = rev(lat))
 
-  f <- function(k, d, n, n1, z, offset){
-    ind2 <- z[1] * k
-    ind1 <- max(ind2 - z[2], 1)
-    if (ind2 > n) ind2 <- n
-    d <- dplyr::slice(d, ind1:ind2)
+  z <- sort(round(runif(2, 2, size)))
+  z[z > n] <- n
+  n1 <- ceiling(n / z[1]) + 1
+  trim <- function(x, min, max) x[x >= min & x <= max]
+  idx <- purrr::map(1:n1, ~((z[1] * .x - z[2]):(z[1] * .x) %>% trim(1, n)))
+  idx <- idx[unlist(purrr::map(idx, ~length(.x) > 0))]
+  d <- purrr::map(idx, ~dplyr::slice(d, .x))
+
+  f <- function(k, d, offset){
+    string <- paste0(".%0", ceiling(log(replicates, base=10)), "d")
     purrr::map(offset, ~dplyr::mutate(d, group =
-      ifelse(replicates == 1, group, group + as.numeric(sprintf(".%d", k))),
+      ifelse(replicates == 1, group, group + as.numeric(sprintf(string, k-1))),
       id = .x + k)) %>% dplyr::bind_rows() %>% dplyr::tbl_df()
   }
 
-  if(direction == "reverse") d <- dplyr::mutate(d, long = rev(long), lat = rev(lat))
-  if(direction == "random" && rnorm(1) < 0) d <- dplyr::mutate(d, long = rev(long), lat = rev(lat))
-  purrr::map(1:n1, ~f(.x, d, n, n1, z, offset)) %>% dplyr::bind_rows %>% dplyr::arrange(group, id)
+  purrr::map2(seq_along(d), d, ~f(.x, .y, offset)) %>% dplyr::bind_rows() %>% dplyr::arrange(group, id)
 }
