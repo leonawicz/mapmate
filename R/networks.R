@@ -34,13 +34,13 @@ arc_paths <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE,
   }
   if(length(n) != 1 & length(n) != nrow(data)) stop("'n' must have length 1 or length equal to the number of rows in 'data'.")
   if(any(n < 1)) stop("Column 'n' must contain positive integers.")
-  data <- gcIntermediate(dplyr::select_(data, .dots=x), dplyr::select_(data, .dots=y),
+  data <- geosphere::gcIntermediate(dplyr::select_(data, .dots=x), dplyr::select_(data, .dots=y),
                          n=n, breakAtDateLine=breakAtDateLine, addStartEnd=addStartEnd)
   if(!is.list(data)) { rownames(data) <- NULL; data <- list(data) }
   f <- function(x, idx){
-    x <- if(is.list(x)) purrr::map2(x, idx + c(0, 0.5), ~data.frame(.x, .y)) %>% bind_rows else data.frame(x, idx)
+    x <- if(is.list(x)) purrr::map2(x, idx + c(0, 0.5), ~data.frame(.x, .y)) %>% dplyr::bind_rows() else data.frame(x, idx)
     x <- setNames(x, c("lon", "lat", "group"))
     tbl_df(x)
   }
-  purrr::map2(data, seq_along(data), ~f(x=.x, idx=.y)) %>% bind_rows
+  purrr::map2(data, seq_along(data), ~f(x=.x, idx=.y)) %>% dplyr::bind_rows()
 }
