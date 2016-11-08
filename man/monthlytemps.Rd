@@ -19,10 +19,10 @@
 monthlytemps
 }
 \description{
-A dataset containing 2010-2099 projected annual average temperature anomalies for a single low resolution grid cell
-taken from a global monthly data set also used as the basis for the \code{annualtemps} dataset in this package.
-This is a toy dataset used for example purposes.
-This dataset includes data from only one grid cell because it is sufficient for examples but also keeps the size of the data small.
+A data set containing 2010-2099 projected annual average temperature anomalies for a single low resolution grid cell
+taken from a global monthly data set also used as the basis for the \code{annualtemps} data set in this package.
+This is a toy data set used for example purposes.
+This data set includes data from only one grid cell because it is sufficient for examples but also keeps the size of the data small.
 Anomalies are delta change from a historical baseline.
 }
 \keyword{datasets}
