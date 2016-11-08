@@ -18,8 +18,8 @@
 annualtemps
 }
 \description{
-A dataset containing low spatial resolution 2010-2099 global projected annual average temperatures.
-This is a toy dataset used for example purposes.
+A data set containing low spatial resolution 2010-2099 global projected annual average temperatures.
+This is a toy data set used for example purposes.
 Anomalies are element-wise (cell by cell) delta change from a historical baseline.
 }
 \keyword{datasets}

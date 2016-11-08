@@ -20,7 +20,7 @@
 borders
 }
 \description{
-A dataset containing global national political boundary lines, modified from the world map in the \code{maps} package.
+A data set containing global national political boundary lines, modified from the world map in the \code{maps} package.
 }
 \keyword{datasets}
 

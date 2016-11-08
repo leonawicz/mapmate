@@ -17,7 +17,7 @@
 bathymetry
 }
 \description{
-A bathymetry dataset containing columns of longitude, latitude and depths/elevations relative to sea level,
+A bathymetry data set containing columns of longitude, latitude and depths/elevations relative to sea level,
 modified from the 10-minute resolution source bathymetry map downloaded via the \code{marmap} package.
 }
 \keyword{datasets}
