@@ -18,7 +18,8 @@ Imports:
     ggplot2,
     RcppRoll,
     shiny,
-    lazyeval
+    lazyeval,
+    geosphere
 Suggests:
     testthat,
     parallel,
