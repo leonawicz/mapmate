@@ -4,7 +4,7 @@ d <- readRDS("data-raw/worldcities.rds") %>% tbl_df %>% rename(lon=Longitude, la
 set.seed(47)
 min_pop <- 10000
 size <- 10000
-final_size <- 100
+final_size <- 500
 wtsFun <- function(x) (x - min(x)) / (max(x) - min(x)) # simple rescale to [0,1]
 distFun <- function(x) 1 - x / max(x) # inverse distance weighting
 
@@ -13,6 +13,6 @@ d <- filter(d, Population >= min_pop) %>% select(lon, lat, Population) %>%
   expand_table("lon", "lat") %>% mutate(Dist_wts=distFun(Dist)) %>%
   sample_n(final_size, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts) # use distance-based weights
 
-arcs <- arc_paths(d, "lon0", "lat0", "lon1", "lat1", n=10)
+arcs <- arc_paths(d, "lon0", "lat0", "lon1", "lat1")
 
 devtools::use_data(arcs, overwrite=TRUE)
