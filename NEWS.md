@@ -1,9 +1,12 @@
 # mapmate 0.1.9 (Release date: )
 
-* Add functions to assist with network maps: `gc_endpoints`, `gc_arcs`, and `gc_paths`.
-* Add help documentation and runnable examples of the network-related functions.
-* Add `network` data set to package.
-* Add unit tests for network-related functions.
+* Added functions to assist with network maps: `gc_endpoints`, `gc_arcs`, and `gc_paths`.
+* Added help documentation and runnable examples of the network-related functions.
+* Added `network` data set to package.
+* Added unit tests for network-related functions.
+* Added tutorial/examples for network maps to the package Github pages.
+* Included simple animated gif examples in above page, piggybacked on `animation` package.
+* Bug fixes.
 
 # mapmate 0.1.0 (Release date: 2016-11-01)
 
