@@ -56,3 +56,18 @@ test_that("gc_arcs returns valid output", {
   expect_equal(length(unique(d$group)), 3)
 })
 
+d0 <- gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=10, addStartEnd=FALSE)
+
+test_that("gc_paths returns valid output", {
+  expect_error(gc_paths(slice(d0, 1:1000)), "Must provided 'group'.")
+  expect_error(gc_paths(slice(d0, 1:1000), "group"), "Must provided 'size'.")
+  expect_error(gc_paths(slice(d0, 1:1000), "group", size=1), "Maximum segment size too small; line composition requires at least two points.")
+
+  d <- gc_paths(slice(d0, 1:1000), "group", size=5)
+  expect_is(d, "tbl_df")
+  expect_equal(ncol(d), ncol(d0) + 1)
+
+  d <- gc_paths(slice(d0, 1:1000)  %>% mutate(dummy=1), "group", size=20)
+  expect_is(d, "data.frame")
+  expect_equal(ncol(d), ncol(d0) + 2)
+})
