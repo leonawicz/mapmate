@@ -113,9 +113,11 @@
 #' @param density.geom character, one of \code{tile} or \code{polygon}. Defaults to \code{tile}. See details.
 #' @param xlim numeric vector, defaults to \code{(-180, 180)}. Will crop to range of longitudes in \code{data} if \code{NULL}.
 #' @param ylim numeric vector, defaults to \code{(-90, 90)}. Will crop to range of latitudes in \code{data} if \code{NULL}.
+#' @param pt.size numeric vector, applies only to \code{type="network"}. Point sizes follow same order as colors for networks. See details.
 #' @param suffix character, optional suffix to be pasted onto output filename.
 #' @param rotation.axis the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.
-#' @param png.args a list of arguments passed to \code{png}.
+#' @param png.args a list of arguments passed to \code{png}. \code{bg} will still be used to color the plot bakground if \code{return.plot=TRUE}
+#' so continue to pass \code{png.args} a background color when \code{bg} is not the default \code{transparent} even if \code{save.plot=FALSE}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
 #' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
@@ -145,8 +147,9 @@
 #'   n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 #' }
 save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period,
-                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), suffix=NULL, rotation.axis=23.4,
-                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
+                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), pt.size=c(1,0.5,1,0.5),
+                     suffix=NULL, rotation.axis=23.4, png.args=list(width=1920, height=1080, res=300, bg="transparent"),
+                     save.plot=TRUE, return.plot=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
@@ -235,16 +238,18 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
     if(type=="network"){
       if(!is.null(z.name)) warning("'z.name' variable is ignored for moving line segments/great circle arcs (type='network').")
       data.lead <- dplyr::group_by(data, group) %>% dplyr::slice(n())
-      g <- g + ggplot2::geom_path(colour=col[1]) + ggplot2::geom_path(colour=col[2]) +
-        ggplot2::geom_point(data=data.lead, colour=col[3], size=0.6) +
-        ggplot2::geom_point(data=data.lead, colour=col[4], size=0.3)
+      size <- rep(pt.size, length=4)
+      g <- g + ggplot2::geom_path(colour=col[1], size=size[1]) + ggplot2::geom_path(colour=col[2], size=size[2]) +
+        ggplot2::geom_point(data=data.lead, colour=col[3], size=size[3]) +
+        ggplot2::geom_point(data=data.lead, colour=col[4], size=size[4])
     }
 
   }
 
-  g <- g + .theme_blank()
-  if(!is.null(xlim)) g <- g + ggplot2::xlim(xlim[1], xlim[2])
-  if(!is.null(ylim)) g <- g + ggplot2::ylim(ylim[1], ylim[2])
+  bg <- png.args$bg
+  g <- g + .theme_blank(bg=ifelse(is.null(bg), "transparent", bg))
+  g <- g + ggplot2::scale_x_continuous(limits=xlim, expand=c(0,0)) +
+    ggplot2::scale_y_continuous(limits=ylim, expand=c(0,0))
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
   if(save.plot){
     if(is.character(suffix)) type <- paste(type, suffix, sep="_")
