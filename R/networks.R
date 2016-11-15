@@ -101,7 +101,7 @@ gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
 #' endpoints <- mutate(endpoints, Dist_wts=distFun(Dist))
 #'
 #' # take a weighted sample, e.g., favoring larger averaged populations and shorter distances
-#' endpoints <- sample_n(500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
+#' endpoints <- sample_n(endpoints, 500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
 #'
 #' # expand data frame from endpoints to arcs, each composed of a sequence of points
 #' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
@@ -179,7 +179,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' endpoints <- mutate(endpoints, Dist_wts=distFun(Dist))
 #'
 #' # take a weighted sample, e.g., favoring larger averaged populations and shorter distances
-#' endpoints <- sample_n(500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
+#' endpoints <- sample_n(endpoints, 500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
 #'
 #' # expand data frame from endpoints to arcs, each composed of a sequence of points
 #' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
