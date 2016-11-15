@@ -10,23 +10,23 @@ test_that("gc_endpoints returns valid output", {
 
   d <- gc_endpoints(network, "lon", "lat")
   expect_is(d, "tbl_df")
-  expect_equal(nrow(d), nrow(network)^2)
-  expect_equal(ncol(d), 4)
+  expect_equal(nrow(d), (nrow(network) / 2)^2)
+  expect_equal(ncol(d), 2*ncol(network) + 1)
 
   d <- gc_endpoints(network, "lon", "lat", distance=FALSE)
   expect_is(d, "tbl_df")
-  expect_equal(nrow(d), nrow(network)^2)
-  expect_equal(ncol(d), 3)
+  expect_equal(nrow(d), (nrow(network) / 2)^2)
+  expect_equal(ncol(d), 2*ncol(network) + 0)
 
   d <- gc_endpoints(network, "lon", "lat", keep=FALSE)
   expect_is(d, "tbl_df")
-  expect_equal(nrow(d), nrow(network)^2)
-  expect_equal(ncol(d), 3)
+  expect_equal(nrow(d), (nrow(network) / 2)^2)
+  expect_equal(ncol(d), 2*2 + 1)
 
   d <- gc_endpoints(network, "lon", "lat", distance=FALSE, keep=FALSE)
   expect_is(d, "tbl_df")
-  expect_equal(nrow(d), nrow(network)^2)
-  expect_equal(ncol(d), 2)
+  expect_equal(nrow(d), (nrow(network) / 2)^2)
+  expect_equal(ncol(d), 2*2 + 0)
 })
 
 distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
