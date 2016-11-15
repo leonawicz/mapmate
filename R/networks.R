@@ -134,6 +134,8 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' into a sequence of points defining arc segments that cover the entire original arc in order from one endpoint to the other.
 #' Segments along the path that covers an arc may overlap to varying degrees based on the segment size, which is variable.
 #'
+#' \code{group} keeps different network pathways distinct within each plot frame when multiple great circle arcs are traversed simultaneously.
+#'
 #' \code{size} describes the maximum number of points composing a great circle arc segment.
 #' It must be at least \code{2} and is used to sample integers uniformly between \eqn{[2, size]}.
 #' This defines the range of values from which the actual segment length is sampled. There are not any other options in the current package version for specifying segment lengths.
@@ -162,6 +164,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' More points composing the entire arc shrinks the distance covered by each segment.
 #'
 #' @param data a data frame.
+#' @param group character, the column in \code{data} referring to the grouping variable.
 #' @param size integer, the maximum number of points used to define a great circle arc segment.
 #' @param replicates integer, the number of replicates of an arc. Defaults to \code{1}.
 #' @param direction character. Defaults to \code{fixed}.
@@ -184,13 +187,22 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' # expand data frame from endpoints to arcs, each composed of a sequence of points
 #' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
 #'
-#' paths <- gc_paths(arcs, size=5)
-gc_paths <- function(data, size, replicates=1, direction="fixed", max.offset=0){
-  n <- nrow(data)
-  if (n < 3) stop("Insufficient data.")
+#' paths <- gc_paths(arcs, group="group", size=5)
+gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
+  if(missing(group)) stop("Must provided 'group'.")
+  if(missing(size)) stop("Must provided 'size'.")
+  n.min <- dplyr::group_by_(arcs, "group") %>% dplyr::summarise(n=n()) %>% dplyr::summarise(n=min(n)) %>% unlist
+  if (n.min < 3) stop("Insufficient data.")
   if (size < 2) stop("Maximum segment size too small; line composition requires at least two points.")
   if(replicates < 1) stop("'replicates' must be >= 1.")
   if(replicates - 1 > max.offset) stop("Replicate paths have uniquely staggerred random starting points (frame IDs); 'replicates' must be <= 'max.offset' + 1.")
+  split(data, data[[group]]) %>%
+    purrr::map(~.gc_paths_internal(.x, group, size, replicates, direction, max.offset)) %>%
+    dplyr::bind_rows() %>% dplyr::tbl_df()
+}
+
+.gc_paths_internal <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
+  n <- nrow(data)
   offset <- sample(0:max.offset, replicates)
   if(direction == "reverse") data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
   if(direction == "random" && rnorm(1) < 0) data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
