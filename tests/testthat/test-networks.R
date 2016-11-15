@@ -3,6 +3,32 @@ suppressMessages({ library(dplyr) })
 context("networks.R")
 
 data(network)
+
+test_that("gc_endpoints returns valid output", {
+  expect_error(gc_endpoints(network, "lon0", "lat0"), "Use a different column name than 'lon0'.")
+  expect_error(gc_endpoints(network, "lon", "lat0"), "Use a different column name than 'lat0'.")
+
+  d <- gc_endpoints(network, "lon", "lat")
+  expect_is(d, "tbl_df")
+  expect_equal(nrow(d), nrow(network)^2)
+  expect_equal(ncol(d), 4)
+
+  d <- gc_endpoints(network, "lon", "lat", distance=FALSE)
+  expect_is(d, "tbl_df")
+  expect_equal(nrow(d), nrow(network)^2)
+  expect_equal(ncol(d), 3)
+
+  d <- gc_endpoints(network, "lon", "lat", keep=FALSE)
+  expect_is(d, "tbl_df")
+  expect_equal(nrow(d), nrow(network)^2)
+  expect_equal(ncol(d), 3)
+
+  d <- gc_endpoints(network, "lon", "lat", distance=FALSE, keep=FALSE)
+  expect_is(d, "tbl_df")
+  expect_equal(nrow(d), nrow(network)^2)
+  expect_equal(ncol(d), 2)
+})
+
 distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
 d0 <- gc_endpoints(network, "lon", "lat") %>% mutate(Dist_wts=distFun(Dist)) %>%
   sample_n(500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
