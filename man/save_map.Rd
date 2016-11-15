@@ -7,9 +7,10 @@
 save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
   lon = 0, lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
   col = NULL, type, contour = "none", density.geom = "tile",
-  suffix = NULL, rotation.axis = 23.4, png.args = list(width = 1920,
-  height = 1080, res = 300, bg = "transparent"), save.plot = TRUE,
-  return.plot = FALSE, num.format = 4)
+  xlim = c(-180, 180), ylim = c(-90, 90), suffix = NULL,
+  rotation.axis = 23.4, png.args = list(width = 1920, height = 1080, res =
+  300, bg = "transparent"), save.plot = TRUE, return.plot = FALSE,
+  num.format = 4)
 }
 \arguments{
 \item{data}{a data frame containing networks, tiles, lines or polygons information.}
@@ -39,6 +40,10 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
 \item{contour}{character, one of \code{none}, \code{overlay}, or \code{only}. Defaults to \code{none}. See details.}
 
 \item{density.geom}{character, one of \code{tile} or \code{polygon}. Defaults to \code{tile}. See details.}
+
+\item{xlim}{numeric vector, defaults to \code{(-180, 180)}. Will crop to range of longitudes in \code{data} if \code{NULL}.}
+
+\item{ylim}{numeric vector, defaults to \code{(-90, 90)}. Will crop to range of latitudes in \code{data} if \code{NULL}.}
 
 \item{suffix}{character, optional suffix to be pasted onto output filename.}
 

@@ -52,6 +52,7 @@ More segment overlap will slow down the journey.
 More points composing the entire arc shrinks the distance covered by each segment.
 }
 \examples{
+library(dplyr)
 set.seed(192)
 data(network)
 distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
@@ -59,7 +60,7 @@ endpoints <- gc_endpoints(network, "lon", "lat")
 endpoints <- mutate(endpoints, Dist_wts=distFun(Dist))
 
 # take a weighted sample, e.g., favoring larger averaged populations and shorter distances
-endpoints <- sample_n(500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
+endpoints <- sample_n(endpoints, 500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
 
 # expand data frame from endpoints to arcs, each composed of a sequence of points
 arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")

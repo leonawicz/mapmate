@@ -38,6 +38,7 @@ corresponding to the columns \code{lon0/lat0} and to \code{lon1/lat1}, respectiv
 If \code{data} contains \code{n} rows, then the data frame returned by \code{gc_endpoints} will contain \eqn{(n/2)^2} rows.
 }
 \examples{
+library(dplyr)
 data(network)
 gc_endpoints(d, "lon", "lat")
 gc_endpoints(d, "lon", "lat", distance=FALSE)
