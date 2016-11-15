@@ -111,6 +111,8 @@
 #' @param type the type of plot, one of \code{points}, \code{maplines}, \code{polygons}, \code{maptiles}, \code{density}, or \code{"network"}.
 #' @param contour character, one of \code{none}, \code{overlay}, or \code{only}. Defaults to \code{none}. See details.
 #' @param density.geom character, one of \code{tile} or \code{polygon}. Defaults to \code{tile}. See details.
+#' @param xlim numeric vector, defaults to \code{(-180, 180)}. Will crop to range of longitudes in \code{data} if \code{NULL}.
+#' @param ylim numeric vector, defaults to \code{(-90, 90)}. Will crop to range of latitudes in \code{data} if \code{NULL}.
 #' @param suffix character, optional suffix to be pasted onto output filename.
 #' @param rotation.axis the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.
 #' @param png.args a list of arguments passed to \code{png}.
@@ -143,7 +145,7 @@
 #'   n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
 #' }
 save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period,
-                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", suffix=NULL, rotation.axis=23.4,
+                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), suffix=NULL, rotation.axis=23.4,
                      png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
@@ -179,6 +181,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
       ggplot2::geom_path(color="white") + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
 
   } else if(type=="points"){
+
     col <- col[1]
     if(!is.null(z.name)) warning("'z.name' variable is ignored for point data (type='points').")
     g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat"))
@@ -231,7 +234,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
     }
     if(type=="network"){
       if(!is.null(z.name)) warning("'z.name' variable is ignored for moving line segments/great circle arcs (type='network').")
-      data.lead <- dplyr::group_by(data, group) %>% dplyr::slice(dplyr::n())
+      data.lead <- dplyr::group_by(data, group) %>% dplyr::slice(n())
       g <- g + ggplot2::geom_path(colour=col[1]) + ggplot2::geom_path(colour=col[2]) +
         ggplot2::geom_point(data=data.lead, colour=col[3], size=0.6) +
         ggplot2::geom_point(data=data.lead, colour=col[4], size=0.3)
@@ -240,6 +243,8 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
   }
 
   g <- g + .theme_blank()
+  if(!is.null(xlim)) g <- g + ggplot2::xlim(xlim[1], xlim[2])
+  if(!is.null(ylim)) g <- g + ggplot2::ylim(ylim[1], ylim[2])
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
   if(save.plot){
     if(is.character(suffix)) type <- paste(type, suffix, sep="_")
