@@ -25,6 +25,7 @@
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' data(network)
 #' gc_endpoints(d, "lon", "lat")
 #' gc_endpoints(d, "lon", "lat", distance=FALSE)
@@ -92,6 +93,7 @@ gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' set.seed(192)
 #' data(network)
 #' distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
@@ -169,6 +171,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' @export
 #'
 #' @examples
+#' library(dplyr)
 #' set.seed(192)
 #' data(network)
 #' distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
