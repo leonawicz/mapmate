@@ -191,7 +191,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
   if(missing(group)) stop("Must provided 'group'.")
   if(missing(size)) stop("Must provided 'size'.")
-  n.min <- dplyr::group_by_(arcs, "group") %>% dplyr::summarise(n=n()) %>% dplyr::summarise(n=min(n)) %>% unlist
+  n.min <- dplyr::group_by_(data, "group") %>% dplyr::summarise(n=n()) %>% dplyr::summarise(n=min(n)) %>% unlist
   if (n.min < 3) stop("Insufficient data.")
   if (size < 2) stop("Maximum segment size too small; line composition requires at least two points.")
   if(replicates < 1) stop("'replicates' must be >= 1.")
