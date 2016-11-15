@@ -244,12 +244,12 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
   dplyr::filter(data, inview) %>% dplyr::select(-inview)
 }
 
-.theme_blank <- function(){
+.theme_blank <- function(bg="transparent"){
   eb <- ggplot2::element_blank()
   ggplot2::theme(axis.line=eb, axis.text.x=eb, axis.text.y=eb,
     axis.ticks=eb, axis.title.x=eb, axis.title.y=eb, legend.position="none",
     panel.background=eb, panel.border=eb, panel.grid.major=eb, panel.grid.minor=eb,
-    plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
+    plot.background=ggplot2::element_rect(colour=bg, fill=bg))
 }
 
 #' Blank ggplot2 theme with optional axes
@@ -270,7 +270,7 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
 #'
 #' @examples
 #' # not run
-.theme_blank_plus <- function(col="transparent", size=16, legend.position="none"){
+.theme_blank_plus <- function(col="transparent", bg="transparent", size=16, legend.position="none"){
   eb <- ggplot2::element_blank()
   el <- ggplot2::element_line(colour=col)
   ggplot2::theme(axis.line=el, axis.line.x=el, axis.line.y=el, axis.ticks=el,
@@ -278,7 +278,7 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
         axis.title=ggplot2::element_text(colour=col, size=ggplot2::rel(1.5)), #currently non-functioning
         legend.position=legend.position,
         panel.background=eb, panel.border=eb, panel.grid.major=eb, panel.grid.minor=eb,
-        plot.background=ggplot2::element_rect(colour="transparent", fill="transparent"))
+        plot.background=ggplot2::element_rect(colour=bg, fill=bg))
 }
 
 .colorStop <- function(col, x){
@@ -419,8 +419,10 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   if(missing(cap)) cap <- mx
   if(cap <1) stop("'cap' must be >= 1.")
 
-  if(!axes.only & axes.space) .theme <- .theme_blank_plus()
-  if(!axes.only & !axes.space) .theme <- .theme_blank()
+  bg <- png.args$bg
+  if(is.null(bg)) bg <- "transparent"
+  if(!axes.only & axes.space) .theme <- .theme_blank_plus(bg=bg)
+  if(!axes.only & !axes.space) .theme <- .theme_blank(bg=bg)
   if(mx >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the max frameID value.")
   .dots <- list(lazyeval::interp(~y <= x, .values=list(y=as.name(id), x=cap)))
@@ -432,7 +434,7 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   }
   if(axes.only){
     g <- g + ggplot2::scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
-      ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col)
+      ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col=col, bg=bg)
   } else {
     g <- g + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + .theme
     if(cap != 1) g <- g + ggplot2::geom_line(colour=col, size=1)
