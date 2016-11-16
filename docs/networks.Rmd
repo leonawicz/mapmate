@@ -26,7 +26,7 @@ This map type can be used to display arbitrary line segments as well if such dat
 
 ## Obtain great circle arc endpoints
 
-The first example ues a flat map. Therefore it is important to break lines at the international dateline when preparing the data.
+The first example uses a flat map. Therefore it is important to break lines at the international dateline when preparing the data.
 In the second example, lines cross the dateline are not split because the segments will be plotted on the globe.
 
 First, begin with the `network` data set provided in `mapmate` is a simple data frame of lon/lat locations of various cities and corresponding weights related to population sizes.
@@ -73,9 +73,9 @@ arcs_globe
 
 ## Obtain great circle arc path sequences
 
-Finally, `gc_paths` is used to further exand the great circle arcs data frame into one that contains sequences of ordered segments along each arc.
+Finally, `gc_paths` is used to further expand the great circle arcs data frame into one that contains sequences of ordered segments along each arc.
 The segments can vary in length between distinct arcs and can overlap one another within an arc.
-The `group` argument is required to identify distinct arcs in the input data frame. `size` is required to set an upper limit on the number of points contituting an arc segment;
+The `group` argument is required to identify distinct arcs in the input data frame. `size` is required to set an upper limit on the number of points constituting an arc segment;
 the actual length of the segments is chosen randomly and uniformly between 2 and `size`.
 Other arguments are optional.
 
@@ -101,7 +101,7 @@ ylm <- range(paths_flat$lat) # trimming empty southern map region
 
 Typically, I would leave the default arguments `save.plot=TRUE` and `return.plot=FALSE`,
 but here they are reversed for the purposes of the example. This returns a list of `ggplot` objects rather than saving png files.
-Note that I still included the `png.args` argument even though `width` and `height` will be discared
+Note that I still included the `png.args` argument even though `width` and `height` will be discarded
 because `save_map` will take the background color specified by `bg` intended for png files and use it in the `ggplot2` theme applied to the returned plots.
 
 The default background is transparent so I need to include this here since I have changed it to black.
