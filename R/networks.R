@@ -27,9 +27,9 @@
 #' @examples
 #' library(dplyr)
 #' data(network)
-#' gc_endpoints(d, "lon", "lat")
-#' gc_endpoints(d, "lon", "lat", distance=FALSE)
-#' gc_endpoints(d, "lon", "lat", keep=FALSE)
+#' gc_endpoints(network, "lon", "lat")
+#' gc_endpoints(network, "lon", "lat", distance=FALSE)
+#' gc_endpoints(network, "lon", "lat", keep=FALSE)
 gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
   n <- nrow(data)
   if(n %% 10 == 1) n <- n - 1
@@ -50,7 +50,7 @@ gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
       by=v0, suffix=sfx)
   }
   if(distance){
-    distances <- geosphere::distMeeus(dplyr::select(y, lon0, lat0), dplyr::select(y, lon1, lat1))
+    distances <- geosphere::distMeeus(dplyr::select_(y, "lon0", "lat0"), dplyr::select_(y, "lon1", "lat1"))
     y <- dplyr::mutate(y, Dist=distances)
   }
   dplyr::sample_n(y, nrow(y))
@@ -120,8 +120,8 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
   if(!is.list(data)) { rownames(data) <- NULL; data <- list(data) }
   f <- function(x, idx){
     x <- if(is.list(x)) purrr::map2(x, idx + c(0, 0.5), ~data.frame(.x, .y)) %>% dplyr::bind_rows() else data.frame(x, idx)
-    x <- setNames(x, c("lon", "lat", "group"))
-    tbl_df(x)
+    x <- stats::setNames(x, c("lon", "lat", "group"))
+    dplyr::tbl_df(x)
   }
   purrr::map2(data, seq_along(data), ~f(x=.x, idx=.y)) %>% dplyr::bind_rows()
 }
@@ -205,9 +205,9 @@ gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.off
   n <- nrow(data)
   offset <- sample(0:max.offset, replicates)
   if(direction == "reverse") data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
-  if(direction == "random" && rnorm(1) < 0) data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
+  if(direction == "random" && stats::rnorm(1) < 0) data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
 
-  z <- sort(round(runif(2, 2, size)))
+  z <- sort(round(stats::runif(2, 2, size)))
   z[z > n] <- n
   n1 <- ceiling(n / z[1]) + 1
   trim <- function(x, min, max) x[x >= min & x <= max]
@@ -222,5 +222,5 @@ gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.off
       id = .x + k)) %>% dplyr::bind_rows() %>% dplyr::tbl_df()
   }
 
-  purrr::map2(seq_along(data), data, ~f(.x, .y, offset)) %>% dplyr::bind_rows() %>% dplyr::arrange(group, id)
+  purrr::map2(seq_along(data), data, ~f(.x, .y, offset)) %>% dplyr::bind_rows() %>% dplyr::arrange_("group", "id")
 }
