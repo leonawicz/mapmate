@@ -7,10 +7,10 @@
 save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
   lon = 0, lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
   col = NULL, type, contour = "none", density.geom = "tile",
-  xlim = c(-180, 180), ylim = c(-90, 90), suffix = NULL,
-  rotation.axis = 23.4, png.args = list(width = 1920, height = 1080, res =
-  300, bg = "transparent"), save.plot = TRUE, return.plot = FALSE,
-  num.format = 4)
+  xlim = c(-180, 180), ylim = c(-90, 90), pt.size = c(1, 0.5, 1, 0.5),
+  suffix = NULL, rotation.axis = 23.4, png.args = list(width = 1920,
+  height = 1080, res = 300, bg = "transparent"), save.plot = TRUE,
+  return.plot = FALSE, num.format = 4)
 }
 \arguments{
 \item{data}{a data frame containing networks, tiles, lines or polygons information.}
@@ -45,11 +45,14 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
 
 \item{ylim}{numeric vector, defaults to \code{(-90, 90)}. Will crop to range of latitudes in \code{data} if \code{NULL}.}
 
+\item{pt.size}{numeric vector, applies only to \code{type="network"}. Point sizes follow same order as colors for networks. See details.}
+
 \item{suffix}{character, optional suffix to be pasted onto output filename.}
 
 \item{rotation.axis}{the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.}
 
-\item{png.args}{a list of arguments passed to \code{png}.}
+\item{png.args}{a list of arguments passed to \code{png}. \code{bg} will still be used to color the plot bakground if \code{return.plot=TRUE}
+so continue to pass \code{png.args} a background color when \code{bg} is not the default \code{transparent} even if \code{save.plot=FALSE}.}
 
 \item{save.plot}{save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.}
 
