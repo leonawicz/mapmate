@@ -40,8 +40,8 @@ If \code{data} contains \code{n} rows, then the data frame returned by \code{gc_
 \examples{
 library(dplyr)
 data(network)
-gc_endpoints(d, "lon", "lat")
-gc_endpoints(d, "lon", "lat", distance=FALSE)
-gc_endpoints(d, "lon", "lat", keep=FALSE)
+gc_endpoints(network, "lon", "lat")
+gc_endpoints(network, "lon", "lat", distance=FALSE)
+gc_endpoints(network, "lon", "lat", keep=FALSE)
 }
 
