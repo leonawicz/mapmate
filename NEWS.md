@@ -1,4 +1,4 @@
-# mapmate 0.1.9 (Release date: 2016-11-15)
+# mapmate 0.2.0 (Release date: 2016-11-15)
 
 * Added functions to assist with network maps: `gc_endpoints`, `gc_arcs`, and `gc_paths`.
 * Added help documentation and runnable examples of the network-related functions.
