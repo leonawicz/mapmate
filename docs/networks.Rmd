@@ -144,7 +144,7 @@ As a side note, if you redo the above example for flat maps using the unbroken d
 you will see why the arc segments are handled differently when preparing data for flat maps vs. for globes.
 
 ```{r globe_setup, eval=FALSE}
-n <- max(paths_flat$id)
+n <- max(paths_globe$id)
 png.args <- list(width=600, height=600, bg="black")
 clrs <- c("#FFFFFF", "#FF450050", "#FF4500", "#FFFFFF50")
 ```
