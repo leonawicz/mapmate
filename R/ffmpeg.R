@@ -2,6 +2,7 @@
 #'
 #' Make a video file from a sequence of still images using FFmpeg.
 #'
+#' @details
 #' \code{ffmpeg} is a wrapper function around the popular FFmpeg command line multimedia framework.
 #' It translates arguments provided by the user in familiar R syntax into a system call to the \code{ffmpeg} command line tool, which must be installed on the system.
 #'
@@ -11,6 +12,7 @@
 #' Since this function is provided in the context of the \code{mapmate} package, it is aimed at assisting with converting still image sequences to video.
 #' While additional uses may be incorporated into \code{ffmpeg} in future, the FFmpeg multimedia framework itself provides a far broader suite of tools and functionality than is needed here.
 #'
+#' \subsection{Input Files}{
 #' A common way to specify a set of input image files when using FFmpeg directy is to provide something like \code{myimages%04d.png},
 #' which requires specifying the entire, non-changing file name with the only substitution being for the unique, order, consecutive integer file numbering component of the file name.
 #' The pattern used indicates how may places are occupied by the file indices, which should be constant. In this example, \code{%04d} represents the file numbering \code{0000, 0001, 0002, ..., 9999}.
@@ -21,44 +23,101 @@
 #' Linux users may find this additional option helpful in cases where file naming is not quite as described above or, for example, if there are multiple sequences of files in one directory.
 #' If \code{glob=TRUE}, wildcards can be used in the \code{pattern} argument, e.g., \code{pattern="*png"}, \code{pattern="myimages*png"}, or \code{pattern="*images0*.png"}.
 #' The default is \code{glob=FALSE} and \code{glob} is simply ignored on Windows.
+#' }
+#'
+#' \subsection{Framerates}{
+#' Framerates: For \code{rate}, non-integer numeric values are rounded. Character options may be a valid abbreviation such as \code{"ntsc"} or a quoted ratio such as \code{"30000/1001"}.
+#' Note that this is the familiar "29.97" (or, 29.97003, to be exact) but FFmpeg does not accept values like these.
+#' Using \code{delay} instead of \code{rate} is more limiting since \code{delay} is converted back to rate (\eqn{delay=1/rate}), but must then be rounded to an integer.
+#' Using \code{rate} is recommended. Arbitrary, non-standard framerates may lead to rendered videos that do not play properly in many media players.
+#' For common settings and character abbreviations, see \link{http://ffmpeg.org/ffmpeg-utils.html#Video-rate}.
+#' }
+#'
+#' \subsection{Output Scaling}{
+#' If \code{size} is not set to \code{"source"}, the output video is scaled.
+#' \code{size} can be a character string of dimensions in length by height format such as \code{"720x480"} or an abbreviated standard such as \code{"ntsc"}.
+#' See \link{http://ffmpeg.org/ffmpeg-utils.html#Video-size} for common dimensions and available abbreviations.
+#' }
+#'
+#' \subsection{Presets, Codecs, Pixel Formats And Lossless Encoding}{
+#' Presets provide a certain encoding speed to compression ratio.
+#' Available presets include \code{ultrafast}, \code{superfast}, \code{veryfast}, \code{faster}, \code{fast}, \code{medium}, \code{slow}, \code{slower}, \code{veryslow}.
+#' Faster speed corresponds to greater file size. Slower speeds are due to greater compression.
+#'
+#' \code{codec} is ignored if the file name in \code{pattern} ends with \code{.gif}.
+#' For other video output file types a default codec is used depending on the file extension in \code{pattern} when \code{codec="default"}.
+#' These can be overridden with options like \code{codec="h264"}, \code{"libx264"}, \code{"libvpx"}, \code{"prores"}, \code{"qtrle"}, etc.,
+#' but the user needs to be knowledgeable regarding which codecs can be used for which output types or errors will be thrown.
+#'
+#' \code{format} is ignored if the file name in \code{pattern} ends with \code{.gif}.
+#' The default is \code{"yuv420p"}, which performs 4:2:0 chroma subsampling.
+#' This pixel format can reduce video quality, but it is the default because it ensures compatibility with most media players, many of which still cannot play 4:4:4 video.
+#' For valid alternatives, run \code{system("ffmpeg -pix_fmts")}.
+#'
+#' \code{lossless} is ignored except for relevant \code{codec} settings, e.g., \code{h264} or \code{libx264}.
+#' If \code{TRUE}, recommended \code{preset} values are \code{ultrafast} or \code{veryslow}. See \link{https://trac.ffmpeg.org/wiki/Encode/H.264} for more information.
+#' }
 #'
 #' @param dir directory containing images, defaults to working directory.
 #' @param pattern character, for matching a set of input image files. See details for acceptable and possible alternative patterns.
-#' @param glob logical, defaults to \code{FALSE}. Globbing is not available on Windows. Linux users, see details on how \code{glob} affects \code{pattern}.
-#' @param codec character, the video codec used. See details.
-#' @param start integer, frame to start from in input image sequence. Defaults to \code{start=1}.
-#' Set to zero if your image sequence has file names beginning from zero or a higher number if you want to skip frames.
 #' @param output character, output file name.
 #' @param output_dir character, output directory. Defaults to working directory.
-#' @param rate numeric, framerate of output video in Hz.
-#' @param delay numeric, time delay between frames in output video. Alternative to \code{rate}. \eqn{delay=1/rate}.
+#' @param rate integer or character, framerate of output video in Hz. See details.
+#' @param delay numeric, time delay between frames in output video. Alternative to \code{rate}. See details.
+#' @param start integer, frame to start from in input image sequence. Defaults to \code{start=1}.
+#' @param size character, the dimensions of the video output. Defaults to \code{"source"}, which is equal to the dimensions of the input files. Otherwise scaling is performed on the output. See details.
+#' @param preset character, encoding presets available in FFmpeg. Defaults to \code{ultrafast}. See details.
+#' @param codec character, the video codec used. See details.
+#' @param format character, the pixel format. See details.
+#' @param lossless logical, use lossless H.264 encoding if applicable. Defaults to \code{FALSE}. See details.
+#' Set to zero if your image sequence has file names beginning from zero or a higher number if you want to skip frames.
 #' @param overwrite logical, overwrite existing output file.
+#' @param glob logical, defaults to \code{FALSE}. Globbing is not available on Windows. Linux users, see details on how \code{glob} affects \code{pattern}.
+#' @param details logical, whether to show FFmpeg output on the R console.
 #'
 #' @return returns the system call to FFmpeg as a character string.
 #' @export
 #'
 #' @examples
-ffmpeg <- function(dir=".", pattern, output, output_dir=".", rate=30, delay=1/rate, codec="h264", start=1, overwrite=FALSE, glob=FALSE){
+ffmpeg <- function(dir=".", pattern, output, output_dir=".", rate="ntsc", delay=1, start=1, size="source",
+                   preset="ultrafast", codec="default", format="yuv420p", lossless=FALSE, overwrite=FALSE, glob=FALSE, details=FALSE){
   if (!missing(rate) && !missing(delay)) stop("specify 'rate' or 'delay' but not both")
-  if(!missing(delay)) rate <- 1/delay
-  rate <- paste("-r", rate)
+  if(!missing(delay)) rate <- round(1/delay)
 
   # input files
   linux <- .Platform$OS.type=="linux"
   iglob <- "-pattern_type glob -i "
   input <- file.path(dir, pattern)
-  input <- ifelse(linux & glob, paste0(iglob, "'", input, "'"), paste("-i", input))
-  input <- paste("-start_number", start, input)
+  input <- ifelse(linux & glob, paste0(iglob, "\"", input, "\""), paste("-i", input))
+  inrate <- paste("-framerate", rate)
+  start <- paste("-start_number", start)
+  input <- paste(start, inrate, input)
 
   #output files
-  output <- file.path(output_dir, output)
+  ext <- strsplit(output, "\\.")[[1]]
+  ext_stop <- "'output' must end in '.mp4', '.mov', '.mkv', '.webm', or '.gif'"
+  if(length(ext)==1) stop(ext_stop) else ext <- tail(ext, 1)
+  if(!ext %in% c("mp4", "mov", "mkv", "webm", "gif")) stop(ext_stop)
+  if(codec=="default" & ext != ".gif") codec <- switch(ext, .mp4="libx264", .mov="libx264", .mkv="libx264", .webm="libvpx")
 
-  output <- paste(output, rate, ifelse(overwrite, "-y", "-n"))
+  output <- file.path(output_dir, output)
+  if(size != "source") output <- paste("-s", size, output)
+  if(ext=="mp4"){
+    format <- paste0(",format=", format)
+    outrate <- paste0("-vf ", "\"", "fps=", rate, format, "\"")
+    output <- paste(outrate, output)
+  }
+  output <- paste(output, ifelse(overwrite, "-y", "-n"))
 
   #video codec
-  vc <- paste("-c:v", codec)
+  if(ext=="gif"){
+    vc <- " "
+  } else {
+    vc <- paste0(" -c:v ", codec, " -preset ", preset, " ")
+    if(lossless & codec %in% c("h264", "libx264")) vc <- paste0(vc, " -qp 0 ")
+  }
 
-  x <- paste("ffmpeg", input, vc, output)
-  details <- capture.output(system(x))
+  x <- paste0("ffmpeg ", input, vc, output)
+  if(details) system(x) else system(x, show.output.on.console=FALSE)
   x
 }
