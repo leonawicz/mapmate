@@ -11,7 +11,7 @@
 
 <meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-11-15" />
+<meta name="date" content="2016-11-18" />
 
 <title>Network maps</title>
 
@@ -265,7 +265,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Network maps</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-11-15</em></h4>
+<h4 class="date"><em>2016-11-18</em></h4>
 
 </div>
 
@@ -409,7 +409,7 @@ ylm &lt;-<span class="st"> </span><span class="kw">range</span>(paths_flat$lat) 
 <div id="globe-network-animation" class="section level1">
 <h1>Globe network animation</h1>
 <p>Here is an example plotting network paths along great circle arcs on the globe. Remember that we use the other data set, which was generated with the default <code>breakAtDateline=FALSE</code> in <code>gc_arcs</code>. As a side note, if you redo the above example for flat maps using the unbroken data, <code>paths_globe</code>, you will see why the arc segments are handled differently when preparing data for flat maps vs. for globes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">max</span>(paths_flat$id)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="kw">max</span>(paths_globe$id)
 png.args &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">width =</span> <span class="dv">600</span>, <span class="dt">height =</span> <span class="dv">600</span>, <span class="dt">bg =</span> <span class="st">&quot;black&quot;</span>)
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#FFFFFF&quot;</span>, <span class="st">&quot;#FF450050&quot;</span>, <span class="st">&quot;#FF4500&quot;</span>, <span class="st">&quot;#FFFFFF50&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gglist &lt;-<span class="st"> </span><span class="kw">save_seq</span>(paths_globe, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>,
