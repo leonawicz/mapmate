@@ -4,7 +4,7 @@ author: "Matthew Leonawicz"
 date: "`r Sys.Date()`"
 ---
 
-<!-- mapmate.md is generated from README.Rmd. Please edit that file -->
+<!-- mapmate.md is generated from mapmate.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(cache=TRUE, collapse=TRUE, comment=">", fig.path="README-Intro-", message=F, warning=F, error=F, eval=F, tidy=T)
