@@ -3,7 +3,7 @@
 #' Make a video file from a sequence of still images using FFmpeg.
 #'
 #' @details
-#' \code{ffmpeg} is a wrapper function around the popular FFmpeg command line multimedia framework.
+#' \code{ffmpeg} is a wrapper function around the popular FFmpeg command line multimedia framework (https://www.ffmpeg.org/).
 #' It translates arguments provided by the user in familiar R syntax into a system call to the \code{ffmpeg} command line tool, which must be installed on the system.
 #'
 #' \code{ffmpeg} does not provide complete flexibility to allow making every possible valid call to FFmpeg,
