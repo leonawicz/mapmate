@@ -419,10 +419,10 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   if(missing(cap)) cap <- mx
   if(cap <1) stop("'cap' must be >= 1.")
 
-  bg <- png.args$bg
-  if(is.null(bg)) bg <- "transparent"
-  if(!axes.only & axes.space) .theme <- .theme_blank_plus(bg=bg)
-  if(!axes.only & !axes.space) .theme <- .theme_blank(bg=bg)
+  if(is.null(png.args$bg)) png.args$bg <- "transparent"
+  if(is.null(png.args$res)) png.args$res <- 300
+  if(!axes.only & axes.space) .theme <- .theme_blank_plus(bg=png.args$bg)
+  if(!axes.only & !axes.space) .theme <- .theme_blank(bg=png.args$bg)
   if(mx >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the max frameID value.")
   .dots <- list(lazyeval::interp(~y <= x, .values=list(y=as.name(id), x=cap)))
@@ -434,7 +434,7 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   }
   if(axes.only){
     g <- g + ggplot2::scale_x_continuous(name="", breaks=seq(xlm[1], xlm[2], by=10), limits=xlm) +
-      ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col=col, bg=bg)
+      ggplot2::scale_y_continuous(name="", limits=ylm) + .theme_blank_plus(col=col, bg=png.args$bg)
   } else {
     g <- g + ggplot2::xlim(xlm) + ggplot2::ylim(ylm) + .theme
     if(cap != 1) g <- g + ggplot2::geom_line(colour=col, size=1)

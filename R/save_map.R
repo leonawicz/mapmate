@@ -246,8 +246,9 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
 
   }
 
-  bg <- png.args$bg
-  g <- g + .theme_blank(bg=ifelse(is.null(bg), "transparent", bg))
+  if(is.null(png.args$bg)) png.args$bg <- "transparent"
+  if(is.null(png.args$res)) png.args$res <- 300
+  g <- g + .theme_blank(bg=png.args$bg)
   g <- g + ggplot2::scale_x_continuous(limits=xlim, expand=c(0,0)) +
     ggplot2::scale_y_continuous(limits=ylim, expand=c(0,0))
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
