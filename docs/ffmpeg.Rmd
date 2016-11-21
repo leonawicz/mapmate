@@ -1,0 +1,163 @@
+---
+title: "Convert images to video from R"
+author: "Matthew Leonawicz"
+date: "`r Sys.Date()`"
+---
+
+<!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(cache=TRUE, collapse=TRUE, comment=">", fig.path="README-ffmpeg-", message=F, warning=F, error=F, eval=F, tidy=T)
+```
+
+This tutorial covers the use of `ffmpeg` in `mapmate`. `ffmpeg` is a wrapper function around the popular [FFmpeg command line multimedia framework](https://www.ffmpeg.org/).
+It translates arguments provided by the user in familiar R syntax into a system call to the `ffmpeg` command line tool, which must be installed on the system.
+
+# Context
+
+`ffmpeg` does not provide complete flexibility to allow making every possible valid call to FFmpeg,
+but users who are that well versed in the use of FFmpeg can use the command line utility directly or pass their custom calls directly to `system` from within R.
+The `ffmpeg` R function is primarily useful to users not well versed in the use of the FFmpeg multimedia framework who will be satisfied with the level of flexibility provided.
+Since this function is provided in the context of the `mapmate` package, it is aimed at assisting with converting still image sequences to video.
+While additional uses may be incorporated into `ffmpeg` in future, the FFmpeg multimedia framework itself provides a far broader suite of tools and functionality than is needed here.
+
+Keep in mind that the purpose of `mapmate` is not to generate animations directly from R. See packages like `animation` if that is more the goal.
+The goal that `mapmate` attempts to fulfill is strictly that of animation pre-production and it does so by focusing on the generation of still image sequences.
+Any animation is expected to be done later by the user via software dedicated to video editing and production.
+`ffmpeg` is provided in `mapmate` as an exception to the rule for users who wish to trade the full control and flexibility over video editing and production
+that `mapmate` aims to avoid entangling itself with for the convenience of generating relatively basic video output directly from an R session.
+
+Ultimately, if you want an incredibly fancy video, do not rely on `ffmpeg` to splice merge and overlay and juxtapose all your layers together,
+to crop and pan and rotate, to apply effects and transitions and every other form of video processing to your image sequences; finish the production outside of R, because that is what makes sense.
+If you are an FFmpeg expert, you don't need to use `ffmpeg` at all (but perhaps consider helping to improve this code!).
+If you are not an FFmpeg expert, use other video editing software.
+
+There always comes a point where it makes the most sense to transition from one application to another.
+When external solutions exist, it does not make sense to port the solution to every problem into R.
+Future package versions may provide more and more functionality and control over video production directly from R through `ffmpeg` or other functions,
+but at this time this should not be a primary development goal for `mapmate`.
+
+# Examples
+
+The `ffmpeg` examples below are made using any of three sets of map image sequences, individually and in combination.
+First, some great circle arc pathways are generated and sampled using the `network` data set in `mapmate`.
+The `borders` data set is also used for a couple versions of a map backgroud layer.
+The three image sequences are saved to disk using `save_seq`, which is the primary purpose of the `mapmate` package.
+
+Afterward, `ffmpeg` is called several times. `ffmpeg` operates on these files to convert the image sequences to videos.
+Some example `ffmpeg` calls specify gif output so that those gifs may be shown here in line with the tutorial code and documentation,
+but most of the calls focus on standard video output file types such as mp4.
+
+These examples all generate files serially and do not make use of `mclapply`.
+This is done in order to reach the widest audience. Feel free to adapt these examples in order to save time on the `save_seq` calls if you are working in Linux.
+Be sure to check the [introduction vignette](mapmate.html#Parallel-Processing) first if you are not familair with the restrictions.
+
+## Simulate network paths
+
+```{r}
+library(mapmate)
+library(dplyr)
+library(purrr)
+
+set.seed(192)
+data(network)
+
+distFun <- function(x) x / max(x) # simple distance weighting
+endpoints <- gc_endpoints(network, "lon", "lat") %>%
+  mutate(Dist_wts=distFun(Dist)) %>% sample_n(1000, replace=TRUE)
+arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1", n=100)
+paths <- gc_paths(arcs, "group", size=5, direction="random", max.offset=100)
+
+n <- max(paths$id)
+clrs <- c("#FFFFFF", "#FF450050", "#FF4500", "#FFFFFF50")
+size <- c(1,1,3,2)
+args <- list(width=600, height=600, res=72)
+save_seq(paths, id="id", n.frames=n, col=clrs, type="network", pt.size=size, png.args=args)
+
+```
+
+The first set of `r n` maps should not take terribly long to output with the code above.
+The `borders` map sequences below will take a bit longer.
+At any rate, once these image sequences are saved, `ffmpeg` will be able to convert them to video relatively quickly.
+
+Two nation borders sequences are saved, one with a transparent background (the default) and one with a black background.
+Note for all three sequences, for simplicity the images are saved in the working directory.
+Also remember that even though default values are used for `lon`, `lat` and `n.period` and thus these arguments are unspecified,
+the important thing is that they are all the same across the three `save_seq` calls.
+This ensures that the nation borders background drawn on the rotating Earth has the same starting position, orientation, and speed of rotation as the great circle arc samples that are drawn on top.
+This is critical when layering of the image sequences is needed.
+The number of frames for the borders outputs is also set to match with the total number simulated by `gc_paths`.
+
+## Save background layers
+
+```{r}
+data(borders)
+borders <- map(1:n, ~mutate(borders, id = .x)) %>% bind_rows()
+sfx <- c("bg_transparent", "bg_black")
+args2 <- list(width=600, height=600, res=300, bg="black")
+save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", suffix=sfx[1], png.args=args)
+save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", suffix=sfx[2], png.args=args2)
+```
+
+## `ffmpeg` usage
+
+#ffmpeg(pattern, output, rate="ntsc", delay=1, start=1, size="source", preset="ultrafast", codec="default", format="yuv420p", lossless=FALSE, min.rate=10, fps.out=rate, alpha=1.0, overwrite=TRUE)
+
+Convert the network paths image sequence to an animated gif at 10 fps.
+
+```{r}
+p <- "maplines_bg_black_%04d.png"
+out <- "borders_10fps.gif"
+# 10 fps gif
+ffmpeg(pattern=p, output=out, rate=10)
+# Same as above. Set overwrite=TRUE if output exists.
+ffmpeg(pattern=p, output=out, delay=1/10, overwrite=TRUE)
+```
+
+However, you probably don't want to use transparent-background images like the following to make an animated gif
+because the images are actually stacked on top of each other in the making of the gifs.
+The default background color for png files generated by `mapmate` is transparent because `mapmate` is aimed at video output, not gifs.
+With the former, transparency generally allows more flexibility in video production in terms of layering images at each frame rather than stacking images over time.
+
+```{r}
+# The stacking of images is revealed by the transparent backgrounds
+ffmpeg(pattern="maplines_bg_transparent_%04d.png", output="borders_10fps_bad.gif", rate=10)
+```
+
+The next example below uses the default `rate="ntsc"`, or about 29.97 fps.
+Images in the sequence can be skipped using `start`.
+
+We continue to use gifs here because the output is embedded in this document immediately following the call for you to see the result,
+even though some settings used are more commonly associated with video formats and not with animated gifs.
+Several `ffmpeg` arguments are not relevant to gifs and will be seen in later examples when we switch from gifs to mp4 file outputs.
+
+```{r}
+# start on frame 60
+ffmpeg(pattern="maplines_bg_black_%04d.png", output="borders_start60.gif", start=60)
+```
+
+The output can be rescaled on the fly using `size` in dimensions or with a standard abbreviation, similar to how `rate` can be specified.
+
+```{r}
+p <- "maplines_bg_black_%04d.png"
+ffmpeg(pattern=p, output="borders_300x300.gif", size="300x300")
+ffmpeg(pattern=p, output="borders_720x480.gif", size="ntsc")
+```
+
+`pattern` can be a vector. Image sequences referred to in each element of `pattern` are merged, or blended, together.
+The first element is the top layer in the output.
+`rate`, `delay` and `start` are recycled if not also vectors when `pattern` is a vector.
+There are many limitation on how `ffmpeg` can be used and how complex the operations can be.
+The help documentation is thorough regarding what can and cannot be done with this wrapper function. Enter `?ffmpeg` or [see the details here](ffmpeg-help.html).
+
+The image sequence with the transparent background is placed on top.
+Both sequences could have transparent backgrounds, but since one does not, it should not be placed on top or it will mask the other.
+This can be seen in the second video.
+However, `alpha` can be set lower than `1.0` and this will add transparency on the fly to the top layer, as seen in the third video.
+
+```{r}
+p <- c("network_%04d.png", "maplines_bg_black_%04d.png")
+ffmpeg(pattern=p, output="layered.gif")
+ffmpeg(pattern=rev(p), output="layered_reversed.gif")
+ffmpeg(pattern=rev(p), output="layered_reversed_alpha50.gif", alpha=0.5)
+```
