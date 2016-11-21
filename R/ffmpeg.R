@@ -22,6 +22,7 @@
 #' to crop and pan and rotate, to apply effects and transitions and every other form of video processing to your image sequences; finish the production outside of R, because that is what makes sense.
 #' If you are an FFmpeg expert, you don't need to use \code{ffmpeg} at all (but perhaps consider helping to improve this code!).
 #' If you are not an FFmpeg expert, use other video editing software.
+#'
 #' There always comes a point where it makes the most sense to transition from one application to another.
 #' When external solutions exist, it does not make sense to port the solution to every problem into R.
 #' Future package versions may provide more and more functionality and control over video production directly from R through \code{ffmpeg} or other functions,
@@ -188,7 +189,7 @@ ffmpeg <- function(dir=".", pattern, output, output_dir=".", rate="ntsc", delay=
   if(ext=="gif"){
     vc <- " "
   } else {
-    if(codec=="default") codec <- switch(ext, .mp4="libx264", .mov="libx264", .mkv="libx264", .webm="libvpx")
+    if(codec=="default") codec <- switch(ext, mp4="libx264", mov="libx264", mkv="libx264", webm="libvpx")
     vc <- paste0(" -c:v ", codec, " -preset ", preset, " ")
     if(lossless & codec %in% c("h264", "libx264")) vc <- paste0(vc, "-qp 0 ")
   }
