@@ -82,7 +82,7 @@ It can have any name. Here it is called `frameID` and is computed based on the u
 It is passed to `save_map` via the `id` argument.
 
 For these static examples, arguments pertaining specifically to image sequences can be ignored for now (`n.period`, `n.frames`, `z.range`)
-and since we are not saving files to disk we can also ignore arguments like `dir` and `suffix`, but we will return to all these immediately after.
+and since we are not saving files to disk we can also ignore arguments like `dir` and `file`, but we will return to all these immediately after.
 
 ### Initial static 2D and 3D map examples
 
@@ -107,16 +107,16 @@ but there is no convenience in using `mapmate` for that when we can just use `gg
 Below are some examples of how `save_map` is usually called as a convenient still image sequence generator.
 
 Notice the importance of passing the known full range of the data.
-The optional filename `suffix` argument is also used.
+The optional `file` argument is also used.
 For a flat map we still do not need to pay attention to the globe-specific arguments (`lon`, `lat`, `rotation.axis`)
 and those dealing with displaying data while globe rotation occurs across the image sequence can also be ignored (`n.period`).
 
 ```{r}
 rng <- range(annualtemps$z, na.rm=TRUE)
 n <- length(unique(annualtemps$Year))
-suffix <- "annual_2D"
+file <- "annual_2D"
 temps <- split(temps, temps$frameID)
-walk(temps, ~save_map(.x, z.name="z", id=id, ortho=FALSE, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+walk(temps, ~save_map(.x, z.name="z", id=id, ortho=FALSE, col=pal, type="maptiles", file=file, z.range=rng))
 
 ```
 
@@ -146,8 +146,8 @@ With a custom path defined by `lon` and `lat` vectors, which may not be at all c
 
 
 ```{r}
-suffix <- "annual_3D_fixed"
-walk(temps, ~save_map(.x, z.name="z", id=id, lon=rep(-70, n), lat=50, n.period=n, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+file <- "annual_3D_fixed"
+walk(temps, ~save_map(.x, z.name="z", id=id, lon=rep(-70, n), lat=50, n.period=n, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng))
 
 ```
 
@@ -179,8 +179,8 @@ A single color can be used for the lines so the previously used palette for tile
 ```{r}
 data(borders)
 borders <- map(1:n, ~mutate(borders, frameID = .x))
-suffix <- "borders_3D_rotating"
-walk(borders, ~save_map(.x, id=id, lon=-70, lat=50, n.period=30, n.frames=n, col="orange", type="maplines", suffix=suffix))
+file <- "borders_3D_rotating"
+walk(borders, ~save_map(.x, id=id, lon=-70, lat=50, n.period=30, n.frames=n, col="orange", type="maplines", file=file))
 
 ```
 
@@ -193,8 +193,8 @@ The key difference with this example of fixed data and a changing perspective is
 ```{r}
 temps1 <- map(1:n, ~mutate(temps[[1]], frameID = .x))
 rng1 <- range(temps1[[1]]$z, na.rm=TRUE)
-suffix <- "year1_3D_rotating"
-walk(temps1, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng1))
+file <- "year1_3D_rotating"
+walk(temps1, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng1))
 
 ```
 
@@ -204,8 +204,8 @@ Finally we have the case of changing data drawn on a map with a changing perspec
 This example plots the full time series list of projected annual temperature anomalies data frames with globe rotation.
 
 ```{r}
-suffix <- "annual_3D_rotating"
-walk(temps, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+file <- "annual_3D_rotating"
+walk(temps, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng))
 
 ```
 
@@ -228,9 +228,9 @@ bath <- map(1:n, ~mutate(bathymetry, frameID = .x))
 rng_bath <- range(bath[[1]]$z, na.rm=TRUE)
 pal_bath <- c("black", "steelblue4")
 
-walk(bath, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath))
-walk(borders, ~save_map(.x, id=id, n.frames=n, col="black", type="maplines", suffix="foreground"))
-walk(temps, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng))
+walk(bath, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath))
+walk(borders, ~save_map(.x, id=id, n.frames=n, col="black", type="maplines", file="foreground"))
+walk(temps, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng))
 
 ```
 
@@ -260,9 +260,9 @@ It is beyond the scope of this tutorial.
 
 ```{r}
 library(parallel)
-mclapply(bath, save_map, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath, mc.cores=32)
-mclapply(borders, save_map, id=id, n.frames=n, col="orange", type="maplines", suffix="foreground", mc.cores=32)
-mclapply(temps, save_map, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng, mc.cores=32)
+mclapply(bath, save_map, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath, mc.cores=32)
+mclapply(borders, save_map, id=id, n.frames=n, col="orange", type="maplines", file="foreground", mc.cores=32)
+mclapply(temps, save_map, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng, mc.cores=32)
 
 ```
 
@@ -282,17 +282,17 @@ Since the function is primarily used for map sequences, `style="map"` is the def
 
 ```{r}
 # Serial
-save_seq(bath, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath)
-save_seq(borders, id=id, n.frames=n, col="black", type="maplines", suffix="foreground")
-save_seq(temps, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng)
+save_seq(bath, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath)
+save_seq(borders, id=id, n.frames=n, col="black", type="maplines", file="foreground")
+save_seq(temps, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng)
 
 # Parallel, Linux, with 32 CPU cores available
 save_seq(bath, use_mclapply=TRUE, mc.cores=32, 
-  z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", suffix="background", z.range=rng_bath)
+  z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath)
 save_seq(borders, use_mclapply=TRUE, mc.cores=32, 
-  id=id, n.frames=n, col="black", type="maplines", suffix="foreground")
+  id=id, n.frames=n, col="black", type="maplines", file="foreground")
 save_seq(temps, use_mclapply=TRUE, mc.cores=32, 
-  z.name="z", id=id, n.frames=n, col=pal, type="maptiles", suffix="timeseries", z.range=rng)
+  z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng)
 
 ```
 
@@ -316,19 +316,19 @@ bio <- ggplot2::fortify(spdf, region="id") %>%
   left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by="id")
 n <- 30
 bio <- map(1:n, ~mutate(bio, frameID = .x) %>% rename(lon=long))
-suffix <- "bioDivPolygons_3D_rotating"
+file <- "bioDivPolygons_3D_rotating"
 x1 <- "BIODIVERSITY"
 clrs <- c("royalblue", "purple", "orange", "yellow")
 
 # Return a test map
-save_map(bio[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
+save_map(bio[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", file=file, save.plot=FALSE, return.plot=TRUE)
 ```
 
 ![](hc_rgeos_ex_1.png)<!-- -->
 
 ```{r}
 # Walk over all maps
-walk(bio, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", suffix=suffix))
+walk(bio, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", file=file))
 
 ```
 
@@ -352,17 +352,17 @@ r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
 bio2 <- rasterize(spdf, r, field=x1) %>% rasterToPoints %>%
   tbl_df() %>% setNames(c("lon", "lat", x1))
 bio2 <- map(1:n, ~mutate(bio2, frameID = .x))
-suffix <- "bioDivMaptiles_3D_rotating"
+file <- "bioDivMaptiles_3D_rotating"
 
 # Return a test map
-save_map(bio2[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix, save.plot=FALSE, return.plot=TRUE)
+save_map(bio2[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", file=file, save.plot=FALSE, return.plot=TRUE)
 ```
 
 ![](hc_rgeos_ex_2.png)<!-- -->
 
 ```{r}
 # Walk over all maps
-walk(bio2, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", suffix=suffix))
+walk(bio2, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", file=file))
 
 ```
 
