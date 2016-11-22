@@ -41,16 +41,18 @@ but at this time this should not be a primary development goal for `mapmate`.
 
 The `ffmpeg` examples below are made using any of three sets of map image sequences, individually and in combination.
 First, some great circle arc pathways are generated and sampled using the `network` data set in `mapmate`.
-The `borders` data set is also used for a couple versions of a map backgroud layer.
+The `borders` data set is also used for a couple versions of a map background layer.
 The three image sequences are saved to disk using `save_seq`, which is the primary purpose of the `mapmate` package.
 
 Afterward, `ffmpeg` is called several times. `ffmpeg` operates on these files to convert the image sequences to videos.
-Some example `ffmpeg` calls specify gif output so that those gifs may be shown here in line with the tutorial code and documentation,
-but most of the calls focus on standard video output file types such as mp4.
+Most of the example `ffmpeg` calls below specify gif output.
+Some animated gif output is shown here in line with the tutorial code and documentation.
+Some calls specifying video output (e.g., mp4 files) are included later.
+While gifs are shown, `ffmpeg` function argument defaults relate more to video file type output than to animated gifs because the former fit more within the context of `mapmate`.
 
 These examples all generate files serially and do not make use of `mclapply`.
 This is done in order to reach the widest audience. Feel free to adapt these examples in order to save time on the `save_seq` calls if you are working in Linux.
-Be sure to check the [introduction vignette](mapmate.html#Parallel-Processing) first if you are not familair with the restrictions.
+Be sure to check the [introduction vignette](mapmate.html#Parallel-Processing) first if you are not familiar with the restrictions.
 
 ## Simulate network paths
 
@@ -127,10 +129,6 @@ ffmpeg(pattern="maplines_bg_transparent_%04d.png", output="borders_10fps_bad.gif
 The next example below uses the default `rate="ntsc"`, or about 29.97 fps.
 Images in the sequence can be skipped using `start`.
 
-We continue to use gifs here because the output is embedded in this document immediately following the call for you to see the result,
-even though some settings used are more commonly associated with video formats and not with animated gifs.
-Several `ffmpeg` arguments are not relevant to gifs and will be seen in later examples when we switch from gifs to mp4 file outputs.
-
 ```{r}
 # start on frame 60
 ffmpeg(pattern="maplines_bg_black_%04d.png", output="borders_start60.gif", start=60)
@@ -144,6 +142,36 @@ ffmpeg(pattern=p, output="borders_300x300.gif", size="300x300")
 ffmpeg(pattern=p, output="borders_720x480.gif", size="ntsc")
 ```
 
+Here are some examples generating mp4 file outputs.
+See the help documentation for `ffmpeg` and experiment with the arguments.
+
+```{r}
+p <- "network_%04d.png"
+out <- "network.mp4"
+ffmpeg(pattern=p, output=out, rate="ntsc", size="ntsc", preset="ultrafast", lossless=TRUE, overwrite=TRUE)
+ffmpeg(pattern=p, output=out, rate=5, size="source", preset="veryslow", lossless=TRUE, min.rate="ntsc", overwrite=TRUE)
+ffmpeg(pattern=p, output=out, size="300x300", preset="veryslow", overwrite=TRUE)
+ffmpeg(pattern=p, output=out, delay=1, fps.out=10, overwrite=TRUE)
+```
+
+# Merging multiple iamge sequences
+
+The tutorial essentially ends with the previous examples above.
+I have included a small section regarding layering multiple image sequences into a single video (or gif) output here.
+However, it is a work in progress and does not actually work as intended.
+While the structure of the code needed to support merging image sequences is intact within `ffmpeg`,
+the resulting behavior of applying `ffmpeg` to multiple image sequences is not what is expected.
+
+I have retained this imperfect functionality in `ffmpeg` for a few reasons:
+
+* I plan to eventually improve it rather than remove it permanently.
+* If anyone with expertise in FFmpeg cares to work on this wrapper function, it is available on Github and you can see what I have begun with.
+* `mapmate` is not focused on direct-from-R animation, but rather on image sequence generation for video pre-production.
+Therefore, I don't mind that this function doesn't do everything yet and some permitted uses don't quite work right.
+If nothing else, for now it can help remind users that this package is not intended to support a need for direct animation like the `animation` package does.
+At least at this time, `ffmpeg` is considered an extra feature, which deviates from the main purpose of the package.
+
+That said, let's discuss sequence blending.
 `pattern` can be a vector. Image sequences referred to in each element of `pattern` are merged, or blended, together.
 The first element is the top layer in the output.
 `rate`, `delay` and `start` are recycled if not also vectors when `pattern` is a vector.
@@ -157,7 +185,20 @@ However, `alpha` can be set lower than `1.0` and this will add transparency on t
 
 ```{r}
 p <- c("network_%04d.png", "maplines_bg_black_%04d.png")
-ffmpeg(pattern=p, output="layered.gif")
-ffmpeg(pattern=rev(p), output="layered_reversed.gif")
-ffmpeg(pattern=rev(p), output="layered_reversed_alpha50.gif", alpha=0.5)
+ffmpeg(pattern=p, output="layered.mp4", alpha=1)
+ffmpeg(pattern=rev(p), output="layered_reversed.mp4")
+ffmpeg(pattern=rev(p), output="layered_reversed_alpha50.mp4", alpha=0.5)
 ```
+
+...or I should say, that is what I expect to see from the above three videos. As you can actually see, this is not what you get.
+Behavior can differ further between video outputs and animated gif outputs.
+Further still, more than two image sequences can be merged, yet while command line output (set `details=TRUE`) from FFmpeg displayed to the R console
+may suggest the merging proceeds successfully, a third image sequence layer never seems to be visible in the output video.
+Part of the issue is the code itself, but the root is of course that I don't fully understand yet exactly the nuances of how blending works in terms of raw FFmpeg syntax
+or what is the best way to specify merging (It seems there are several possible ways.).
+
+In summary, merging does not work and I advise against using it at this time unless your specific use case is simple and standard enough that `ffmpeg` gives you the output you want.
+Otherwise, only use `ffmpeg` to make basic video output from single image sequences.
+This was initially all I was going to develop, but I am leaving the possibility open of merging functionality to be more successfully integrated.
+The main goal for `mapmate` remains to provide image sequence generation under the assumption that users will do whatever they wish with their saved file sequences externally,
+whether that is to dump their images on a timeline in a popular GUI video editing software application or to use a command line application like FFmpeg from the terminal.
