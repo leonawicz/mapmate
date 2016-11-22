@@ -385,7 +385,7 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' @param axes.space if \code{axes.only=TRUE}, leave room for x and y axes in plot window when \code{axes.space=TRUE}.
 #' Remove this marginal area so that data are plotted over the full canvas when \code{axes.space=FALSE}.
 #' Defaults to \code{TRUE}. Ignored when \code{axes.only=TRUE} because of the explicit intent to draw axes.
-#' @param suffix character, optional suffix to be pasted onto output filename.
+#' @param file character, output filename pattern preceeding the image sequence numbering and file extension. Defaults to \code{"Rplot"}.
 #' @param png.args a list of arguments passed to \code{png}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
@@ -410,7 +410,7 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
 #'   cap=.x, col="blue", xlm=xlm, ylm=ylm))
 #' }
-save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, suffix=NULL,
+save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, file="Rplot",
                     png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
   type <- "tsline"
   if(missing(id)) stop("'id' column is missing.")
@@ -441,10 +441,9 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
   }
   if(save.plot){
     ext <- if(axes.only) "_axesOnly.png" else paste0("_%0", num.format, "d.png")
-    if(is.character(suffix)) type <- paste(type, suffix, sep="_")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
-    filename <- sprintf(paste0(dir, "/", type, ext), cap)
-    do.call(png, c(filename=filename, png.args))
+    file <- sprintf(paste0(dir, "/", file, ext), cap)
+    do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()
   }
