@@ -146,7 +146,15 @@
 #' @export
 #'
 #' @examples
-#' # not run
+#' \dontrun{
+#' data(borders)
+#' library(dplyr)
+#' n <- 90
+#' borders <- map(1:n, ~mutate(borders, id = .x)) %>% bind_rows()
+#' args <- list(width=300, height=300, res=300, bg="black")
+#' save_seq(borders, id="id", n.frames=n, col="white",
+#'          type="maplines", file="images", png.args=args)
+#' ffmpeg(pattern="images_%04d.png", output="video.mp4", rate=10)}
 ffmpeg <- function(dir=".", pattern, output, output_dir=".", rate="ntsc", delay=1, start=1, size="source",
                    preset="ultrafast", codec="default", format="yuv420p", lossless=FALSE, min.rate=10, fps.out=rate, alpha=1.0, overwrite=FALSE, glob=FALSE, details=FALSE){
   if (!missing(rate) && !missing(delay)) stop("specify 'rate' or 'delay' but not both")
