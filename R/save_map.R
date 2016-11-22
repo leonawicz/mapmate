@@ -114,8 +114,8 @@
 #' @param xlim numeric vector, defaults to \code{(-180, 180)}. Will crop to range of longitudes in \code{data} if \code{NULL}.
 #' @param ylim numeric vector, defaults to \code{(-90, 90)}. Will crop to range of latitudes in \code{data} if \code{NULL}.
 #' @param pt.size numeric vector, applies only to \code{type="network"}. Point sizes follow same order as colors for networks. See details.
-#' @param suffix character, optional suffix to be pasted onto output filename.
 #' @param rotation.axis the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.
+#' @param file character, output filename pattern preceeding the image sequence numbering and file extension. Defaults to \code{"Rplot"}.
 #' @param png.args a list of arguments passed to \code{png}. \code{bg} will still be used to color the plot bakground if \code{return.plot=TRUE}
 #' so continue to pass \code{png.args} a background color when \code{bg} is not the default \code{transparent} even if \code{save.plot=FALSE}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
@@ -139,16 +139,16 @@
 #' temps <- split(temps, temps$frameID)
 #' rng <- range(annualtemps$z, na.rm=TRUE)
 #' n <- length(unique(annualtemps$Year))
-#' suffix <- "annual_3D_rotating"
+#' filename <- "annual_3D_rotating"
 #'
 #' # should specify a dir or set working dir for file output
 #' # consider running over a smaller subset of frame IDs
 #' walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
-#'   n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+#'   n.period=30, n.frames=n, col=pal, type="maptiles", file=filename, z.range=rng))
 #' }
 save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period,
                      ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), pt.size=c(1,0.5,1,0.5),
-                     suffix=NULL, rotation.axis=23.4, png.args=list(width=1920, height=1080, res=300, bg="transparent"),
+                     rotation.axis=23.4, file="Rplot", png.args=list(width=1920, height=1080, res=300, bg="transparent"),
                      save.plot=TRUE, return.plot=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
@@ -253,10 +253,9 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
     ggplot2::scale_y_continuous(limits=ylim, expand=c(0,0))
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
   if(save.plot){
-    if(is.character(suffix)) type <- paste(type, suffix, sep="_")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
-    filename <- sprintf(paste0(dir, "/", type, "_%0", num.format, "d.png"), i)
-    do.call(png, c(filename=filename, png.args))
+    file <- sprintf(paste0(dir, "/", file, "_%0", num.format, "d.png"), i)
+    do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()
   }
