@@ -3,7 +3,7 @@
 #' Make a video file from a sequence of still images using FFmpeg.
 #'
 #' @details
-#' \code{ffmpeg} is a wrapper function around the popular FFmpeg command line multimedia framework (https://www.ffmpeg.org/).
+#' \code{ffmpeg} is a wrapper function around the popular \href{https://www.ffmpeg.org/}{FFmpeg command line multimedia framework}.
 #' It translates arguments provided by the user in familiar R syntax into a system call to the \code{ffmpeg} command line tool, which must be installed on the system.
 #'
 #' \code{ffmpeg} does not provide complete flexibility to allow making every possible valid call to FFmpeg,
@@ -45,6 +45,9 @@
 #' }
 #'
 #' \subsection{Merging multiple image sequences}{
+#'
+#' \emph{Merging is experimental and under development. It does not yet work as intended.}
+#'
 #' \code{pattern} may be a vector referring to multiple image sequences. This is for merging or blending layers into one output video file.
 #' The first vector element refers to the top layer among image sequences.
 #' All files do not need to be in the same directory; \code{dir} can be vectorized to match with \code{pattern} if sequences are in different locations.
@@ -69,7 +72,7 @@
 #' Note that this is the familiar "29.97" (or, 29.97003, to be exact) but FFmpeg does not accept values like these.
 #' Using \code{delay} instead of \code{rate} is more limiting since \code{delay} is converted back to rate (\eqn{delay=1/rate}), but must then be rounded to an integer.
 #' Using \code{rate} is recommended. Arbitrary, non-standard framerates may lead to rendered videos that do not play properly in many media players.
-#' For common settings and character abbreviations, see \code{http://ffmpeg.org/ffmpeg-utils.html#Video-rate}.
+#' For common settings and character abbreviations, see \href{http://ffmpeg.org/ffmpeg-utils.html#Video-rate}{FFmpeg standard video rates}.
 #'
 #' \code{rate} technically refers to the assumed or intended framerate of the input image file sequence.
 #' This is important to mention because of the distinction between input and output framerates in FFmpeg.
@@ -79,7 +82,7 @@
 #' \subsection{Output Scaling}{
 #' If \code{size} is not set to \code{"source"}, the output video is scaled.
 #' \code{size} can be a character string of dimensions in length by height format such as \code{"720x480"} or an abbreviated standard such as \code{"ntsc"}.
-#' See \code{http://ffmpeg.org/ffmpeg-utils.html#Video-size} for common dimensions and available abbreviations.
+#' See \href{http://ffmpeg.org/ffmpeg-utils.html#Video-size}{FFmpeg standard video sizes} for common dimensions and available abbreviations.
 #' }
 #'
 #' \subsection{Presets, Codecs, Pixel Formats, Lossless Encoding, and minimum framerates}{
