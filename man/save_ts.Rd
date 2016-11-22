@@ -5,7 +5,7 @@
 \title{Save time series plots}
 \usage{
 save_ts(data, x, y, id, cap, dir = getwd(), col = "black", xlm, ylm,
-  axes.only = FALSE, axes.space = TRUE, suffix = NULL,
+  axes.only = FALSE, axes.space = TRUE, file = "Rplot",
   png.args = list(width = 1920, height = 1080, res = 300, bg = "transparent"),
   save.plot = TRUE, return.plot = FALSE, num.format = 4)
 }
@@ -35,7 +35,7 @@ The rows of data retained are all those where \code{p <= cap}, where \code{p} re
 Remove this marginal area so that data are plotted over the full canvas when \code{axes.space=FALSE}.
 Defaults to \code{TRUE}. Ignored when \code{axes.only=TRUE} because of the explicit intent to draw axes.}
 
-\item{suffix}{character, optional suffix to be pasted onto output filename.}
+\item{file}{character, output filename pattern preceeding the image sequence numbering and file extension. Defaults to \code{"Rplot"}.}
 
 \item{png.args}{a list of arguments passed to \code{png}.}
 

@@ -7,8 +7,8 @@
 ffmpeg(dir = ".", pattern, output, output_dir = ".", rate = "ntsc",
   delay = 1, start = 1, size = "source", preset = "ultrafast",
   codec = "default", format = "yuv420p", lossless = FALSE,
-  min.rate = 10, fps.out = rate, overwrite = FALSE, glob = FALSE,
-  details = FALSE)
+  min.rate = 10, fps.out = rate, alpha = 1, overwrite = FALSE,
+  glob = FALSE, details = FALSE)
 }
 \arguments{
 \item{dir}{directory containing images, defaults to working directory.}
@@ -40,6 +40,9 @@ Set to zero if your image sequence has file names beginning from zero or a highe
 
 \item{fps.out}{integer or character, framerate of output video. This can be given in the same ways as \code{rate}. Defaults to \code{rate}. See details.}
 
+\item{alpha}{numeric, from 0 to 1.0. Only applicable when \code{pattern} is vectorized, referring to layering of multiple image sequences.
+Defaults to \code{1.0} (non-transparent) since \code{mapmate} produces transparent-background png sequences by default with subsequent layering in mind.}
+
 \item{overwrite}{logical, overwrite existing output file.}
 
 \item{glob}{logical, defaults to \code{FALSE}. Globbing is not available on Windows. Linux users, see details on how \code{glob} affects \code{pattern}.}
@@ -53,7 +56,7 @@ returns the system call to FFmpeg as a character string.
 Make a video file from a sequence of still images using FFmpeg.
 }
 \details{
-\code{ffmpeg} is a wrapper function around the popular FFmpeg command line multimedia framework.
+\code{ffmpeg} is a wrapper function around the popular \href{https://www.ffmpeg.org/}{FFmpeg command line multimedia framework}.
 It translates arguments provided by the user in familiar R syntax into a system call to the \code{ffmpeg} command line tool, which must be installed on the system.
 
 \code{ffmpeg} does not provide complete flexibility to allow making every possible valid call to FFmpeg,
@@ -61,6 +64,22 @@ but users who are that well versed in the use of FFmpeg can use the command line
 The \code{ffmpeg} R function is primarily useful to users not well versed in the use of the FFmpeg multimedia framework who will be satisfied with the level of flexibility provided.
 Since this function is provided in the context of the \code{mapmate} package, it is aimed at assisting with converting still image sequences to video.
 While additional uses may be incorporated into \code{ffmpeg} in future, the FFmpeg multimedia framework itself provides a far broader suite of tools and functionality than is needed here.
+
+Keep in mind that the purpose of \code{mapmate} is not to generate animations directly from R. See packages like \code{animation} if that is more the goal.
+The goal that \code{mapmate} attempts to fulfill is strictly that of animation pre-production and it does so by focusing on the generation of still image sequences.
+Any animation is expected to be done later by the user via software dedicated to video editing and production.
+\code{ffmpeg} is provided in \code{mapmate} as an exception to the rule for users who wish to trade the full control and flexibility over video editing and production
+that \code{mapmate} aims to avoid entangling itself with for the convenience of generating relatively basic video output directly from an R session.
+
+Ultimately, if you want an incredibly fancy video, do not rely on \code{ffmpeg} to splice merge and overlay and juxtapose all your layers together,
+to crop and pan and rotate, to apply effects and transitions and every other form of video processing to your image sequences; finish the production outside of R, because that is what makes sense.
+If you are an FFmpeg expert, you don't need to use \code{ffmpeg} at all (but perhaps consider helping to improve this code!).
+If you are not an FFmpeg expert, use other video editing software.
+
+There always comes a point where it makes the most sense to transition from one application to another.
+When external solutions exist, it does not make sense to port the solution to every problem into R.
+Future package versions may provide more and more functionality and control over video production directly from R through \code{ffmpeg} or other functions,
+but at this time this should not be a primary development goal for \code{mapmate}.
 
 \subsection{Input Files}{
 A common way to specify a set of input image files when using FFmpeg directy is to provide something like \code{myimages\%04d.png},
@@ -73,6 +92,32 @@ An alternative and often convenient way to provide a general pattern for matchin
 Linux users may find this additional option helpful in cases where file naming is not quite as described above or, for example, if there are multiple sequences of files in one directory.
 If \code{glob=TRUE}, wildcards can be used in the \code{pattern} argument, e.g., \code{pattern="*png"}, \code{pattern="myimages*png"}, or \code{pattern="*images0*.png"}.
 The default is \code{glob=FALSE} and \code{glob} is simply ignored on Windows.
+
+The current package version of \code{ffmpeg} allows merging more than two sequences without error,
+but testing has not confirmed this is actually working correctly, as all layers do not always appear in the output video.
+}
+
+\subsection{Merging multiple image sequences}{
+
+\emph{Merging is experimental and under development. It does not yet work as intended.}
+
+\code{pattern} may be a vector referring to multiple image sequences. This is for merging or blending layers into one output video file.
+The first vector element refers to the top layer among image sequences.
+All files do not need to be in the same directory; \code{dir} can be vectorized to match with \code{pattern} if sequences are in different locations.
+Similarly, \code{rate}, \code{delay}, and \code{start} can be vectors. If nothing but \code{pattern} is a vector, the other arguments are duplicated.
+Vectors should be of equal length.
+
+Merging capabilities are limited. An expert in the use of FFmpeg should use it directly and not via this wrapper function.
+If merging sequences with this function, it is recommended they be the same number of frames, begin from the same starting frame, and proceed at the same frame rate, though this is not strictly required.
+Also, merging only two sequences at a time is recommended or they may not all display.
+Sequences must be very similar in a variety of respects. For example, images must be the same dimensions across sequences.
+For greater control, use FFmpeg directly from the command line and consult official FFmpeg documentation, or help improve this wrapper function via Github issues and pull requests.
+
+Remember that \code{mapmate} generates still image sequences that are intended for later use in a dedicated video editing program, one with a GUI, unlike FFmpeg which is a command line application.
+In such a program, it is assumed the user may be dropping multiple image sequences on different tracks of a project timeline, layering the tracks together,
+and for this reason the default background png color is transparent.
+In the default case, using \code{alpha} less than \code{1.0} is generally unnecessary when merging two image sequences into a video with FFmpeg.
+If not using defaults, \code{alpha} may not provide the flexibility desired.
 }
 
 \subsection{Framerates}{
@@ -80,7 +125,7 @@ For \code{rate}, non-integer numeric values are rounded. Character options may b
 Note that this is the familiar "29.97" (or, 29.97003, to be exact) but FFmpeg does not accept values like these.
 Using \code{delay} instead of \code{rate} is more limiting since \code{delay} is converted back to rate (\eqn{delay=1/rate}), but must then be rounded to an integer.
 Using \code{rate} is recommended. Arbitrary, non-standard framerates may lead to rendered videos that do not play properly in many media players.
-For common settings and character abbreviations, see \code{http://ffmpeg.org/ffmpeg-utils.html#Video-rate}.
+For common settings and character abbreviations, see \href{http://ffmpeg.org/ffmpeg-utils.html#Video-rate}{FFmpeg standard video rates}.
 
 \code{rate} technically refers to the assumed or intended framerate of the input image file sequence.
 This is important to mention because of the distinction between input and output framerates in FFmpeg.
@@ -90,7 +135,7 @@ See the details below on \code{min.rate} and \code{fps.out} to understand the di
 \subsection{Output Scaling}{
 If \code{size} is not set to \code{"source"}, the output video is scaled.
 \code{size} can be a character string of dimensions in length by height format such as \code{"720x480"} or an abbreviated standard such as \code{"ntsc"}.
-See \code{http://ffmpeg.org/ffmpeg-utils.html#Video-size} for common dimensions and available abbreviations.
+See \href{http://ffmpeg.org/ffmpeg-utils.html#Video-size}{FFmpeg standard video sizes} for common dimensions and available abbreviations.
 }
 
 \subsection{Presets, Codecs, Pixel Formats, Lossless Encoding, and minimum framerates}{

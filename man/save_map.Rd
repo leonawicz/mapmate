@@ -8,7 +8,7 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
   lon = 0, lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
   col = NULL, type, contour = "none", density.geom = "tile",
   xlim = c(-180, 180), ylim = c(-90, 90), pt.size = c(1, 0.5, 1, 0.5),
-  suffix = NULL, rotation.axis = 23.4, png.args = list(width = 1920,
+  rotation.axis = 23.4, file = "Rplot", png.args = list(width = 1920,
   height = 1080, res = 300, bg = "transparent"), save.plot = TRUE,
   return.plot = FALSE, num.format = 4)
 }
@@ -47,9 +47,9 @@ save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
 
 \item{pt.size}{numeric vector, applies only to \code{type="network"}. Point sizes follow same order as colors for networks. See details.}
 
-\item{suffix}{character, optional suffix to be pasted onto output filename.}
-
 \item{rotation.axis}{the rotation axis used when \code{ortho=TRUE} for globe plots. Defaults to 23.4 degrees.}
+
+\item{file}{character, output filename pattern preceeding the image sequence numbering and file extension. Defaults to \code{"Rplot"}.}
 
 \item{png.args}{a list of arguments passed to \code{png}. \code{bg} will still be used to color the plot bakground if \code{return.plot=TRUE}
 so continue to pass \code{png.args} a background color when \code{bg} is not the default \code{transparent} even if \code{save.plot=FALSE}.}
@@ -175,12 +175,12 @@ temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
 temps <- split(temps, temps$frameID)
 rng <- range(annualtemps$z, na.rm=TRUE)
 n <- length(unique(annualtemps$Year))
-suffix <- "annual_3D_rotating"
+filename <- "annual_3D_rotating"
 
 # should specify a dir or set working dir for file output
 # consider running over a smaller subset of frame IDs
 walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
-  n.period=30, n.frames=n, col=pal, type="maptiles", suffix=suffix, z.range=rng))
+  n.period=30, n.frames=n, col=pal, type="maptiles", file=filename, z.range=rng))
 }
 }
 
