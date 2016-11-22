@@ -154,7 +154,7 @@ ffmpeg(pattern=p, output=out, size="300x300", preset="veryslow", overwrite=TRUE)
 ffmpeg(pattern=p, output=out, delay=1, fps.out=10, overwrite=TRUE)
 ```
 
-# Merging multiple iamge sequences
+# Limitations with merging multiple image sequences
 
 The tutorial essentially ends with the previous examples above.
 I have included a small section regarding layering multiple image sequences into a single video (or gif) output here.
