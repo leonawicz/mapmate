@@ -175,6 +175,14 @@ This matching can be overridden by specifying \code{fps.out} as something other 
 }
 }
 \examples{
-# not run
+\dontrun{
+data(borders)
+library(dplyr)
+n <- 90
+borders <- map(1:n, ~mutate(borders, id = .x)) \%>\% bind_rows()
+args <- list(width=300, height=300, res=300, bg="black")
+save_seq(borders, id="id", n.frames=n, col="white",
+         type="maplines", file="images", png.args=args)
+ffmpeg(pattern="images_\%04d.png", output="video.mp4", rate=10)}
 }
 
