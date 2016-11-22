@@ -95,10 +95,10 @@ The number of frames for the borders outputs is also set to match with the total
 ```{r}
 data(borders)
 borders <- map(1:n, ~mutate(borders, id = .x)) %>% bind_rows()
-sfx <- c("bg_transparent", "bg_black")
+file <- c("bg_transparent", "bg_black")
 args2 <- list(width=600, height=600, res=300, bg="black")
-save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", suffix=sfx[1], png.args=args)
-save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", suffix=sfx[2], png.args=args2)
+save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", file=file[1], png.args=args)
+save_seq(borders, id="id", n.frames=n, col="dodgerblue", type="maplines", file=file[2], png.args=args2)
 ```
 
 ## `ffmpeg` usage
@@ -176,7 +176,7 @@ That said, let's discuss sequence blending.
 The first element is the top layer in the output.
 `rate`, `delay` and `start` are recycled if not also vectors when `pattern` is a vector.
 There are many limitation on how `ffmpeg` can be used and how complex the operations can be.
-The help documentation is thorough regarding what can and cannot be done with this wrapper function. Enter `?ffmpeg` or [see the details here](ffmpeg-help.html).
+The help documentation is thorough regarding what can and cannot be done with this wrapper function. Enter `?ffmpeg` for help.
 
 The image sequence with the transparent background is placed on top.
 Both sequences could have transparent backgrounds, but since one does not, it should not be placed on top or it will mask the other.
