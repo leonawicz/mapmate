@@ -389,6 +389,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' @param png.args a list of arguments passed to \code{png}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
+#' @param overwrite logical, overwrite existing files. Defaults to \code{FALSE}. If file exists and \code{return.plot=TRUE} the plot is still returned. Otherwise returns \code{NULL}.
+#' This is a frame by frame check on each file. File writing is simply skipped for existing files when \code{overwrite=FALSE}. No error or warning is thrown.
 #' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
 #' @return usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
@@ -410,8 +412,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
 #'   cap=.x, col="blue", xlm=xlm, ylm=ylm))
 #' }
-save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, file="Rplot",
-                    png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, num.format=4){
+save_ts <- function(data, x, y, id, cap, dir=".", col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, file="Rplot",
+                    png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, overwrite=FALSE, num.format=4){
   type <- "tsline"
   if(missing(id)) stop("'id' column is missing.")
   if(!id %in% names(data)) stop("'id' must refer to a column name.")
@@ -443,6 +445,7 @@ save_ts <- function(data, x, y, id, cap, dir=getwd(), col="black", xlm, ylm, axe
     ext <- if(axes.only) "_axesOnly.png" else paste0("_%0", num.format, "d.png")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
     file <- sprintf(paste0(dir, "/", file, ext), cap)
+    if(file.exists(file)){ if(return.plot) return(g) else return(NULL) }
     do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()

@@ -95,14 +95,6 @@ h6 {
 }
 </style>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-46129458-3', 'auto');
-  ga('send', 'pageview');
-</script>
 
 </head>
 
@@ -216,23 +208,23 @@ $(document).ready(function () {
         <li>
   <a href="index.html">
     <span class="fa fa-home fa-lg"></span>
-
+     
     Home
   </a>
 </li>
 <li>
   <a href="mapmate.html">
     <span class="fa fa-info fa-lg"></span>
-
+     
     Introduction
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-globe fa-lg"></span>
-
+     
     Visual examples
-
+     
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
@@ -244,12 +236,19 @@ $(document).ready(function () {
     </li>
   </ul>
 </li>
+<li>
+  <a href="ffmpeg.html">
+    <span class="fa fa-play-circle-o fa-lg"></span>
+     
+    ffmpeg
+  </a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/leonawicz/mapmate">
     <span class="fa fa-github fa-lg"></span>
-
+     
   </a>
 </li>
       </ul>
@@ -338,9 +337,9 @@ temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, 
 frame1 &lt;-<span class="st"> </span><span class="kw">filter</span>(temps, frameID ==<span class="st"> </span><span class="dv">1</span>)  <span class="co"># subset to first frame</span>
 id &lt;-<span class="st"> &quot;frameID&quot;</span>
 
-<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>,
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
-<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>,
+<span class="kw">save_map</span>(frame1, <span class="dt">z.name =</span> <span class="st">&quot;z&quot;</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">&quot;maptiles&quot;</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Home-unnamed-chunk-3-1.png" alt="2D flat map and 3D globe" /><img src="README-Home-unnamed-chunk-3-2.png" alt="2D flat map and 3D globe" /></p>
 <p>The above is only a very basic initial example of static 2D and 3D maps. See the <a href="mapmate.html">introduction vignette</a> for more complete and more typical usage examples:</p>

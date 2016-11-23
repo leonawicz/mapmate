@@ -120,6 +120,8 @@
 #' so continue to pass \code{png.args} a background color when \code{bg} is not the default \code{transparent} even if \code{save.plot=FALSE}.
 #' @param save.plot save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.
 #' @param return.plot return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.
+#' @param overwrite logical, overwrite existing files. Defaults to \code{FALSE}. If file exists and \code{return.plot=TRUE} the plot is still returned. Otherwise returns \code{NULL}.
+#' This is a frame by frame check on each file. File writing is simply skipped for existing files when \code{overwrite=FALSE}. No error or warning is thrown.
 #' @param num.format number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.
 #'
 #' @return usually returns NULL after writing file to disk. May return a ggplot object with or without the file writing side effect.
@@ -146,10 +148,10 @@
 #' walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
 #'   n.period=30, n.frames=n, col=pal, type="maptiles", file=filename, z.range=rng))
 #' }
-save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, lat=0, n.period=360, n.frames=n.period,
+save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0, n.period=360, n.frames=n.period,
                      ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), pt.size=c(1,0.5,1,0.5),
                      rotation.axis=23.4, file="Rplot", png.args=list(width=1920, height=1080, res=300, bg="transparent"),
-                     save.plot=TRUE, return.plot=FALSE, num.format=4){
+                     save.plot=TRUE, return.plot=FALSE, overwrite=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
     warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
@@ -255,6 +257,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=getwd(), lon=0, la
   if(save.plot){
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
     file <- sprintf(paste0(dir, "/", file, "_%0", num.format, "d.png"), i)
+    if(file.exists(file)){ if(return.plot) return(g) else return(NULL) }
     do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()
