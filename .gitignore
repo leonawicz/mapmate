@@ -6,3 +6,4 @@ data-raw/*
 !data-raw/*.R
 rsconnect/
 docs/*_cache/
+docs/test-images/
