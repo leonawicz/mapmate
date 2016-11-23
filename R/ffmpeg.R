@@ -176,21 +176,25 @@ ffmpeg <- function(dir=".", pattern, output, output_dir=".", rate="ntsc", delay=
   if(length(ext)==1) stop(ext_stop) else ext <- utils::tail(ext, 1)
   if(!ext %in% c("mp4", "mov", "mkv", "webm", "gif")) stop(ext_stop)
   output <- file.path(output_dir, output)
-  if(size != "source") output <- paste("-s", size, output)
-
 
   # video filter chain
   format <- paste0("format=", format)
+  if(size == "source"){
+    size <- ""
+  } else if(ext != "gif"){
+    size <- paste0(",scale=", size, ",setsar=1:1")
+  } else size <- paste("-s", size)
+
   if(blend){
     blend_prefix <- "-filter_complex \"blend=all_mode='overlay':all_opacity="
     if(ext=="gif"){
       vf <- paste0(blend_prefix, alpha, "\"")
     } else {
-      vf <- paste0(blend_prefix, alpha, ",", format, "\"")
+      vf <- paste0(blend_prefix, alpha, ",", format, size, "\"")
     }
   } else if(ext=="gif"){
-    vf <- ""
-  } else vf <- paste0("-vf ", "\"", format, "\"")
+    vf <- size
+  } else vf <- paste0("-vf ", "\"", format, size, "\"")
 
   output <- paste(vf, output)
   outrate <- paste("-r", max(fps.out, min.rate))
