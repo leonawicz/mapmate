@@ -4,13 +4,13 @@
 \alias{save_map}
 \title{Save maps to disk}
 \usage{
-save_map(data, z.name = NULL, z.range = NULL, id, dir = getwd(),
-  lon = 0, lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
+save_map(data, z.name = NULL, z.range = NULL, id, dir = ".", lon = 0,
+  lat = 0, n.period = 360, n.frames = n.period, ortho = TRUE,
   col = NULL, type, contour = "none", density.geom = "tile",
   xlim = c(-180, 180), ylim = c(-90, 90), pt.size = c(1, 0.5, 1, 0.5),
   rotation.axis = 23.4, file = "Rplot", png.args = list(width = 1920,
   height = 1080, res = 300, bg = "transparent"), save.plot = TRUE,
-  return.plot = FALSE, num.format = 4)
+  return.plot = FALSE, overwrite = FALSE, num.format = 4)
 }
 \arguments{
 \item{data}{a data frame containing networks, tiles, lines or polygons information.}
@@ -57,6 +57,9 @@ so continue to pass \code{png.args} a background color when \code{bg} is not the
 \item{save.plot}{save the plot to disk. Defaults to \code{TRUE}. Typically only set to \code{FALSE} for demonstrations and testing.}
 
 \item{return.plot}{return the ggplot object. Defaults to \code{FALSE}. Only intended for single-plot demonstrations and testing, not for still image sequence automation.}
+
+\item{overwrite}{logical, overwrite existing files. Defaults to \code{FALSE}. If file exists and \code{return.plot=TRUE} the plot is still returned. Otherwise returns \code{NULL}.
+This is a frame by frame check on each file. File writing is simply skipped for existing files when \code{overwrite=FALSE}. No error or warning is thrown.}
 
 \item{num.format}{number of digits including any leading zeros for image sequence frame numbering. Defaults to 4, i.e. \code{0001, 0002, ...}.}
 }
