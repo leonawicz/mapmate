@@ -9,9 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Matthew Leonawicz" />
 
-<meta name="date" content="2016-11-18" />
 
 <title>Network maps</title>
 
@@ -246,6 +244,13 @@ $(document).ready(function () {
     </li>
   </ul>
 </li>
+<li>
+  <a href="ffmpeg.html">
+    <span class="fa fa-play-circle-o fa-lg"></span>
+
+    ffmpeg
+  </a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -264,8 +269,6 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Network maps</h1>
-<h4 class="author"><em>Matthew Leonawicz</em></h4>
-<h4 class="date"><em>2016-11-18</em></h4>
 
 </div>
 
@@ -385,14 +388,14 @@ ylm &lt;-<span class="st"> </span><span class="kw">range</span>(paths_flat$lat) 
 <p>The default background is transparent so I need to include this here since I have changed it to black. I have changed it to black in this example because I am making a reproducible gif for simplicity rather than doing any layering of separate image sequences in a video editor. Below, <code>saveGIF</code> from the <code>animation</code> package is used to make a simple gif from the plot sequence produced by <code>save_map</code> by looping over the list of returned plots.</p>
 <p>In summary, this is all a somewhat convoluted scenario to show you a short animated gif representing plots made by <code>save_map</code>. The intended use case for <code>save_map</code> is to simply export the sequence of png files and the user can do whatever they wish with those files subsequently. If literally all you want to do is make a short, simple animated gif of custom plots using a small amount of data, <em>just use the animation package</em>. You do not need <code>mapmate</code> for that. Also, if you are using <code>animation</code> in general, as with the code below, it is dependent on <code>ImageMagick</code>, which you will also have to install.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gglist &lt;-<span class="st"> </span><span class="kw">save_seq</span>(paths_flat, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>,
-    <span class="dt">ylim =</span> ylm, <span class="dt">suffix =</span> <span class="st">&quot;2D&quot;</span>, <span class="dt">png.args =</span> png.args, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
+    <span class="dt">ylim =</span> ylm, <span class="dt">png.args =</span> png.args, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">library</span>(animation)
 <span class="co"># you may need to specify a different path on your Windows machine you may</span>
 <span class="co"># also need to ensure convert.exe is part of your particular installation</span>
 <span class="kw">ani.options</span>(<span class="dt">convert =</span> <span class="st">&quot;C:/Program Files/ImageMagick-7.0.3-Q16/convert.exe&quot;</span>)
 <span class="kw">saveGIF</span>(for (i in <span class="kw">seq_along</span>(gglist)) <span class="kw">print</span>(gglist[[i]]), <span class="st">&quot;network2D.gif&quot;</span>, <span class="dt">interval =</span> <span class="dv">1</span>/<span class="dv">20</span>,
-    <span class="dt">ani.width =</span> <span class="dv">600</span>, <span class="dt">ani.height =</span> <span class="dv">300</span>)</code></pre></div>
+    <span class="dt">ani.width =</span> <span class="dv">960</span>, <span class="dt">ani.height =</span> <span class="dv">480</span>)</code></pre></div>
 <div class="figure">
 <img src="network2D.gif" alt="" />
 
@@ -401,7 +404,7 @@ ylm &lt;-<span class="st"> </span><span class="kw">range</span>(paths_flat$lat) 
 <h2></h2>
 <p>This <code>animation</code>-dependent example and the animated gif are not meant to be distractions from the purpose of this package. Despite the example gif, any code here related to <code>animation</code> is beyond the scope of this tutorial. If you have trouble running it, see the <code>animation</code> documentation and just do the following example instead, which is the way <code>mapmate</code> is meant to be used:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_seq</span>(paths_flat, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>,
-    <span class="dt">suffix =</span> <span class="st">&quot;2D&quot;</span>, <span class="dt">png.args =</span> png.args)
+    <span class="dt">file =</span> <span class="st">&quot;network2D&quot;</span>, <span class="dt">png.args =</span> png.args)
 <span class="co"># Next, do whatever you want with the files, such as import them to a video</span>
 <span class="co"># editing program</span></code></pre></div>
 </div>
@@ -413,8 +416,7 @@ ylm &lt;-<span class="st"> </span><span class="kw">range</span>(paths_flat$lat) 
 png.args &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">width =</span> <span class="dv">600</span>, <span class="dt">height =</span> <span class="dv">600</span>, <span class="dt">bg =</span> <span class="st">&quot;black&quot;</span>)
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#FFFFFF&quot;</span>, <span class="st">&quot;#FF450050&quot;</span>, <span class="st">&quot;#FF4500&quot;</span>, <span class="st">&quot;#FFFFFF50&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gglist &lt;-<span class="st"> </span><span class="kw">save_seq</span>(paths_globe, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>,
-    <span class="dt">pt.size =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>), <span class="dt">suffix =</span> <span class="st">&quot;3D&quot;</span>, <span class="dt">png.args =</span> png.args, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>,
-    <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
+    <span class="dt">pt.size =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>), <span class="dt">png.args =</span> png.args, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">library</span>(animation)
 <span class="kw">ani.options</span>(<span class="dt">convert =</span> <span class="st">&quot;C:/Program Files/ImageMagick-7.0.3-Q16/convert.exe&quot;</span>)
@@ -427,7 +429,7 @@ clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&q
 <h2></h2>
 <p>Again, normal usage is to just do the following and then use the saved still image sequence with full user control for whatever you like:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">save_seq</span>(paths_globe, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>,
-    <span class="dt">pt.size =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>), <span class="dt">suffix =</span> <span class="st">&quot;3D&quot;</span>, <span class="dt">png.args =</span> png.args)</code></pre></div>
+    <span class="dt">pt.size =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>), <span class="dt">file =</span> <span class="st">&quot;network3D&quot;</span>, <span class="dt">png.args =</span> png.args)</code></pre></div>
 </div>
 </div>
 
