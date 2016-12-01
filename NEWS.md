@@ -1,9 +1,10 @@
-# mapmate 0.2.1 (Release date: 2016-11-22)
+# mapmate 0.2.1 (Release date: 2016-12-01)
 
 * Added `ffmpeg` function to allow users to make video from image sequences directly from R. This function is still under active development, however, and can only meet basic needs.
 `mapmate` is still intended for image sequence generation, not direct animation, and users are encouraged to not depend on `ffmpeg` to work with their image sequences.
+* Added tutorial web page providing `ffmpeg` usage and current limitations.
 * Replaced `suffix` argument in `save_map` and `save_seq` with 'file', now the full filename preceding the file sequence numbering and file extension, defaulting to `'Rplot'`.
-* Updated package web pages, tutorials and help documentation.
+* Updated all package web pages, tutorials and help documentation.
 * Minor bug fixes.
 
 # mapmate 0.2.0 (Release date: 2016-11-15)
