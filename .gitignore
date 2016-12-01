@@ -7,3 +7,5 @@ data-raw/*
 rsconnect/
 docs/*_cache/
 docs/test-images/
+docs/*.mp4
+docs/*.md
