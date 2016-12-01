@@ -7,7 +7,7 @@ date: "`r Sys.Date()`"
   <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
   
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(cache=TRUE, collapse=TRUE, comment=">", fig.path="README-Network-", message=F, warning=F, error=F, tidy=T)
+knitr::opts_chunk$set(cache=FALSE, collapse=TRUE, comment=">", fig.path="README-Network-", message=F, warning=F, error=F, tidy=T)
 ```
 
 To install the package:
@@ -114,13 +114,13 @@ If literally all you want to do is make a short, simple animated gif of custom p
 Also, if you are using `animation` in general, as with the code below, it is dependent on `ImageMagick`, which you will also have to install.
 
 ```{r flat_animation, eval=FALSE}
-gglist <- save_seq(paths_flat, id="id", n.frames=n, ortho=FALSE, type="network", ylim=ylm, file="2D", png.args=png.args, save.plot=FALSE, return.plot=TRUE)
+gglist <- save_seq(paths_flat, id="id", n.frames=n, ortho=FALSE, type="network", ylim=ylm, png.args=png.args, save.plot=FALSE, return.plot=TRUE)
 
 library(animation)
 # you may need to specify a different path on your Windows machine
 # you may also need to ensure convert.exe is part of your particular installation
 ani.options(convert="C:/Program Files/ImageMagick-7.0.3-Q16/convert.exe")
-saveGIF(for(i in seq_along(gglist)) print(gglist[[i]]), "network2D.gif", interval=1/20, ani.width=600, ani.height=300)
+saveGIF(for(i in seq_along(gglist)) print(gglist[[i]]), "network2D.gif", interval=1/20, ani.width=960, ani.height=480)
 ```
 
 ![](network2D.gif)
@@ -132,7 +132,7 @@ Despite the example gif, any code here related to `animation` is beyond the scop
 If you have trouble running it, see the `animation` documentation and just do the following example instead, which is the way `mapmate` is meant to be used:
 
 ```{r flat_pngs, eval=FALSE}
-save_seq(paths_flat, id="id", n.frames=n, ortho=FALSE, type="network", file="2D", png.args=png.args)
+save_seq(paths_flat, id="id", n.frames=n, ortho=FALSE, type="network", file="network2D", png.args=png.args)
 # Next, do whatever you want with the files, such as import them to a video editing program
 ```
 
@@ -150,7 +150,7 @@ clrs <- c("#FFFFFF", "#FF450050", "#FF4500", "#FFFFFF50")
 ```
 
 ```{r globe_animation, eval=FALSE}
-gglist <- save_seq(paths_globe, id="id", n.frames=n, col=clrs, type="network", pt.size=c(1,1,3,2), file="3D", png.args=png.args, save.plot=FALSE, return.plot=TRUE)
+gglist <- save_seq(paths_globe, id="id", n.frames=n, col=clrs, type="network", pt.size=c(1,1,3,2), png.args=png.args, save.plot=FALSE, return.plot=TRUE)
 
 library(animation)
 ani.options(convert="C:/Program Files/ImageMagick-7.0.3-Q16/convert.exe")
@@ -166,5 +166,5 @@ saveGIF(for(i in seq_along(gglist)) print(gglist[[i]]), "network3D.gif", interva
 Again, normal usage is to just do the following and then use the saved still image sequence with full user control for whatever you like:
 
 ```{r globe_pngs, eval=FALSE}
-save_seq(paths_globe, id="id", n.frames=n, col=clrs, type="network", pt.size=c(1,1,3,2), file="3D", png.args=png.args)
+save_seq(paths_globe, id="id", n.frames=n, col=clrs, type="network", pt.size=c(1,1,3,2), file="network3D", png.args=png.args)
 ```
