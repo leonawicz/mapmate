@@ -71,7 +71,7 @@ Any animation is expected to be done later by the user via software dedicated to
 \code{ffmpeg} is provided in \code{mapmate} as an exception to the rule for users who wish to trade the full control and flexibility over video editing and production
 that \code{mapmate} aims to avoid entangling itself with for the convenience of generating relatively basic video output directly from an R session.
 
-Ultimately, if you want an incredibly fancy video, do not rely on \code{ffmpeg} to splice merge and overlay and juxtapose all your layers together,
+Ultimately, if you want an incredibly fancy video, do not rely on \code{ffmpeg} to splice and merge and overlay and juxtapose all your layers together,
 to crop and pan and rotate, to apply effects and transitions and every other form of video processing to your image sequences; finish the production outside of R, because that is what makes sense.
 If you are an FFmpeg expert, you don't need to use \code{ffmpeg} at all (but perhaps consider helping to improve this code!).
 If you are not an FFmpeg expert, use other video editing software.
