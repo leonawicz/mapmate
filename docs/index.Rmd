@@ -1,5 +1,7 @@
 ---
 title: "mapmate"
+author: "Matthew Leonawicz"
+date: "`r Sys.Date()`"
 ---
 
 ```{r, echo = FALSE}

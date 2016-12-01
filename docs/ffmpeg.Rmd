@@ -1,7 +1,5 @@
 ---
 title: "Convert images to video from R"
-author: "Matthew Leonawicz"
-date: "`r Sys.Date()`"
 ---
 
 <!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->

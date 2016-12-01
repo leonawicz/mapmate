@@ -1,7 +1,5 @@
 ---
 title: "Introduction to mapmate"
-author: "Matthew Leonawicz"
-date: "`r Sys.Date()`"
 ---
 
 <!-- mapmate.md is generated from mapmate.Rmd. Please edit that file -->
