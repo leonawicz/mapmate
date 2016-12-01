@@ -1,7 +1,5 @@
 ---
 title: "Usage examples and limitations"
-author: "Matthew Leonawicz"
-date: "`r Sys.Date()`"
 ---
 
 <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
