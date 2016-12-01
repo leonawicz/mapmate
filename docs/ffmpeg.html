@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Convert images to video from R</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-46129458-3', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">mapmate</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home fa-lg"></span>
+
+    Home
+  </a>
+</li>
+<li>
+  <a href="mapmate.html">
+    <span class="fa fa-info fa-lg"></span>
+
+    Introduction
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-globe fa-lg"></span>
+
+    Visual examples
+
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="usage_and_limitations.html">Usage &amp; limitations</a>
+    </li>
+    <li>
+      <a href="networks.html">Network maps</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="ffmpeg.html">
+    <span class="fa fa-play-circle-o fa-lg"></span>
+
+    ffmpeg
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/leonawicz/mapmate">
+    <span class="fa fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Convert images to video from R</h1>
+
+</div>
+
+
+<!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->
+<p>This tutorial covers the use of <code>ffmpeg</code> in <code>mapmate</code>. <code>ffmpeg</code> is a wrapper function around the popular <a href="https://www.ffmpeg.org/">FFmpeg command line multimedia framework</a>. It translates arguments provided by the user in familiar R syntax into a system call to the <code>ffmpeg</code> command line tool, which must be installed on the system.</p>
+<div id="context" class="section level1">
+<h1>Context</h1>
+<p><code>ffmpeg</code> does not provide complete flexibility to allow making every possible valid call to FFmpeg, but users who are that well versed in the use of FFmpeg can use the command line utility directly or pass their custom calls directly to <code>system</code> from within R. The <code>ffmpeg</code> R function is primarily useful to users not well versed in the use of the FFmpeg multimedia framework who will be satisfied with the level of flexibility provided. Since this function is provided in the context of the <code>mapmate</code> package, it is aimed at assisting with converting still image sequences to video. While additional uses may be incorporated into <code>ffmpeg</code> in future, the FFmpeg multimedia framework itself provides a far broader suite of tools and functionality than currently is needed here.</p>
+<p>Keep in mind that the purpose of <code>mapmate</code> is not to generate animations directly from R. See packages like <code>animation</code> if that is the goal. The goal that <code>mapmate</code> attempts to fulfill is strictly that of animation pre-production and it does so by focusing on the generation of still image sequences. Any animation is expected to be done later by the user via software dedicated to video editing and production. <code>ffmpeg</code> is provided in <code>mapmate</code> as an exception to the rule for users who wish to trade the full control and flexibility over video editing and production that <code>mapmate</code> aims to avoid entangling itself with for the convenience of generating relatively basic video output directly from an R session.</p>
+<p>Ultimately, if you want an incredibly fancy video, do not rely on <code>ffmpeg</code> to splice and merge and overlay and juxtapose all your layers together, to crop and pan and rotate, to apply effects and transitions and every other form of video processing to your image sequences; finish the production outside of R, because that is what makes sense. If you are an FFmpeg expert, you don’t need to use <code>ffmpeg</code> at all (but perhaps consider helping to improve this code!). If you are not an FFmpeg expert, use other video editing software.</p>
+<p>There always comes a point where it makes the most sense to transition from one application to another. When external solutions exist, it does not make sense to port the solution to every problem into R. Future package versions may provide more functionality and control over video production directly from R through <code>ffmpeg</code> or other functions, but at this time this is not be a primary development goal for <code>mapmate</code>.</p>
+</div>
+<div id="examples" class="section level1">
+<h1>Examples</h1>
+<p>The <code>ffmpeg</code> examples below are made using map image sequences, individually and in combination, so we make those first. Some great circle arc pathways are generated and sampled using the <code>network</code> data set in <code>mapmate</code>. Two copies of the image sequences are saved, one where the png files have a transparent background and one using a solid black background. The <code>borders</code> data set is also used for a couple versions of a map background layer with similar backgrounds. The four image sequences are saved to disk using <code>save_seq</code>.</p>
+<p>Afterward, <code>ffmpeg</code> is called several times. <code>ffmpeg</code> operates on these files to convert the image sequences to videos. The initial examples of <code>ffmpeg</code> calls below specify gif output. Some calls specifying video output (e.g., mp4 files) are included later. While gifs are used here, <code>ffmpeg</code> function argument defaults relate more to video file type output than to animated gifs because video fit more within the context of <code>mapmate</code>.</p>
+<p>These examples all generate files serially and do not make use of <code>mclapply</code>. This is done in order to reach the widest audience. Feel free to adapt these examples in order to save time on the <code>save_seq</code> calls if you are working in Linux. Be sure to check the <a href="mapmate.html">introduction vignette</a> first if you are not familiar with the restrictions.</p>
+<div id="simulate-network-paths" class="section level2">
+<h2>Simulate network paths</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mapmate)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(purrr)
+
+<span class="kw">set.seed</span>(<span class="dv">192</span>)
+<span class="kw">data</span>(network)
+
+distFun &lt;-<span class="st"> </span>function(x) x/<span class="kw">max</span>(x)  <span class="co"># simple distance weighting</span>
+endpoints &lt;-<span class="st"> </span><span class="kw">gc_endpoints</span>(network, <span class="st">&quot;lon&quot;</span>, <span class="st">&quot;lat&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">Dist_wts =</span> <span class="kw">distFun</span>(Dist)) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">sample_n</span>(<span class="dv">1000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+arcs &lt;-<span class="st"> </span><span class="kw">gc_arcs</span>(endpoints, <span class="st">&quot;lon0&quot;</span>, <span class="st">&quot;lat0&quot;</span>, <span class="st">&quot;lon1&quot;</span>, <span class="st">&quot;lat1&quot;</span>, <span class="dt">n =</span> <span class="dv">100</span>)
+paths &lt;-<span class="st"> </span><span class="kw">gc_paths</span>(arcs, <span class="st">&quot;group&quot;</span>, <span class="dt">size =</span> <span class="dv">5</span>, <span class="dt">direction =</span> <span class="st">&quot;random&quot;</span>, <span class="dt">max.offset =</span> <span class="dv">100</span>)
+
+n &lt;-<span class="st"> </span><span class="kw">max</span>(paths$id)
+clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#FFFFFF&quot;</span>, <span class="st">&quot;#FF450050&quot;</span>, <span class="st">&quot;#FF4500&quot;</span>, <span class="st">&quot;#FFFFFF50&quot;</span>)
+size &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>)
+args1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">width =</span> <span class="dv">600</span>, <span class="dt">height =</span> <span class="dv">600</span>, <span class="dt">res =</span> <span class="dv">72</span>)
+args2 &lt;-<span class="st"> </span><span class="kw">c</span>(args1, <span class="dt">bg =</span> <span class="st">&quot;black&quot;</span>)
+file &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;network_bg_&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>, <span class="st">&quot;black&quot;</span>))
+<span class="kw">save_seq</span>(paths, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>, <span class="dt">pt.size =</span> size,
+    <span class="dt">file =</span> file[<span class="dv">1</span>], <span class="dt">png.args =</span> args1)
+<span class="kw">save_seq</span>(paths, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> clrs, <span class="dt">type =</span> <span class="st">&quot;network&quot;</span>, <span class="dt">pt.size =</span> size,
+    <span class="dt">file =</span> file[<span class="dv">2</span>], <span class="dt">png.args =</span> args2)</code></pre></div>
+<p>These first two sets of 152 maps should not take terribly long to output with the code above. The <code>borders</code> map sequences below will take a bit longer. At any rate, once these image sequences are saved, <code>ffmpeg</code> will be able to convert them to video relatively quickly.</p>
+<p>Two nation borders sequences are saved, one with a transparent background (the default) and one with a black background. For all four sequences, I happen to be saving the images directory in a single directory named <code>test-images</code>, but this is not required. Also remember that even though default values are used for <code>lon</code>, <code>lat</code> and <code>n.period</code> and thus these arguments are unspecified, the important thing is that they are all the same across the three <code>save_seq</code> calls. This ensures that the nation borders background drawn on the rotating Earth has the same starting position, orientation, and speed of rotation as the great circle arc samples that are drawn on top. This is critical when layering of the image sequences is needed. The number of frames for the borders outputs is also set to match with the total number simulated by <code>gc_paths</code>.</p>
+</div>
+<div id="save-background-layers" class="section level2">
+<h2>Save background layers</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(borders)
+borders &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(borders, <span class="dt">id =</span> .x)) %&gt;%<span class="st"> </span><span class="kw">bind_rows</span>()
+file &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;borders_bg_&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;transparent&quot;</span>, <span class="st">&quot;black&quot;</span>))
+<span class="kw">save_seq</span>(borders, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>,
+    <span class="dt">file =</span> file[<span class="dv">1</span>], <span class="dt">png.args =</span> args1)
+<span class="kw">save_seq</span>(borders, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">&quot;dodgerblue&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;maplines&quot;</span>,
+    <span class="dt">file =</span> file[<span class="dv">2</span>], <span class="dt">png.args =</span> args2)</code></pre></div>
+</div>
+<div id="ffmpeg-usage" class="section level2">
+<h2><code>ffmpeg</code> usage</h2>
+<p>Convert the network paths image sequence to an animated gif at 10 fps.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;network_bg_black_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;ntwk_10fps.gif&quot;</span>
+<span class="co"># 10 fps gif</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)
+<span class="co"># Same as above. Set overwrite=TRUE if output exists.</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span>/<span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p align="center">
+<img src="ntwk_10fps.gif"/>
+</p>
+</div>
+<div id="section" class="section level2">
+<h2></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;borders_bg_black_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;brdr_10fps.gif&quot;</span>
+<span class="co"># 10 fps gif</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)
+<span class="co"># Same as above</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span>/<span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p align="center">
+<img src="brdr_10fps.gif"/>
+</p>
+</div>
+<div id="section-1" class="section level2">
+<h2></h2>
+<p>However, you probably don’t want to use transparent-background images like the following to make an animated gif because the images are actually stacked on top of each other in the making of the gifs. The default background color for png files generated by <code>mapmate</code> is transparent because <code>mapmate</code> is aimed at video output, not gifs. With the former, transparency generally allows more flexibility in video production in terms of layering images at each frame rather than stacking images over time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;network_bg_transparent_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;ntwk_10fps_stacking.gif&quot;</span>
+<span class="co"># The stacking of images is revealed by the transparent backgrounds</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)</code></pre></div>
+<p align="center">
+<img src="ntwk_10fps_stacking.gif"/>
+</p>
+</div>
+<div id="section-2" class="section level2">
+<h2></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;borders_bg_transparent_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;brdr_10fps_stacking.gif&quot;</span>
+<span class="co"># The stacking of images is revealed by the transparent backgrounds</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)</code></pre></div>
+<p align="center">
+<img src="brdr_10fps_stacking.gif"/>
+</p>
+</div>
+<div id="section-3" class="section level2">
+<h2></h2>
+<p>As a quick aside, notice how this is not a problem is the FFmpeg process chain happens to include resizing or rescaling; the transparency is lost.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;borders_bg_transparent_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;brdr_10fps_stacking_300x300.gif&quot;</span>
+<span class="co"># The stacking of images is revealed by the transparent backgrounds</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>, <span class="dt">size =</span> <span class="st">&quot;300x300&quot;</span>)</code></pre></div>
+<p align="center">
+<img src="brdr_10fps_stacking_300x300.gif"/>
+</p>
+</div>
+<div id="section-4" class="section level2">
+<h2></h2>
+<p>Now that all that has been shown, let’s make mp4 files. The next example below uses the default <code>rate=&quot;ntsc&quot;</code>, or about 29.97 fps (more specifically, <code>30000/1001</code>). Images in the sequence can be skipped using <code>start</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;borders_bg_black_%04d.png&quot;</span>
+out &lt;-<span class="st"> &quot;brdr_start60.mp4&quot;</span>
+<span class="co"># start on frame 60</span>
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">start =</span> <span class="dv">60</span>)</code></pre></div>
+<p>Looking at rescaling again, the output can be rescaled on the fly using <code>size</code> in dimensions or with a standard abbreviation, similar to how <code>rate</code> can be specified.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;borders_bg_black_%04d.png&quot;</span>
+out &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;brdr_300x300.mp4&quot;</span>, <span class="st">&quot;brdr_720x480.mp4&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">1</span>], <span class="dt">size =</span> <span class="st">&quot;300x300&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">2</span>], <span class="dt">size =</span> <span class="st">&quot;ntsc&quot;</span>)</code></pre></div>
+<p>Here are some more examples generating mp4 file outputs. See the help documentation for <code>ffmpeg</code> and experiment with the arguments. Other available output file types include <code>.mov</code>, <code>.mkv</code> and <code>.webm</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> &quot;network_bg_transparent_%04d.png&quot;</span>
+out &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;ntwk_example_&quot;</span>, <span class="dv">1</span>:<span class="dv">4</span>, <span class="st">&quot;.mp4&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">1</span>], <span class="dt">rate =</span> <span class="st">&quot;ntsc&quot;</span>, <span class="dt">size =</span> <span class="st">&quot;ntsc&quot;</span>, <span class="dt">preset =</span> <span class="st">&quot;ultrafast&quot;</span>,
+    <span class="dt">lossless =</span> <span class="ot">TRUE</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">2</span>], <span class="dt">rate =</span> <span class="dv">5</span>, <span class="dt">size =</span> <span class="st">&quot;source&quot;</span>, <span class="dt">preset =</span> <span class="st">&quot;veryslow&quot;</span>,
+    <span class="dt">lossless =</span> <span class="ot">TRUE</span>, <span class="dt">min.rate =</span> <span class="st">&quot;ntsc&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">3</span>], <span class="dt">size =</span> <span class="st">&quot;300x300&quot;</span>, <span class="dt">preset =</span> <span class="st">&quot;veryslow&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">4</span>], <span class="dt">delay =</span> <span class="dv">1</span>, <span class="dt">fps.out =</span> <span class="dv">10</span>)</code></pre></div>
+</div>
+</div>
+<div id="limitations-with-merging-multiple-image-sequences" class="section level1">
+<h1>Limitations with merging multiple image sequences</h1>
+<p>The tutorial essentially ends with the previous examples above. I have included a small section regarding layering multiple image sequences into a single video (or gif) output below. However, it is a work in progress and does not yet work as intended. While the structure of the code needed to support merging image sequences is intact within <code>ffmpeg</code>, the resulting behavior of applying <code>ffmpeg</code> to multiple image sequences is not what is expected.</p>
+<p>I have retained this imperfect functionality in <code>ffmpeg</code> for a few reasons:</p>
+<ul>
+<li>I plan to eventually improve it rather than remove it permanently.</li>
+<li>If anyone with expertise in FFmpeg cares to work on this wrapper function, it is available on Github and you can see what I have begun with.</li>
+<li><code>mapmate</code> is not focused on direct-from-R animation, but rather on image sequence generation for video pre-production. Therefore, I don’t mind that this function doesn’t do everything yet or that some permitted uses don’t quite work right. If nothing else, for now it can help remind users that this package is not intended to support a need for direct animation like the <code>animation</code> package does. At least at this time, <code>ffmpeg</code> is considered an extra feature, which deviates from the main purpose of the package.</li>
+</ul>
+<p>That said, let’s discuss sequence blending. <code>pattern</code> can be a vector. Image sequences referred to in each element of <code>pattern</code> are merged, or blended, together. The first element is the top layer in the output. <code>rate</code>, <code>delay</code> and <code>start</code> are recycled if not also vectors when <code>pattern</code> is a vector. There are many limitation on how <code>ffmpeg</code> can be used and how complex the operations can be. The help documentation is thorough regarding what can and cannot be done with this wrapper function. Enter <code>?ffmpeg</code> for help.</p>
+<p>The image sequence with the transparent background is placed on top. Both sequences could have transparent backgrounds, but since one does not, it should not be placed on top or it will mask the other. This can be seen in the second video. However, <code>alpha</code> can be set lower than <code>1.0</code> and this will add transparency on the fly to the top layer, as seen in the third video.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;network_bg_transparent_%04d.png&quot;</span>, <span class="st">&quot;borders_bg_black_%04d.png&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> <span class="st">&quot;ntwk_brdr_layered.mp4&quot;</span>, <span class="dt">alpha =</span> <span class="dv">1</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> <span class="kw">rev</span>(p), <span class="dt">output =</span> <span class="st">&quot;ntwk_brdr_layered_reversed.mp4&quot;</span>)
+<span class="kw">ffmpeg</span>(<span class="dt">pattern =</span> <span class="kw">rev</span>(p), <span class="dt">output =</span> <span class="st">&quot;ntwk_brdr_layered_reversed_alpha50.mp4&quot;</span>,
+    <span class="dt">alpha =</span> <span class="fl">0.5</span>)</code></pre></div>
+<p>…or I should say, that is what I expect to see from the above three videos. As you can actually see when you run the code, this is not what you get. Behavior can differ further between video outputs and animated gif outputs. Further still, more than two image sequences can be merged, yet while command line output (set <code>details=TRUE</code>) from FFmpeg displayed to the R console may suggest the merging proceeds successfully, a third image sequence layer never seems to be visible in the output video. Part of the issue is the code itself, but the root is of course that I don’t yet fully understand the nuances of how blending works in terms of raw FFmpeg syntax or what is the best way to specify merging (It seems there are several possible ways to do this with FFmpeg.).</p>
+<p>In summary, merging does not work and I advise against using it at this time unless your specific use case is simple and standard enough that <code>ffmpeg</code> gives you the output you want. Otherwise, only use <code>ffmpeg</code> to make basic video output from single image sequences. The latter was initially all I was going to develop, but I am leaving the possibility open of merging functionality to be more successfully integrated into <code>ffmpeg</code>. The main goal for <code>mapmate</code> remains to provide image sequence generation under the assumption that users will do whatever they wish with their saved file sequences externally, whether that is to dump their images on a timeline in a popular GUI video editing software application or to use a command line application like FFmpeg from the terminal.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
