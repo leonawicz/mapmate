@@ -6,6 +6,8 @@ mapmate
 
 `mapmate` (map animate) is an R package for map animation. It is used to generate and save a sequence of plots to disk as a still image sequence intended for later use in data animation production.
 
+Here is the complete online [documentation and tutorials with code examples](https://leonawicz.github.io/mapmate/).
+
 Install
 -------
 
