@@ -343,7 +343,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
     if(use_mclapply){
       return(parallel::mclapply(data, save_map, ..., mc.cores=mc.cores))
     } else {
-      if(return.plot) return(purrr::map(data, ~save_map(.x, ...))) else return(purrr::walk(data, ~save_map(.x, ...)))
+      if(return.plot) return(purrr::map(data, ~do.call(save_map, c(list(data=.x), dots)))) else
+        return(purrr::walk(data, ~do.call(save_map, c(list(data=.x), dots))))
     }
   } else if(style=="tsline"){
     if(!is.null(dots$cap)) stop("When calling 'save_seq' with style='tsline', do not pass argument 'cap' on to 'save_ts'.")
@@ -353,7 +354,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
     if(use_mclapply){
       return(parallel::mclapply(data, save_ts, ..., mc.cores=mc.cores))
     } else {
-      if(return.plot) return(purrr::map(data, ~save_ts(.x, ...))) else return(purrr::walk(data, ~save_ts(.x, ...)))
+      if(return.plot) return(purrr::map(data, ~do.call(save_ts, c(list(data=.x), dots)))) else
+        return(purrr::walk(data, ~do.call(save_ts, c(list(data=.x), dots))))
     }
   }
 }

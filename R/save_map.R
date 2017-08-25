@@ -157,6 +157,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
     warning("'num.format' may be too small for sequential file numbering given the total number of files suggested by 'n.frames'.")
   if(missing(id)) stop("'id' column is missing.")
   if(!id %in% names(data)) stop("'id' must refer to a column name.")
+  if(!overwrite & file.exists(file) & !return.plot) return(NULL)
   i <- data[[id]][1]
   lonlat <- get_lonlat_seq(lon, lat, n.period, n.frames)
 
@@ -257,7 +258,7 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
   if(save.plot){
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
     file <- sprintf(paste0(dir, "/", file, "_%0", num.format, "d.png"), i)
-    if(file.exists(file)){ if(return.plot) return(g) else return(NULL) }
+    if(!overwrite & file.exists(file)) return(g)
     do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()
