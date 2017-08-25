@@ -7,3 +7,4 @@
 ^README-.*\.png$
 ^docs$
 ^_pkgdown\.yml$
+^inst/\.lintr$
