@@ -1,0 +1,64 @@
+url: http://leonawicz.github.io/
+
+template:
+  params:
+    bootswatch: sandstone
+
+reference:
+- title: Save image sequences
+  contents:
+  - save_seq
+  - save_map
+  - save_ts
+- title: Projections
+  contents:
+  - do_projection
+  - project_to_hemisphere
+- title: Data prep
+  contents:
+  - gc_endpoints
+  - gc_arcs
+  - gc_paths
+  - get_ma
+  - get_lonlat_seq
+  - pad_frames
+- title: Convert image sequences to video
+  contents:
+  - ffmpeg
+- title: Apps
+  contents:
+  - runOrtho
+- title: Data sets
+  contents:
+  - annualtemps
+  - monthlytemps
+  - bathymetry
+  - borders
+  - network
+
+navbar:
+  title: "mapmate"
+  type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home fa-lg
+      href: index.html
+    - text: "Introduction"
+      icon: fa-info fa-lg
+      href: articles/mapmate.html
+    - text: "Visual examples"
+      icon: fa-globe fa-lg
+      menu:
+        - text: "Usage & limitations"
+          href: articles/usage_and_limitations.html
+        - text: "Network maps"
+          href: articles/networks.html
+    - text: "ffmpeg"
+      icon: fa-play-circle-o fa-lg
+      href: articles/ffmpeg.html
+    - text: "Reference"
+      icon: fa-book fa-lg
+      href: reference/index.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/leonawicz/mapmate
