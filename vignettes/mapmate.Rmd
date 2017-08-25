@@ -11,7 +11,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<!-- mapmate.md is generated from README.Rmd. Please edit that file -->
+<!-- mapmate.md is generated from mapmate.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse=TRUE, comment="#>", message=F, warning=F, error=F, eval=F, tidy=T) # for html_vignette only
