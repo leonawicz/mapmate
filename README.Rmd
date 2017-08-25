@@ -51,7 +51,7 @@ which can then be used in video editing and rendering software of the user's cho
 Functionality and fine-grain user control of inputs and outputs are limited in the current package version.
 
 
-```{r, eval=TRUE, fig.show='hold', fig.cap="2D flat map and 3D globe"}
+```{r example_plots, eval=TRUE, fig.show='hold', fig.cap="2D flat map and 3D globe"}
 library(mapmate)
 library(dplyr)
 data(annualtemps)
@@ -69,7 +69,8 @@ save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, r
 
 ```
 
-The above is only a very basic initial example of static 2D and 3D maps. See the introduction vignette for more complete and more typical usage examples:
+The above is only a very basic initial example of static 2D and 3D maps.
+See the [introduction vignette](http://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
 
 - Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data)
 in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
@@ -83,8 +84,7 @@ in the form of an n-year moving or rolling average based on an input data frame 
 - Comparison of map tiles, map lines, and polygons
 - Non-map data example (time series line growth)
 
-```{r}
-browseVignettes(package="mapmate")
-```
+This and other vignettes covering more examples, including network maps with great circle arcs and generating video with `ffmpeg`,
+can be found at the [mapmate](http://leonawicz.github.io/rvtable/articles/rvtable.html) website.
 
 Other features and functionality will be added in future package versions.
