@@ -1,3 +1,7 @@
+# mapmate 0.2.2 (Release date: 2017-08-25)
+
+* Minor bug fixes.
+
 # mapmate 0.2.1 (Release date: 2016-12-01)
 
 * Added `ffmpeg` function to allow users to make video from image sequences directly from R. This function is still under active development, however, and can only meet basic needs.
