@@ -42,4 +42,3 @@ n <- 6
 pad_frames(x, id="idx", n.period=n, rotation="add")
 pad_frames(x, id="idx", n.period=n, rotation="pad")
 }
-

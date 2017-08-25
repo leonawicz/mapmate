@@ -76,4 +76,3 @@ arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
 
 paths <- gc_paths(arcs, group="group", size=5)
 }
-

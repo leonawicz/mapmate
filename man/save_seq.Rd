@@ -56,4 +56,3 @@ save_seq(temps, style="tsline", x="Year", y="z", id="frameID",
   col="blue", xlm=xlm, ylm=ylm)
 }
 }
-

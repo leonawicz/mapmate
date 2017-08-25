@@ -186,4 +186,3 @@ walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
   n.period=30, n.frames=n, col=pal, type="maptiles", file=filename, z.range=rng))
 }
 }
-

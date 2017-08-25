@@ -30,4 +30,3 @@ lon <- seq(-180, 180, length.out=60)
 lat <- rep(seq(-90, 90, length.out=30), 2)
 project_to_hemisphere(lon, lat , 0, 0)
 }
-

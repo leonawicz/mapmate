@@ -22,4 +22,3 @@ This is a toy data set used for example purposes.
 Sampling and weights are based on the square root of the original populations and are rescaled and rounded.
 }
 \keyword{datasets}
-

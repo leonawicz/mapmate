@@ -23,4 +23,3 @@ This is a toy data set used for example purposes.
 Anomalies are element-wise (cell by cell) delta change from a historical baseline.
 }
 \keyword{datasets}
-

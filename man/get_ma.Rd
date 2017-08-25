@@ -56,4 +56,3 @@ get_ma(monthlytemps, res, season, format="list")
 # not run
 \dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
 }
-

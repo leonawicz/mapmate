@@ -41,4 +41,3 @@ get_lonlat_seq(-20, 30, n.period=60) # quicker period, begin from lon -20, at la
 
 get_lonlat_seq(1:60, 2:61, n.period=60) # custom sequence is simply put in list
 }
-

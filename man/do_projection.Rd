@@ -46,4 +46,3 @@ temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
 do_projection(temps, id="frameID")
 do_projection(temps, id="frameID", keep=TRUE)
 }
-

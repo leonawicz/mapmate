@@ -26,4 +26,3 @@ This data set includes data from only one grid cell because it is sufficient for
 Anomalies are delta change from a historical baseline.
 }
 \keyword{datasets}
-

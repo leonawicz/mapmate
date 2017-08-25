@@ -185,4 +185,3 @@ save_seq(borders, id="id", n.frames=n, col="white",
          type="maplines", file="images", png.args=args)
 ffmpeg(pattern="images_\%04d.png", output="video.mp4", rate=10)}
 }
-

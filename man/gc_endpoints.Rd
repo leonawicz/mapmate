@@ -44,4 +44,3 @@ gc_endpoints(network, "lon", "lat")
 gc_endpoints(network, "lon", "lat", distance=FALSE)
 gc_endpoints(network, "lon", "lat", keep=FALSE)
 }
-

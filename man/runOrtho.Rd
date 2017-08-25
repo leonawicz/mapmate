@@ -12,4 +12,3 @@ Launch a Shiny app which provides an example of the effect of longitude, latitud
 \examples{
 # not run
 }
-

@@ -21,4 +21,3 @@ A bathymetry data set containing columns of longitude, latitude and depths/eleva
 modified from the 10-minute resolution source bathymetry map downloaded via the \code{marmap} package.
 }
 \keyword{datasets}
-

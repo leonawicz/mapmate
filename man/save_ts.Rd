@@ -82,4 +82,3 @@ walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
   cap=.x, col="blue", xlm=xlm, ylm=ylm))
 }
 }
-
