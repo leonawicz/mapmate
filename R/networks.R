@@ -25,11 +25,11 @@
 #' @export
 #'
 #' @examples
-#' library(dplyr)
+#' \dontrun{library(dplyr)
 #' data(network)
 #' gc_endpoints(network, "lon", "lat")
 #' gc_endpoints(network, "lon", "lat", distance=FALSE)
-#' gc_endpoints(network, "lon", "lat", keep=FALSE)
+#' gc_endpoints(network, "lon", "lat", keep=FALSE)}
 gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
   n <- nrow(data)
   if(n %% 10 == 1) n <- n - 1
@@ -93,7 +93,7 @@ gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
 #' @export
 #'
 #' @examples
-#' library(dplyr)
+#' \dontrun{library(dplyr)
 #' set.seed(192)
 #' data(network)
 #' distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
@@ -104,7 +104,7 @@ gc_endpoints <- function(data, lon, lat, distance=TRUE, keep=TRUE){
 #' endpoints <- sample_n(endpoints, 500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
 #'
 #' # expand data frame from endpoints to arcs, each composed of a sequence of points
-#' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
+#' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")}
 gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, addStartEnd=TRUE){
   x <- list(lon0, lat0)
   y <- list(lon1, lat1)
@@ -180,7 +180,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' @export
 #'
 #' @examples
-#' library(dplyr)
+#' \dontrun{library(dplyr)
 #' set.seed(192)
 #' data(network)
 #' distFun <- function(x) 1 - x / max(x) # simple inverse distance weighting
@@ -193,7 +193,7 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 #' # expand data frame from endpoints to arcs, each composed of a sequence of points
 #' arcs <- gc_arcs(endpoints, "lon0", "lat0", "lon1", "lat1")
 #'
-#' paths <- gc_paths(arcs, group="group", size=5)
+#' paths <- gc_paths(arcs, group="group", size=5)}
 gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
   if(missing(group)) stop("Must provided 'group'.")
   if(missing(size)) stop("Must provided 'size'.")

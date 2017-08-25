@@ -38,8 +38,6 @@ globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z",
 #' get_ma(monthlytemps, res, season)
 #' get_ma(list(monthlytemps, monthlytemps), res, season)
 #' get_ma(monthlytemps, res, season, format="list")
-#'
-#' # not run
 #' \dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
 #' @importFrom magrittr %>%
 #' @importFrom grDevices png dev.off
@@ -321,7 +319,6 @@ do_projection <- function(data, id, lon=0, lat=0, n.period=360, n.frames=n.perio
 #' @export
 #'
 #' @examples
-#' # not run
 #' \dontrun{
 #' library(dplyr)
 #' library(purrr)
@@ -406,7 +403,6 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' @export
 #'
 #' @examples
-#' # not run
 #' \dontrun{
 #' library(dplyr)
 #' library(purrr)
