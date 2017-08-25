@@ -9,3 +9,4 @@ docs/articles/*_cache/
 docs/articles/test-images/
 docs/*.mp4
 docs/*.md
+inst/doc
