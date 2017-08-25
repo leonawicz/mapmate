@@ -66,7 +66,6 @@ In this case, specifying \code{cap} is not needed and an error will be thrown if
 Fixed axis limits must be established in advance by computing the max range or other desired range for the x and y variables that are to be plotted.
 }
 \examples{
-# not run
 \dontrun{
 library(dplyr)
 library(purrr)

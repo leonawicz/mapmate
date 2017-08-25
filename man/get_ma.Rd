@@ -52,7 +52,5 @@ if(res=="seasonal") monthlytemps <- dplyr::filter(monthlytemps, Month \%in\% idx
 get_ma(monthlytemps, res, season)
 get_ma(list(monthlytemps, monthlytemps), res, season)
 get_ma(monthlytemps, res, season, format="list")
-
-# not run
 \dontrun{get_ma(list(monthlytemps, monthlytemps), res, season, use_mclapply=T, mc.cores=2)}
 }

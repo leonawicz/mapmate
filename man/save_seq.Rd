@@ -40,7 +40,6 @@ It is best to first make sure you can successfully call \code{save_map} and \cod
 See the intoductory vignette for details: \code{browseVignettes(package="mapmate")}.
 }
 \examples{
-# not run
 \dontrun{
 library(dplyr)
 library(purrr)
