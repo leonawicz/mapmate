@@ -1,13 +1,15 @@
 Package: mapmate
 Title: Make Still Image Sequences For Data Animations
-Version: 0.2.2
-Authors@R: person("Matthew", "Leonawicz", email = "mfleonawicz@alaska.edu", role = c("aut", "cre"))
+Version: 0.3.0
+Author: Matthew Leonawicz [aut, cre]
+Maintainer: Matthew Leonawicz <mfleonawicz@alaska.edu>
+Authors@R: person("Matthew", "Leonawicz", role = c("aut", "cre"), email = "mfleonawicz@alaska.edu")
 Description: mapmate is an R package for generating and saving a sequence of
     map- and globe-based plots to disk as a still image sequence intended for later use in data animation
     production.
 Depends:
     R (>= 3.3.1)
-License: GPL (>= 2)
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -31,6 +33,7 @@ Suggests:
     maptools,
     rworldmap,
     rworldxtra,
-    raster
+    raster,
+    animation
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr

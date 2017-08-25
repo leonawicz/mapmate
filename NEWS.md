@@ -1,5 +1,7 @@
-# mapmate 0.2.2 (Release date: 2017-08-25)
+# mapmate 0.3.0 (Release date: 2017-08-25)
 
+* Changed package website generation to use `pkgdown`.
+* Updated documentation.
 * Minor bug fixes.
 
 # mapmate 0.2.1 (Release date: 2016-12-01)

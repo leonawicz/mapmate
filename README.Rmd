@@ -17,13 +17,16 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-", message
 
 Here is the complete online [documentation and tutorials with code examples](https://leonawicz.github.io/mapmate/).
 
-## Install
+## Installation and bug reporting
 
-```{r}
-devtools::install_github("leonawicz/mapmate")
+Install the latest development version (0.3.0) from github:
+
+```r
+install.packages("devtools")
+devtools::install_github("leonawicz/rvtable")
 ```
 
-This installs the current development version. Functionality is subject to change.
+Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/rvtable/issues).
 
 ## Example videos based on mapmate
 
