@@ -1,5 +1,8 @@
 library(mapmate)
-suppressMessages({ library(data.table); library(dplyr) })
+suppressMessages({
+  library(data.table)
+  library(dplyr)
+})
 context("get_ma [functions.R]")
 
 data(monthlytemps)
@@ -7,7 +10,7 @@ data(monthlytemps)
 test_that("get_ma works with serial processing", {
   res <- "seasonal" # annual, seasonal, monthly
   season <- "winter" # winter, spring, summer, autumn
-  idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
+  idx <- switch(season, winter=c(12, 1, 2), spring=3:5, summer=6:8, autumn=9:11)
   x <- if(res=="seasonal") dplyr::filter(monthlytemps, Month %in% idx) else monthlytemps
   x0 <- get_ma(data.frame(x), res, season)
   x1 <- get_ma(x, res, season)

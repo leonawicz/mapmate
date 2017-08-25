@@ -19,7 +19,8 @@ ui <- shinyUI(fluidPage(
 
 server <- shinyServer(function(input, output) {
    output$orthoMap <- renderPlot({
-     save_map(borders, id=id, lon=input$lon, lat=input$lat, col="black", type="maplines", rotation.axis=input$orientation, save.plot=FALSE, return.plot=TRUE)
+     save_map(borders, id=id, lon=input$lon, lat=input$lat, col="black", type="maplines",
+              rotation.axis=input$orientation, save.plot=FALSE, return.plot=TRUE)
    })
 })
 

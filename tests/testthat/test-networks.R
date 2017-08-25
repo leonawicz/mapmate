@@ -1,5 +1,5 @@
 library(mapmate)
-suppressMessages({ library(dplyr) })
+suppressMessages(library(dplyr))
 context("networks.R")
 
 data(network)
@@ -34,9 +34,12 @@ d0 <- gc_endpoints(network, "lon", "lat") %>% mutate(Dist_wts=distFun(Dist)) %>%
   sample_n(500, replace=TRUE, weight=(Pop_wts0 + Pop_wts1)/2 + Dist_wts)
 
 test_that("gc_arcs returns valid output", {
-  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=c(1,2)), "'n' must have length 1 or length equal to the number of rows in 'data'.")
-  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=0), "Column 'n' must contain positive integers.")
-  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n="a"), "If 'n' is character, it must refer to a column in 'data'.")
+  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=c(1, 2)),
+               "'n' must have length 1 or length equal to the number of rows in 'data'.")
+  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=0),
+               "Column 'n' must contain positive integers.")
+  expect_error(gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n="a"),
+               "If 'n' is character, it must refer to a column in 'data'.")
 
   d <- gc_arcs(slice(d0, 1), "lon0", "lat0", "lon1", "lat1", n=10, addStartEnd=FALSE)
   expect_is(d, "tbl_df")
@@ -61,7 +64,8 @@ d0 <- gc_arcs(d0, "lon0", "lat0", "lon1", "lat1", n=10, addStartEnd=FALSE)
 test_that("gc_paths returns valid output", {
   expect_error(gc_paths(slice(d0, 1:1000)), "Must provided 'group'.")
   expect_error(gc_paths(slice(d0, 1:1000), "group"), "Must provided 'size'.")
-  expect_error(gc_paths(slice(d0, 1:1000), "group", size=1), "Maximum segment size too small; line composition requires at least two points.")
+  expect_error(gc_paths(slice(d0, 1:1000), "group", size=1),
+               "Maximum segment size too small; line composition requires at least two points.")
 
   d <- gc_paths(slice(d0, 1:1000), "group", size=5)
   expect_is(d, "tbl_df")

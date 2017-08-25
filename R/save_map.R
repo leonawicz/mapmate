@@ -148,9 +148,11 @@
 #' walk(temps, ~save_map(.x, z.name="z", id="frameID", lon=-70, lat=50,
 #'   n.period=30, n.frames=n, col=pal, type="maptiles", file=filename, z.range=rng))
 #' }
-save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0, n.period=360, n.frames=n.period,
-                     ortho=TRUE, col=NULL, type, contour="none", density.geom="tile", xlim=c(-180, 180), ylim=c(-90, 90), pt.size=c(1,0.5,1,0.5),
-                     rotation.axis=23.4, file="Rplot", png.args=list(width=1920, height=1080, res=300, bg="transparent"),
+save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0, # nolint start
+                     n.period=360, n.frames=n.period, ortho=TRUE, col=NULL, type,
+                     contour="none", density.geom="tile", xlim=c(-180, 180),
+                     ylim=c(-90, 90), pt.size=c(1, 0.5, 1, 0.5), rotation.axis=23.4, file="Rplot",
+                     png.args=list(width=1920, height=1080, res=300, bg="transparent"),
                      save.plot=TRUE, return.plot=FALSE, overwrite=FALSE, num.format=4){
 
   if(n.frames >= eval(parse(text=paste0("1e", num.format))))
@@ -177,14 +179,15 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
   if(type=="maptiles"){
 
     .colorStop(col, "map tiles")
-    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", fill=z.name)) + ggplot2::geom_tile() +
-      ggplot2::scale_fill_gradientn(colors=col, limits=z.range)
+    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", fill=z.name)) +
+      ggplot2::geom_tile() + ggplot2::scale_fill_gradientn(colors=col, limits=z.range)
 
   } else if(type=="polygons"){
 
     .colorStop(col, "polygon fill")
-    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group", fill=z.name)) + ggplot2::geom_polygon() +
-      ggplot2::geom_path(color="white") + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
+    g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group", fill=z.name)) +
+      ggplot2::geom_polygon() + ggplot2::geom_path(color="white") +
+      ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
 
   } else if(type=="points"){
 
@@ -202,12 +205,15 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
       if(contour=="none" | contour=="overlay"){
         .colorStop(col, paste("(lon,lat) point density"))
         g <- g + ggplot2::scale_fill_gradientn(colours=col)
-        if(density.geom=="polygon") g <- g + ggplot2::stat_density2d(geom="polygon", ggplot2::aes(fill = ..level..))
-        if(density.geom=="tile") g <- g + ggplot2::stat_density2d(geom="tile", ggplot2::aes(fill = ..density..), contour = FALSE)
+        if(density.geom=="polygon")
+          g <- g + ggplot2::stat_density2d(geom="polygon", ggplot2::aes(fill = ..level..))
+        if(density.geom=="tile")
+          g <- g + ggplot2::stat_density2d(geom="tile", ggplot2::aes(fill = ..density..), contour = FALSE)
       }
       if(contour=="overlay") g <- g + ggplot2::geom_density2d(colour="black")
       if(contour=="only" & length(col)==1) g <- g + ggplot2::geom_density2d(colour=col)
-      if(contour=="only" & length(col) > 1) g <- g + ggplot2::geom_density2d(ggplot2::aes(colour = ..level..)) +
+      if(contour=="only" & length(col) > 1)
+        g <- g + ggplot2::geom_density2d(ggplot2::aes(colour = ..level..)) +
           ggplot2::scale_colour_gradientn(colours=col)
     } else {
       if(!z.name %in% names(data)) stop("'z' must refer to a column name.")
@@ -217,7 +223,8 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
       if(contour=="none" | contour=="overlay"){
         .colorStop(col, paste(z.name, "data density"))
         g <- g + ggplot2::scale_fill_gradientn(colours=col, limits=z.range)
-        if(density.geom=="polygon") g <- g + ggplot2::stat_contour(geom="polygon", ggplot2::aes(fill = ..level..))
+        if(density.geom=="polygon")
+          g <- g + ggplot2::stat_contour(geom="polygon", ggplot2::aes(fill = ..level..))
         if(density.geom=="tile") g <- g + ggplot2::geom_tile(ggplot2::aes_string(fill=z.name))
 
       }
@@ -235,14 +242,17 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
 
     g <- ggplot2::ggplot(data, ggplot2::aes_string("lon", "lat", group="group"))
     if(type=="maplines"){
-      if(!is.null(z.name)) warning("'z.name' variable is ignored for path lines (type='maplines').")
+      if(!is.null(z.name))
+        warning("'z.name' variable is ignored for path lines (type='maplines').")
       g <- g + ggplot2::geom_path(colour=col[1])
     }
     if(type=="network"){
-      if(!is.null(z.name)) warning("'z.name' variable is ignored for moving line segments/great circle arcs (type='network').")
+      if(!is.null(z.name))
+        warning("'z.name' variable is ignored for moving line segments/great circle arcs (type='network').")
       data.lead <- dplyr::group_by(data, group) %>% dplyr::slice(n())
       size <- rep(pt.size, length=4)
-      g <- g + ggplot2::geom_path(colour=col[1], size=size[1]) + ggplot2::geom_path(colour=col[2], size=size[2]) +
+      g <- g + ggplot2::geom_path(colour=col[1], size=size[1]) +
+        ggplot2::geom_path(colour=col[2], size=size[2]) +
         ggplot2::geom_point(data=data.lead, colour=col[3], size=size[3]) +
         ggplot2::geom_point(data=data.lead, colour=col[4], size=size[4])
     }
@@ -252,13 +262,13 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
   if(is.null(png.args$bg)) png.args$bg <- "transparent"
   if(is.null(png.args$res)) png.args$res <- 300
   g <- g + .theme_blank(bg=png.args$bg)
-  g <- g + ggplot2::scale_x_continuous(limits=xlim, expand=c(0,0)) +
-    ggplot2::scale_y_continuous(limits=ylim, expand=c(0,0))
+  g <- g + ggplot2::scale_x_continuous(limits=xlim, expand=c(0, 0)) +
+    ggplot2::scale_y_continuous(limits=ylim, expand=c(0, 0))
   if(ortho) g <- g + ggplot2::coord_map("ortho", orientation=c(lonlat$lat[i], lonlat$lon[i], rotation.axis))
   if(save.plot){
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
     file <- sprintf(paste0(dir, "/", file, "_%0", num.format, "d.png"), i)
-    if(!overwrite & file.exists(file)) return(g)
+    if(!overwrite & file.exists(file) & return.plot) return(g)
     do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()
@@ -266,3 +276,4 @@ save_map <- function(data, z.name=NULL, z.range=NULL, id, dir=".", lon=0, lat=0,
   if(return.plot) return(g)
   NULL
 }
+# nolint end

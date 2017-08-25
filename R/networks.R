@@ -113,19 +113,25 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
     if(!is.integer(data[[n]])) data[[n]] <- as.integer(data[[n]])
     n <- data[[n]]
   }
-  if(length(n) != 1 & length(n) != nrow(data)) stop("'n' must have length 1 or length equal to the number of rows in 'data'.")
+  if(length(n) != 1 & length(n) != nrow(data))
+    stop("'n' must have length 1 or length equal to the number of rows in 'data'.")
   if(any(n < 1)) stop("Column 'n' must contain positive integers.")
   data <- geosphere::gcIntermediate(dplyr::select_(data, .dots=x), dplyr::select_(data, .dots=y),
                          n=n, breakAtDateLine=breakAtDateLine, addStartEnd=addStartEnd)
-  if(!is.list(data)) { rownames(data) <- NULL; data <- list(data) }
+  if(!is.list(data)){
+    rownames(data) <- NULL
+    data <- list(data)
+  }
   f <- function(x, idx){
-    x <- if(is.list(x)) purrr::map2(x, idx + c(0, 0.5), ~data.frame(.x, .y)) %>% dplyr::bind_rows() else data.frame(x, idx)
+    x <- if(is.list(x)) purrr::map2(
+      x, idx + c(0, 0.5), ~data.frame(.x, .y)) %>% dplyr::bind_rows() else data.frame(x, idx)
     x <- stats::setNames(x, c("lon", "lat", "group"))
     dplyr::tbl_df(x)
   }
   purrr::map2(data, seq_along(data), ~f(x=.x, idx=.y)) %>% dplyr::bind_rows()
 }
 
+# nolint start
 #' Generate a table of incremental great circle arc segments
 #'
 #' Expand a table of great circle arcs to a larger table of great circle arc segments that sequentially traverse the original arcs.
@@ -191,21 +197,30 @@ gc_arcs <- function(data, lon0, lat0, lon1, lat1, n=50, breakAtDateLine=FALSE, a
 gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
   if(missing(group)) stop("Must provided 'group'.")
   if(missing(size)) stop("Must provided 'size'.")
-  n.min <- dplyr::group_by_(data, "group") %>% dplyr::summarise(n=n()) %>% dplyr::summarise(n=min(n)) %>% unlist
+  n.min <- dplyr::group_by_(data, "group") %>% dplyr::summarise(n=n()) %>%
+    dplyr::summarise(n=min(n)) %>% unlist
   if (n.min < 3) stop("Insufficient data.")
-  if (size < 2) stop("Maximum segment size too small; line composition requires at least two points.")
+  if (size < 2)
+    stop("Maximum segment size too small; line composition requires at least two points.")
   if(replicates < 1) stop("'replicates' must be >= 1.")
-  if(replicates - 1 > max.offset) stop("Replicate paths have uniquely staggerred random starting points (frame IDs); 'replicates' must be <= 'max.offset' + 1.")
-  split(data, data[[group]]) %>%
-    purrr::map(~.gc_paths_internal(.x, group, size, replicates, direction, max.offset)) %>%
+  if(replicates - 1 > max.offset){
+    e <- "Replicate paths have uniquely staggerred random starting points (frame IDs);"
+    e <- paste(e, "'replicates' must be <= 'max.offset' + 1.")
+    stop(e)
+  }
+  split(data, data[[group]]) %>% purrr::map(
+    ~.gc_paths_internal(.x, group, size, replicates, direction, max.offset)) %>%
     dplyr::bind_rows() %>% dplyr::tbl_df()
 }
 
-.gc_paths_internal <- function(data, group, size, replicates=1, direction="fixed", max.offset=0){
+.gc_paths_internal <- function(data, group, size, replicates=1,
+                               direction="fixed", max.offset=0){
   n <- nrow(data)
   offset <- sample(0:max.offset, replicates)
-  if(direction == "reverse") data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
-  if(direction == "random" && stats::rnorm(1) < 0) data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
+  if(direction == "reverse")
+    data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
+  if(direction == "random" && stats::rnorm(1) < 0)
+    data <- dplyr::mutate(data, lon = rev(lon), lat = rev(lat))
 
   z <- sort(round(stats::runif(2, 2, size)))
   z[z > n] <- n
@@ -222,5 +237,7 @@ gc_paths <- function(data, group, size, replicates=1, direction="fixed", max.off
       id = .x + k)) %>% dplyr::bind_rows() %>% dplyr::tbl_df()
   }
 
-  purrr::map2(seq_along(data), data, ~f(.x, .y, offset)) %>% dplyr::bind_rows() %>% dplyr::arrange_("group", "id")
+  purrr::map2(seq_along(data), data, ~f(.x, .y, offset)) %>%
+    dplyr::bind_rows() %>% dplyr::arrange_("group", "id")
 }
+# nolint end

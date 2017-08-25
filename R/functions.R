@@ -1,4 +1,5 @@
-globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z", "group", "frameID", "Mean", "..level..", "..density..", "n"))
+globalVariables(c(".", "inview", "mo", "Year", "Month", "lon", "lat", "z",
+                  "group", "frameID", "Mean", "..level..", "..density..", "n"))
 #' Obtain moving average map series
 #'
 #' Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.
@@ -59,7 +60,7 @@ get_ma <- function(x, type, season=NULL, size=10, format="table", use_mclapply=F
   if(type=="seasonal"){
     if(is.null(season) || !(season %in% c("winter", "spring", "summer", "autumn")))
       stop("If res='seasonal', season must be 'winter', 'spring', 'summer' or 'autumn'.")
-    idx <- switch(season, winter=c(12,1,2), spring=3:5, summer=6:8, autumn=9:11)
+    idx <- switch(season, winter=c(12, 1, 2), spring=3:5, summer=6:8, autumn=9:11)
     yr.lim <- if(is_list) range(x[[1]]$Year) else range(x$Year)
     f <- function(x, size) {
       x <- dplyr::mutate(x, Year=ifelse(Month==12, Year+1, Year), Month=ifelse(Month %in% idx, 1, 0)) %>%
@@ -106,9 +107,10 @@ project_to_hemisphere <- function(lon, lat, lon0, lat0){
   hold <- cbind(lon, lat)
   x <- purrr::map(list(lat, lat0, lon-lon0), ~.x*pi/180)
   inview <- sin(x[[1]])*sin(x[[2]]) + cos(x[[1]])*cos(x[[2]])*cos(x[[3]]) > 0
-  data.frame(lon=hold[,1], lat=hold[,2], inview=inview) %>% dplyr::tbl_df()
+  data.frame(lon=hold[, 1], lat=hold[, 2], inview=inview) %>% dplyr::tbl_df()
 }
 
+# nolint start
 #' Pad the end of list of data frames
 #'
 #' Use recycling to pad the end of a list of data frames where data frame elements in the list repeat in a cyclical pattern.
@@ -151,11 +153,15 @@ pad_frames <- function(x, id, n.period=360, rotation="add", force=TRUE){
   x <- c(x, x2)
   if(id != "frameID"){
     idx <- which(names(x[[1]])=="frameID")
-    f <- function(x, idx, id){ names(x)[idx] <- id; x }
+    f <- function(x, idx, id){
+      names(x)[idx] <- id
+      x
+    }
     x <- purrr::map(x, ~f(.x, idx, id))
   }
   x
 }
+# nolint end
 
 #' Generate a sequence of coordinates
 #'
@@ -347,7 +353,8 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
         return(purrr::walk(data, ~do.call(save_map, c(list(data=.x), dots))))
     }
   } else if(style=="tsline"){
-    if(!is.null(dots$cap)) stop("When calling 'save_seq' with style='tsline', do not pass argument 'cap' on to 'save_ts'.")
+    e <- "When calling 'save_seq' with style='tsline', do not pass argument 'cap' on to 'save_ts'."
+    if(!is.null(dots$cap)) stop(e)
     iters <- sort(unique(data[[id]]))
     data <- purrr::map(iters, ~dplyr::filter_(data,
       .dots=list(lazyeval::interp(~y <= x, .values=list(y=as.name(id), x=as.name(".x"))))))
@@ -414,11 +421,14 @@ save_seq <- function(data, style="map", use_mclapply=FALSE, mc.cores=1L, ...){
 #' walk(temps$frameID, ~save_ts(temps, x="Year", y="z", id="frameID",
 #'   cap=.x, col="blue", xlm=xlm, ylm=ylm))
 #' }
-save_ts <- function(data, x, y, id, cap, dir=".", col="black", xlm, ylm, axes.only=FALSE, axes.space=TRUE, file="Rplot",
-                    png.args=list(width=1920, height=1080, res=300, bg="transparent"), save.plot=TRUE, return.plot=FALSE, overwrite=FALSE, num.format=4){
-  type <- "tsline"
+save_ts <- function(data, x, y, id, cap, dir=".", col="black", xlm, ylm,
+                    axes.only=FALSE, axes.space=TRUE, file="Rplot",
+                    png.args=list(width=1920, height=1080, res=300, bg="transparent"),
+                    save.plot=TRUE, return.plot=FALSE, overwrite=FALSE, num.format=4){
+  type <- "tsline" # nolint
   if(missing(id)) stop("'id' column is missing.")
   if(!id %in% names(data)) stop("'id' must refer to a column name.")
+  if(!overwrite & file.exists(file) & !return.plot) return(NULL)
   mx <- max(data[[id]])
   if(missing(cap)) cap <- mx
   if(cap <1) stop("'cap' must be >= 1.")
@@ -447,7 +457,7 @@ save_ts <- function(data, x, y, id, cap, dir=".", col="black", xlm, ylm, axes.on
     ext <- if(axes.only) "_axesOnly.png" else paste0("_%0", num.format, "d.png")
     dir.create(dir, recursive=TRUE, showWarnings=FALSE)
     file <- sprintf(paste0(dir, "/", file, ext), cap)
-    if(file.exists(file)){ if(return.plot) return(g) else return(NULL) }
+    if(!overwrite & file.exists(file) & return.plot) return(g)
     do.call(png, c(filename=file, png.args))
     print(g)
     dev.off()

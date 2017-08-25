@@ -1,19 +1,23 @@
 library(mapmate)
-suppressMessages({ library(dplyr); library(purrr) })
+suppressMessages({
+  library(dplyr)
+  library(purrr)
+})
 context("functions.R")
 
 test_that("project_to_hemisphere returns valid output", {
-  expect_is(project_to_hemisphere(0,0,0,0), "tbl_df")
-  expect_is(project_to_hemisphere(0,0,0,0), "tbl")
-  expect_is(project_to_hemisphere(0,0,0,0), "data.frame")
-  expect_equal(ncol(project_to_hemisphere(0,0,0,0)), 3)
-  expect_equal(nrow(project_to_hemisphere(0,0,0,0)), 1)
-  expect_is(project_to_hemisphere(0,0,0,0)$inview, "logical")
+  p <- project_to_hemisphere(0, 0, 0, 0)
+  expect_is(p, "tbl_df")
+  expect_is(p, "tbl")
+  expect_is(p, "data.frame")
+  expect_equal(ncol(p), 3)
+  expect_equal(nrow(p), 1)
+  expect_is(p$inview, "logical")
   expect_is(project_to_hemisphere(-180:180, seq(-90, 90, length.out=361), 40, -60), "tbl_df")
   expect_equal(nrow(project_to_hemisphere(-180:180, seq(-90, 90, length.out=361), -60, 40)), 361)
-  expect_error(project_to_hemisphere(1:360,1:359,0,0), "lon and lat must be equal length")
-  expect_error(project_to_hemisphere(1:91,1:91,0,0), "latitudes must be >= -90 and <= 90")
-  expect_error(project_to_hemisphere(-181,0,0,0), "longitudes must be >= -180 and <= 180")
+  expect_error(project_to_hemisphere(1:360, 1:359, 0, 0), "lon and lat must be equal length")
+  expect_error(project_to_hemisphere(1:91, 1:91, 0, 0), "latitudes must be >= -90 and <= 90")
+  expect_error(project_to_hemisphere(-181, 0, 0, 0), "longitudes must be >= -180 and <= 180")
 })
 
 data(annualtemps)
@@ -40,8 +44,8 @@ test_that("pad_frames returns valid output", {
 })
 
 test_that("get_lonlat_seq returns valid output", {
-  expect_error(get_lonlat_seq(c(1,2), c(1,2)), "lon must be length one or length n.period")
-  expect_error(get_lonlat_seq(1, c(1,2)), "lat must be length one or length n.period")
+  expect_error(get_lonlat_seq(c(1, 2), c(1, 2)), "lon must be length one or length n.period")
+  expect_error(get_lonlat_seq(1, c(1, 2)), "lat must be length one or length n.period")
   expect_error(get_lonlat_seq(180.1, -90.1), "lon invalid")
   expect_error(get_lonlat_seq(0, -90.1), "lat invalid")
 

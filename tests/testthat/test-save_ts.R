@@ -1,5 +1,5 @@
 library(mapmate)
-suppressMessages({ library(dplyr) })
+suppressMessages(library(dplyr))
 context("save_ts [functions.R]")
 
 data(annualtemps)
