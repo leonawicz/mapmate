@@ -8,3 +8,5 @@
 ^docs$
 ^_pkgdown\.yml$
 ^inst/\.lintr$
+^appveyor\.yml$
+^pkgdown$
