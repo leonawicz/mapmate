@@ -13,3 +13,9 @@ Once the files are regenerated and chaching has occurred, subsequent website bui
 Make sure these outputs are in the `docs/articles` directory.
 This is necessary because most code blocks in this vignette are not evaluated,
 but when it is run, it expects to find these two gifs in the directory in order to display them in the document.
+
+## Unincluded data files
+
+Project data is backed up and can be found here if needed:
+
+* /workspace/UA/mfleonawicz/data/mapmate/data-raw/

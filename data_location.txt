@@ -1,2 +1,0 @@
-Project data is backed up and can be found here if needed:
-/workspace/UA/mfleonawicz/data/mapmate/data-raw/

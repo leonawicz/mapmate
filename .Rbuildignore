@@ -8,5 +8,11 @@
 ^docs$
 ^_pkgdown\.yml$
 ^inst/\.lintr$
+^\.lintr$
 ^appveyor\.yml$
 ^pkgdown$
+^vignettes/ffmpeg\.Rmd$
+^vignettes/networks\.Rmd$
+^vignettes/usage_and_limitations\.Rmd$
+^LICENSE.md$
+^clone_notes.md$
