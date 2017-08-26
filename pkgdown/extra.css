@@ -1,3 +1,11 @@
-.nav a{
-  font-size: 1.2em !important;
+.navbar-nav > li > a, .navbar-brand {
+  font-size: 14px !important;
+  text-transform: none !important;
+  font-weight: normal !important;
+}
+
+.nav a {
+  font-size: 12px !important;
+  text-transform: none !important;
+  font-weight: normal !important;
 }
