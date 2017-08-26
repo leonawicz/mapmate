@@ -1,7 +1,5 @@
 ---
 title: "Introduction to mapmate"
-author: "Matthew Leonawicz"
-date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     fig_caption: yes
@@ -14,7 +12,8 @@ vignette: >
 <!-- mapmate.md is generated from mapmate.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse=TRUE, comment="#>", message=F, warning=F, error=F, eval=F, tidy=T) # for html_vignette only
+knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path="README-Introduction-", 
+  message=F, warning=F, error=F, eval=F, tidy=T)
 ```
 
 The `mapmate` package is used for map- and globe-based data animation pre-production.
