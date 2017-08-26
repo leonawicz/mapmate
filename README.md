@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 mapmate
 =======
@@ -8,30 +9,39 @@ mapmate
 
 Here is the complete online [documentation and tutorials with code examples](https://leonawicz.github.io/mapmate/).
 
-Install
--------
+Installation and bug reporting
+------------------------------
+
+Install the latest development version (0.3.0) from github:
 
 ``` r
-devtools::install_github("leonawicz/mapmate")
+install.packages("devtools")
+devtools::install_github("leonawicz/rvtable")
 ```
 
-This installs the current development version. Functionality is subject to change.
+Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/rvtable/issues).
 
 Example videos based on mapmate
 -------------------------------
 
 ### Historical and projected global temperature anomalies
 
-<a href="https://www.youtube.com/watch?v=xhqEkyJDBho"><img src="https://img.youtube.com/vi/xhqEkyJDBho/0.jpg" width="200"></a>
-
+<p align="center">
+<iframe src="https://www.youtube.com/embed/xhqEkyJDBho?ecver=2" width="640" height="360" frameborder="0" allowfullscreen>
+</iframe>
+</p>
 ### Global UAF/SNAP Shiny Apps web traffic
 
-<a href="https://www.youtube.com/watch?v=uQYR91qixgo"><img src="https://img.youtube.com/vi/uQYR91qixgo/0.jpg" width="200"></a>
-
+<p align="center">
+<iframe src="https://www.youtube.com/embed/uQYR91qixgo?ecver=2" width="640" height="360" frameborder="0" allowfullscreen>
+</iframe>
+</p>
 ### Flat map great circle animation example
 
-<a href="https://www.youtube.com/watch?v=yoyIUMvIP3Q"><img src="https://img.youtube.com/vi/yoyIUMvIP3Q/0.jpg" width="200"></a>
-
+<p align="center">
+<iframe src="https://www.youtube.com/embed/yoyIUMvIP3Q?ecver=2" width="640" height="360" allowfullscreen>
+</iframe>
+</p>
 Introduction and basic example
 ------------------------------
 
@@ -42,18 +52,18 @@ library(mapmate)
 library(dplyr)
 data(annualtemps)
 annualtemps
-#> # A tibble: 55,080 × 4
+#> # A tibble: 55,080 x 4
 #>          lon      lat  Year     z
 #>        <dbl>    <dbl> <int> <dbl>
-#> 1  -176.6667 53.66633  2010  1.09
-#> 2  -176.6667 66.99967  2010  3.21
-#> 3  -176.6667 73.66633  2010  2.76
-#> 4  -170.0000 53.66633  2010  0.91
-#> 5  -170.0000 60.33300  2010  2.47
-#> 6  -170.0000 66.99967  2010  2.73
-#> 7  -163.3333 20.33300  2010  0.19
-#> 8  -163.3333 53.66633  2010  0.79
-#> 9  -163.3333 60.33300  2010  1.43
+#>  1 -176.6667 53.66633  2010  1.09
+#>  2 -176.6667 66.99967  2010  3.21
+#>  3 -176.6667 73.66633  2010  2.76
+#>  4 -170.0000 53.66633  2010  0.91
+#>  5 -170.0000 60.33300  2010  2.47
+#>  6 -170.0000 66.99967  2010  2.73
+#>  7 -163.3333 20.33300  2010  0.19
+#>  8 -163.3333 53.66633  2010  0.79
+#>  9 -163.3333 60.33300  2010  1.43
 #> 10 -163.3333 66.99967  2010  1.28
 #> # ... with 55,070 more rows
 
@@ -70,9 +80,9 @@ save_map(frame1, z.name = "z", id = id, col = pal, type = "maptiles", save.plot 
     return.plot = TRUE)
 ```
 
-![2D flat map and 3D globe](README-unnamed-chunk-3-1.png)![2D flat map and 3D globe](README-unnamed-chunk-3-2.png)
+![2D flat map and 3D globe](README-example_plots-1.png)![2D flat map and 3D globe](README-example_plots-2.png)
 
-The above is only a very basic initial example of static 2D and 3D maps. See the introduction vignette for more complete and more typical usage examples:
+The above is only a very basic initial example of static 2D and 3D maps. See the [introduction vignette](http://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
 
 -   Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data) in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
 -   Generate a sequence of still frames of:
@@ -85,8 +95,6 @@ The above is only a very basic initial example of static 2D and 3D maps. See the
 -   Comparison of map tiles, map lines, and polygons
 -   Non-map data example (time series line growth)
 
-``` r
-browseVignettes(package = "mapmate")
-```
+This and other vignettes covering more examples, including network maps with great circle arcs and generating video with `ffmpeg`, can be found at the [mapmate](http://leonawicz.github.io/rvtable/articles/rvtable.html) website.
 
 Other features and functionality will be added in future package versions.
