@@ -4,6 +4,8 @@ Version: 0.3.0
 Author: Matthew Leonawicz [aut, cre]
 Maintainer: Matthew Leonawicz <mfleonawicz@alaska.edu>
 Authors@R: person("Matthew", "Leonawicz", role = c("aut", "cre"), email = "mfleonawicz@alaska.edu")
+URL: https://leonawicz.github.io/mapmate, https://github.com/leonawicz/mapmate
+BugReports: https://github.com/leonawicz/mapmate/issues
 Description: mapmate is an R package for generating and saving a sequence of
     map- and globe-based plots to disk as a still image sequence intended for later use in data animation
     production.
@@ -35,5 +37,6 @@ Suggests:
     rworldxtra,
     raster,
     animation
-RoxygenNote: 6.0.1
 VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+
