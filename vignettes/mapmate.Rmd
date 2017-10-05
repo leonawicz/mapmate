@@ -89,7 +89,7 @@ and since we are not saving files to disk we can also ignore arguments like `dir
 library(RColorBrewer)
 pal <- rev(brewer.pal(11,"RdYlBu"))
 temps <- mutate(annualtemps, frameID  =  Year - min(Year) + 1)
-frame1 <- filter(temps, frameID =  = 1) # subset to first frame
+frame1 <- filter(temps, frameID = 1) # subset to first frame
 id <- "frameID"
 
 save_map(frame1, z.name = "z", id = id, ortho = FALSE, col = pal, type = "maptiles", save.plot = FALSE, return.plot = TRUE)
