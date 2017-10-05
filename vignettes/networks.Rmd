@@ -116,7 +116,7 @@ If literally all you want to do is make a short, simple animated gif of custom p
 Also, if you are using `animation` in general, as with the code below, it is dependent on `ImageMagick`, which you will also have to install.
 
 ```{r flat_animation, eval=FALSE}
-gglist <- save_seq(paths_flat, id="id", n.frames=n, ortho=FALSE, type="network", ylim=ylm, png.args=png.args, save.plot=FALSE, return.plot=TRUE)
+gglist <- save_seq(paths_flat, id = "id", n.frames = n, ortho = FALSE, type = "network", ylim = ylm, png.args = png.args, save.plot = FALSE, return.plot = TRUE)
 
 library(animation)
 # you may need to specify a different path on your Windows machine
@@ -125,9 +125,7 @@ ani.options(convert = "C:/Program Files/ImageMagick-7.0.6-Q16/convert.exe")
 saveGIF(for(i in seq_along(gglist)) print(gglist[[i]]), "network2D.gif", interval = 1/20, ani.width = 960, ani.height = 480)
 ```
 
-<p align="center">
-<img src="network2D.gif"/>
-</p>
+<p style="text-align:center;"><img src="network2D.gif"></p>
 
 This `animation`-dependent example and the animated gif are not meant to be distractions from the purpose of this package.
 Despite the example gif, any code here related to `animation` is beyond the scope of this tutorial.
@@ -159,9 +157,7 @@ ani.options(convert="C:/Program Files/ImageMagick-7.0.3-Q16/convert.exe")
 saveGIF(for(i in seq_along(gglist)) print(gglist[[i]]), "network3D.gif", interval = 1/20, ani.width = 600, ani.height = 600)
 ```
 
-<p align="center">
-<img src="network3D.gif"/>
-</p>
+<p style="text-align:center;"><img src="network3D.gif"></p>
 
 Again, normal usage is to just do the following and then use the saved still image sequence with full user control for whatever you like:
 

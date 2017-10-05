@@ -357,7 +357,7 @@ file <- "bioDivMaptiles_3D_rotating"
 save_map(bio2[[1]], z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, col = clrs, type = "maptiles", file = file, save.plot = FALSE, return.plot = TRUE)
 ```
 
-![](hc_rgeos_ex_2.png)<!-- -->
+![](hc_rgeos_ex_2.png)
 
 ```{r}
 # Walk over all maps
