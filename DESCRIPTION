@@ -1,6 +1,6 @@
 Package: mapmate
 Title: Make Still Image Sequences For Data Animations
-Version: 0.3.0
+Version: 0.3.1
 Author: Matthew Leonawicz [aut, cre]
 Maintainer: Matthew Leonawicz <mfleonawicz@alaska.edu>
 Authors@R: person("Matthew", "Leonawicz", role = c("aut", "cre"), email = "mfleonawicz@alaska.edu")
