@@ -61,7 +61,7 @@ save_map(frame1, z.name = "z", id = id, col = pal, type = "maptiles", save.plot 
 
 ![2D flat map and 3D globe](README-example_plots-1.png)![2D flat map and 3D globe](README-example_plots-2.png)
 
-The above is only a very basic initial example of static 2D and 3D maps. See the [introduction vignette](http://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
+The above is only a very basic initial example of static 2D and 3D maps. See the [introduction vignette](https://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
 
 -   Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data) in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
 -   Generate a sequence of still frames of:
@@ -74,6 +74,6 @@ The above is only a very basic initial example of static 2D and 3D maps. See the
 -   Comparison of map tiles, map lines, and polygons
 -   Non-map data example (time series line growth)
 
-This and other vignettes covering more examples, including network maps with great circle arcs and generating video with `ffmpeg`, can be found at the [mapmate](http://leonawicz.github.io/rvtable/articles/rvtable.html) website.
+This and other vignettes covering more examples, including network maps with great circle arcs and generating video with `ffmpeg`, can be found at the [mapmate](https://leonawicz.github.io/rvtable/articles/rvtable.html) website.
 
 Other features and functionality will be added in future package versions.

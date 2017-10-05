@@ -1,6 +1,6 @@
 urls:
-  reference: http://leonawicz.github.io//reference
-  article: http://leonawicz.github.io//articles
+  reference: https://leonawicz.github.io//reference
+  article: https://leonawicz.github.io//articles
 articles:
   ffmpeg: ffmpeg.html
   mapmate: mapmate.html
