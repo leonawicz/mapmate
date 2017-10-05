@@ -21,14 +21,14 @@ Here is the complete online [documentation and tutorials with code examples](htt
 
 ## Installation and bug reporting
 
-Install the latest development version (0.3.0) from github:
+You can install snapverse from github with:
 
 ```r
-install.packages("devtools")
-devtools::install_github("leonawicz/rvtable")
+# install.packages('devtools')
+devtools::install_github("leonawicz/mapmate")
 ```
 
-Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/rvtable/issues).
+Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/mapmate/issues).
 
 ## Example videos based on mapmate
 
@@ -78,7 +78,7 @@ save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, r
 ```
 
 The above is only a very basic initial example of static 2D and 3D maps.
-See the [introduction vignette](http://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
+See the [introduction vignette](https://leonawicz.github.io/mapmate/articles/mapmate.html) for more complete and typical usage examples:
 
 - Generate a data frame containing monthly map data (optionally seasonal or annual aggregate average data)
 in the form of an n-year moving or rolling average based on an input data frame of raw monthly data.
@@ -93,6 +93,6 @@ in the form of an n-year moving or rolling average based on an input data frame 
 - Non-map data example (time series line growth)
 
 This and other vignettes covering more examples, including network maps with great circle arcs and generating video with `ffmpeg`,
-can be found at the [mapmate](http://leonawicz.github.io/rvtable/articles/rvtable.html) website.
+can be found at the [mapmate](https://leonawicz.github.io/rvtable/articles/rvtable.html) website.
 
 Other features and functionality will be added in future package versions.
