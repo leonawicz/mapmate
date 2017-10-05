@@ -5,8 +5,9 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-", 
-                      message=F, warning=F, error=F, eval=F, tidy=T)
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", fig.path = "README-",
+  message = FALSE, warning = FALSE, error = FALSE, tidy = TRUE)
 ```
 
 # mapmate
@@ -17,38 +18,36 @@ knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path = "README-",
 
 `mapmate` (map animate) is an R package for map animation. It is used to generate and save a sequence of plots to disk as a still image sequence intended for later use in data animation production.
 
-Here is the complete online [documentation and tutorials with code examples](https://leonawicz.github.io/mapmate/).
+```{r is_md, echo = FALSE}
+is_md <- knitr::opts_knit$get("rmarkdown.pandoc.to") == "markdown_github-ascii_identifiers"
+```
+
+```{r md_examples, echo = FALSE, results = "asis", eval = is_md}
+cat("Here is the complete online [documentation and tutorials with code examples](https://leonawicz.github.io/mapmate/).")
+```
 
 ## Installation and bug reporting
 
 You can install snapverse from github with:
 
-```r
+```{r gh-installation, eval = FALSE}
 # install.packages('devtools')
 devtools::install_github("leonawicz/mapmate")
 ```
 
 Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/mapmate/issues).
 
-## Example videos based on mapmate
-
-### Historical and projected global temperature anomalies
-
-<p align="center">
-<iframe src="https://www.youtube.com/embed/xhqEkyJDBho?ecver=2" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-</p>
-
-### Global UAF/SNAP Shiny Apps web traffic
-
-<p align="center">
-<iframe src="https://www.youtube.com/embed/uQYR91qixgo?ecver=2" width="640" height="360" frameborder="0" allowfullscreen></iframe>
-</p>
-
-### Flat map great circle animation example
-
-<p align="center">
-<iframe src="https://www.youtube.com/embed/yoyIUMvIP3Q?ecver=2" width="640" height="360" allowfullscreen></iframe>
-</p>
+```{r html_examples, echo = FALSE, results = "asis", eval = !is_md}
+cat(paste0(
+  "## Example videos based on mapmate\n\n",
+  "### Historical and projected global temperature anomalies\n\n",
+  '<p align="center"><iframe src="https://www.youtube.com/embed/xhqEkyJDBho?ecver=2" width="640" height="360" frameborder="0" allowfullscreen></iframe></p>\n\n',
+  "### Global UAF/SNAP Shiny Apps web traffic\n\n",
+  '<p align="center"><iframe src="https://www.youtube.com/embed/uQYR91qixgo?ecver=2" width="640" height="360" frameborder="0" allowfullscreen></iframe></p>\n\n',
+  "### Flat map great circle animation example\n\n",
+  '<p align="center"><iframe src="https://www.youtube.com/embed/yoyIUMvIP3Q?ecver=2" width="640" height="360" frameborder="0" allowfullscreen></iframe></p>\n\n'
+))
+```
 
 ## Introduction and basic example
 
