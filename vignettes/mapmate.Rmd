@@ -11,9 +11,9 @@ vignette: >
 
 <!-- mapmate.md is generated from mapmate.Rmd. Please edit that file -->
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(collapse=TRUE, comment="#>", fig.path="README-Introduction-", 
-  message=F, warning=F, error=F, eval=F, tidy=T)
+```{r, echo=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "README-Introduction-", 
+  message = FALSE, warning = FALSE, error = FALSE, eval = FALSE, tidy = TRUE)
 ```
 
 The `mapmate` package is used for map- and globe-based data animation pre-production.
@@ -30,7 +30,7 @@ in the form of an n-year moving or rolling average based on an input data frame 
     - dynamic/temporally changing map data projected onto a static globe (3D Earth)
     - static map data projected onto rotating globe
     - dynamic map data projected onto rotating globe
-- Parallel processing examples using `mclapply`
+- Parallel processing examples using `parallel::mclapply`
 - Convenient iterator wrapper function
 - Comparison of map tiles, map lines, and polygons
 - Non-map data example (time series line growth)
@@ -48,9 +48,9 @@ library(purrr)
 data(monthlytemps)
 monthlytemps
 
-get_ma(monthlytemps, type="seasonal", season="winter")
+get_ma(monthlytemps, type = "seasonal", season = "winter")
 
-get_ma(monthlytemps, type="annual", size=20)
+get_ma(monthlytemps, type = "annual", size = 20)
 ```
 
 ## Generate a still image sequence
@@ -70,8 +70,8 @@ Make sure to obtain the range of data across not only space (a single map) but t
 This is to ensure a constant color to value mapping with your chosen color palette across all maps in the set of png files.
 For simplicity, set the number of still frames to be equal to the number of unique time points in the data frame, in this example one frame for each year.
 
-Since each point in this data frame represents a coarse grid cell, we use `type="maptiles"` in the call to `save_map`.
-`save_map` is used for tiles, points (`type="points"`), polygon outlines (`type="maplines"`), polygon fill (`type=="polygons"`), densities (`type="density"`), and great circle arcs (`type="network"`).
+Since each point in this data frame represents a coarse grid cell, we use `type = "maptiles"` in the call to `save_map`.
+`save_map` is used for tiles, points (`type = "points"`), polygon outlines (`type = "maplines"`), polygon fill (`type =  = "polygons"`), densities (`type = "density"`), and great circle arcs (`type = "network"`).
 One of these six types must be specified and the data must be appropriate for the type.
 
 While we are working with data frames in this tiles example, the data typically would originate from a rasterized object, hence the nice even spacing of the coordinates.
@@ -88,12 +88,12 @@ and since we are not saving files to disk we can also ignore arguments like `dir
 ```{r, eval=TRUE, fig.show='hold', fig.cap="2D flat map and 3D globe"}
 library(RColorBrewer)
 pal <- rev(brewer.pal(11,"RdYlBu"))
-temps <- mutate(annualtemps, frameID = Year - min(Year) + 1)
-frame1 <- filter(temps, frameID==1) # subset to first frame
+temps <- mutate(annualtemps, frameID  =  Year - min(Year) + 1)
+frame1 <- filter(temps, frameID =  = 1) # subset to first frame
 id <- "frameID"
 
-save_map(frame1, z.name="z", id=id, ortho=FALSE, col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
-save_map(frame1, z.name="z", id=id, col=pal, type="maptiles", save.plot=FALSE, return.plot=TRUE)
+save_map(frame1, z.name = "z", id = id, ortho = FALSE, col = pal, type = "maptiles", save.plot = FALSE, return.plot = TRUE)
+save_map(frame1, z.name = "z", id = id, col = pal, type = "maptiles", save.plot = FALSE, return.plot = TRUE)
 
 ```
 
@@ -111,11 +111,11 @@ For a flat map we still do not need to pay attention to the globe-specific argum
 and those dealing with displaying data while globe rotation occurs across the image sequence can also be ignored (`n.period`).
 
 ```{r}
-rng <- range(annualtemps$z, na.rm=TRUE)
+rng <- range(annualtemps$z, na.rm = TRUE)
 n <- length(unique(annualtemps$Year))
 file <- "annual_2D"
 temps <- split(temps, temps$frameID)
-walk(temps, ~save_map(.x, z.name="z", id=id, ortho=FALSE, col=pal, type="maptiles", file=file, z.range=rng))
+walk(temps, ~save_map(.x, z.name = "z", id = id, ortho = FALSE, col = pal, type = "maptiles", file = file, z.range = rng))
 
 ```
 
@@ -123,15 +123,15 @@ walk(temps, ~save_map(.x, z.name="z", id=id, ortho=FALSE, col=pal, type="maptile
 
 #### Dynamic data, static map
 
-For plotting data on the globe, set `ortho=TRUE` (default).
+For plotting data on the globe, set `ortho = TRUE` (default).
 In this example the globe remains in a fixed position and orientation.
 The default when passing a single, scalar longitude value to the `lon` argument is to use it as a starting point for rotation.
 Therefore, we need to pass our own vector of longitudes defining a custom longitude sequence to override this behavior.
-Since the globe is to remain in a fixed view, set `lon=rep(-70, n)`.
+Since the globe is to remain in a fixed view, set `lon = rep(-70, n)`.
 Note that a scalar `lat` argument does not behave as a starting point for rotation in the perpendicular direction so no explicitly repeating vector is needed.
 
 Also pay attention to `n.period`, which defines the number of frames or plot iterations required to complete one globe rotation (the degree increment).
-The default of `n.period=360` means that it will take 360 frames to complete one rotation, the perspective shifting by one degree per frame.
+The default of `n.period = 360` means that it will take 360 frames to complete one rotation, the perspective shifting by one degree per frame.
 More frames will allow for smoother rotation, but also means more data to process.
 More frames does not automatically mean slower animation, since when producing the video in video editing software there is always the ability to speed up or slow down the frame rate as well as to duplicate or drop frames.
 That is not relevant here, but worth mentioning since `mapmate` is primarily intended as a video pre-production package to be used in that broader context and workflow.
@@ -146,7 +146,7 @@ With a custom path defined by `lon` and `lat` vectors, which may not be at all c
 
 ```{r}
 file <- "annual_3D_fixed"
-walk(temps, ~save_map(.x, z.name="z", id=id, lon=rep(-70, n), lat=50, n.period=n, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng))
+walk(temps, ~save_map(.x, z.name = "z", id = id, lon = rep(-70, n), lat = 50, n.period = n, n.frames = n, col = pal, type = "maptiles", file = file, z.range = rng))
 
 ```
 
@@ -171,15 +171,15 @@ Those 90 saved images can be looped in a video editor until they reach the end o
 
 The plot type has changed to `maplines`.
 `z.range` can be ignored because it only applies to map tiles (essentially square grid polygon fill coloring) which have values associated with surface pixels
-and for polygon fill (`type="polygons"`) and some types of density maps (`type="density"`).
-It is irrelevant for polygon outlines as well as for `type="points"` and for `type="network"` plots of line segment data.
+and for polygon fill (`type = "polygons"`) and some types of density maps (`type = "density"`).
+It is irrelevant for polygon outlines as well as for `type = "points"` and for `type = "network"` plots of line segment data.
 A single color can be used for the lines so the previously used palette for tiles has been replaced.
 
 ```{r}
 data(borders)
-borders <- map(1:n, ~mutate(borders, frameID = .x))
+borders <- map(1:n, ~mutate(borders, frameID  =  .x))
 file <- "borders_3D_rotating"
-walk(borders, ~save_map(.x, id=id, lon=-70, lat=50, n.period=30, n.frames=n, col="orange", type="maplines", file=file))
+walk(borders, ~save_map(.x, id = id, lon = -70, lat = 50, n.period = 30, n.frames = n, col = "orange", type = "maplines", file = file))
 
 ```
 
@@ -190,10 +190,10 @@ Remember to update the plot ID values.
 The key difference with this example of fixed data and a changing perspective is that providing `z.range` is crucial to maintaining constant color mapping.
 
 ```{r}
-temps1 <- map(1:n, ~mutate(temps[[1]], frameID = .x))
-rng1 <- range(temps1[[1]]$z, na.rm=TRUE)
+temps1 <- map(1:n, ~mutate(temps[[1]], frameID  =  .x))
+rng1 <- range(temps1[[1]]$z, na.rm = TRUE)
 file <- "year1_3D_rotating"
-walk(temps1, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng1))
+walk(temps1, ~save_map(.x, z.name = "z", id = id, lon = -70, lat = 50, n.period = 30, n.frames = n, col = pal, type = "maptiles", file = file, z.range = rng1))
 
 ```
 
@@ -204,7 +204,7 @@ This example plots the full time series list of projected annual temperature ano
 
 ```{r}
 file <- "annual_3D_rotating"
-walk(temps, ~save_map(.x, z.name="z", id=id, lon=-70, lat=50, n.period=30, n.frames=n, col=pal, type="maptiles", file=file, z.range=rng))
+walk(temps, ~save_map(.x, z.name = "z", id = id, lon = -70, lat = 50, n.period = 30, n.frames = n, col = pal, type = "maptiles", file = file, z.range = rng))
 
 ```
 
@@ -223,13 +223,13 @@ This is also why `save_map` does not try to draw every possible map layer, as it
 
 ```{r}
 data(bathymetry)
-bath <- map(1:n, ~mutate(bathymetry, frameID = .x))
-rng_bath <- range(bath[[1]]$z, na.rm=TRUE)
+bath <- map(1:n, ~mutate(bathymetry, frameID  =  .x))
+rng_bath <- range(bath[[1]]$z, na.rm = TRUE)
 pal_bath <- c("black", "steelblue4")
 
-walk(bath, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath))
-walk(borders, ~save_map(.x, id=id, n.frames=n, col="black", type="maplines", file="foreground"))
-walk(temps, ~save_map(.x, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng))
+walk(bath, ~save_map(.x, z.name = "z", id = id, n.frames = n, col = pal_bath, type = "maptiles", file = "background", z.range = rng_bath))
+walk(borders, ~save_map(.x, id = id, n.frames = n, col = "black", type = "maplines", file = "foreground"))
+walk(temps, ~save_map(.x, z.name = "z", id = id, n.frames = n, col = pal, type = "maptiles", file = "timeseries", z.range = rng))
 
 ```
 
@@ -259,9 +259,9 @@ It is beyond the scope of this tutorial.
 
 ```{r}
 library(parallel)
-mclapply(bath, save_map, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath, mc.cores=32)
-mclapply(borders, save_map, id=id, n.frames=n, col="orange", type="maplines", file="foreground", mc.cores=32)
-mclapply(temps, save_map, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng, mc.cores=32)
+mclapply(bath, save_map, z.name = "z", id = id, n.frames = n, col = pal_bath, type = "maptiles", file = "background", z.range = rng_bath, mc.cores = 32)
+mclapply(borders, save_map, id = id, n.frames = n, col = "orange", type = "maplines", file = "foreground", mc.cores = 32)
+mclapply(temps, save_map, z.name = "z", id = id, n.frames = n, col = pal, type = "maptiles", file = "timeseries", z.range = rng, mc.cores = 32)
 
 ```
 
@@ -277,28 +277,28 @@ The serial and parallel equivalents to the previous examples are shown below.
 It won't always save much in the way of gross typing because the wrapper is used to pass along the same arguments that would otherwise be passed to `save_map` or `save_ts` directly,
 along with some of its own arguments.
 But it allows focusing on calling a single plotting iterator function instead of requiring iteration be done explicitly, the iterative aspect being abstracted away to some small degree.
-Since the function is primarily used for map sequences, `style="map"` is the default. Later we will see `style="tsline"` for time series line growth sequences.
+Since the function is primarily used for map sequences, `style = "map"` is the default. Later we will see `style = "tsline"` for time series line growth sequences.
 
 ```{r}
 # Serial
-save_seq(bath, z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath)
-save_seq(borders, id=id, n.frames=n, col="black", type="maplines", file="foreground")
-save_seq(temps, z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng)
+save_seq(bath, z.name = "z", id = id, n.frames = n, col = pal_bath, type = "maptiles", file = "background", z.range = rng_bath)
+save_seq(borders, id = id, n.frames = n, col = "black", type = "maplines", file = "foreground")
+save_seq(temps, z.name = "z", id = id, n.frames = n, col = pal, type = "maptiles", file = "timeseries", z.range = rng)
 
 # Parallel, Linux, with 32 CPU cores available
-save_seq(bath, use_mclapply=TRUE, mc.cores=32, 
-  z.name="z", id=id, n.frames=n, col=pal_bath, type="maptiles", file="background", z.range=rng_bath)
-save_seq(borders, use_mclapply=TRUE, mc.cores=32, 
-  id=id, n.frames=n, col="black", type="maplines", file="foreground")
-save_seq(temps, use_mclapply=TRUE, mc.cores=32, 
-  z.name="z", id=id, n.frames=n, col=pal, type="maptiles", file="timeseries", z.range=rng)
+save_seq(bath, use_mclapply = TRUE, mc.cores = 32, 
+  z.name = "z", id = id, n.frames = n, col = pal_bath, type = "maptiles", file = "background", z.range = rng_bath)
+save_seq(borders, use_mclapply = TRUE, mc.cores = 32, 
+  id = id, n.frames = n, col = "black", type = "maplines", file = "foreground")
+save_seq(temps, use_mclapply = TRUE, mc.cores = 32, 
+  z.name="z", id = id, n.frames = n, col = pal, type = "maptiles", file = "timeseries", z.range = rng)
 
 ```
 
 ### Polygon fill and limitations
 
-Previous examples made use of `type="maptiles"` and `type="maplines"`.
-Here is an example using `type="polygons"`. While polygon borders were drawn earlier with `maplines`,
+Previous examples made use of `type = "maptiles"` and `type = "maplines"`.
+Here is an example using `type = "polygons"`. While polygon borders were drawn earlier with `maplines`,
 they didn't need to be polygon borders and could have been any data suitable to be passed on to `ggplot2::geom_path`.
 In the example below, a data frame originating from a `SpatialPolygonsDataFrame` is expected and the intent is to fill polygons with colors based on data values.
 A convenient example can be shown making use of the `rworldmap` package.
@@ -309,35 +309,35 @@ library(rworldxtra) # required for "high" resolution map
 library(maptools) # required for fortify to work
 # also recommend installing rgeos
 
-spdf <- joinCountryData2Map(countryExData, mapResolution="high")
+spdf <- joinCountryData2Map(countryExData, mapResolution = "high")
 spdf@data$id <- rownames(spdf@data)
-bio <- ggplot2::fortify(spdf, region="id") %>%
-  left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by="id")
+bio <- ggplot2::fortify(spdf, region = "id") %>%
+  left_join(subset(spdf@data, select=c(id, BIODIVERSITY)), by = "id")
 n <- 30
-bio <- map(1:n, ~mutate(bio, frameID = .x) %>% rename(lon=long))
+bio <- map(1:n, ~mutate(bio, frameID = .x) %>% rename(lon = long))
 file <- "bioDivPolygons_3D_rotating"
 x1 <- "BIODIVERSITY"
 clrs <- c("royalblue", "purple", "orange", "yellow")
 
 # Return a test map
-save_map(bio[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", file=file, save.plot=FALSE, return.plot=TRUE)
+save_map(bio[[1]], z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, col = clrs, type = "polygons", file = file, save.plot = FALSE, return.plot = TRUE)
 ```
 
-![](hc_rgeos_ex_1.png)<!-- -->
+![](hc_rgeos_ex_1.png)
 
 ```{r}
 # Walk over all maps
-walk(bio, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="polygons", file=file))
+walk(bio, ~save_map(.x, z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, col = clrs, type = "polygons", file = file))
 
 ```
 
-Note that `type="polygons"` will work poorly for the orthographic projection. Nation polygons will be clipped at varying points as the globe rotates,
+Note that `type = "polygons"` will work poorly for the orthographic projection. Nation polygons will be clipped at varying points as the globe rotates,
 leading to moving artifacts around the perimeter of the visible hemisphere. In the view above, this is clear over North America.
-There is no work around implemented for this within `save_map` when using `type="polygons"` on a globe.
+There is no work around implemented for this within `save_map` when using `type = "polygons"` on a globe.
 As a result, it is recommended to only use world polygons with flat maps.
 
 The external work around is to rasterize source polygon data, e.g. from a `SpatialPolygonsDataFrame` to a satisfactorily high resolution
-and plot the rasterized grid cells data frame using `type="maptiles"`.
+and plot the rasterized grid cells data frame using `type = "maptiles"`.
 See the earlier examples using the `annualtemps` data set for an introduction to the use of tiles.
 Of course, this will lead to greater processing time, as `geom_tile` from `ggplot2` is essentially plotting many tiny square polygons
 rather than the small number of larger polygons in the original data if using `geom_polygon`.
@@ -347,21 +347,21 @@ Much higher resolutions are painfully slow to render with `geom_tile`.
 ```{r}
 library(raster)
 proj4 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"
-r <- raster(extent(-180,180,-90,90), nrow=180, ncol=360, proj4)
-bio2 <- rasterize(spdf, r, field=x1) %>% rasterToPoints %>%
+r <- raster(extent(-180, 180, -90, 90), nrow = 180, ncol = 360, proj4)
+bio2 <- rasterize(spdf, r, field = x1) %>% rasterToPoints %>%
   tbl_df() %>% setNames(c("lon", "lat", x1))
 bio2 <- map(1:n, ~mutate(bio2, frameID = .x))
 file <- "bioDivMaptiles_3D_rotating"
 
 # Return a test map
-save_map(bio2[[1]], z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", file=file, save.plot=FALSE, return.plot=TRUE)
+save_map(bio2[[1]], z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, col = clrs, type = "maptiles", file = file, save.plot = FALSE, return.plot = TRUE)
 ```
 
 ![](hc_rgeos_ex_2.png)<!-- -->
 
 ```{r}
 # Walk over all maps
-walk(bio2, ~save_map(.x, z.name=x1, id=id, lon=0, lat=20, n.period=n, n.frames=n, col=clrs, type="maptiles", file=file))
+walk(bio2, ~save_map(.x, z.name = x1, id = id, lon = 0, lat = 20, n.period = n, n.frames = n, col = clrs, type = "maptiles", file = file))
 
 ```
 
@@ -387,14 +387,14 @@ and layered in later.
 See the function documentation for other related arguments and options.
 
 ```{r}
-means <- group_by(annualtemps, Year) %>% summarise(Mean=mean(z)) %>%
-  ungroup() %>% mutate(frameID=1:n())
+means <- group_by(annualtemps, Year) %>% summarise(Mean = mean(z)) %>%
+  ungroup() %>% mutate(frameID = 1:n())
 xlm <- range(means$Year)
 ylm <- range(means$Mean)
 lab <- paste0("ts_", means$frameID[1])
-walk(means$frameID, ~save_ts(means, x="Year", y="Mean", id=id, cap=.x, col="blue", xlm=xlm, ylm=ylm))
+walk(means$frameID, ~save_ts(means, x = "Year", y = "Mean", id = id, cap = .x, col = "blue", xlm = xlm, ylm = ylm))
 
 # Using implicit iteration looks like this.
 # Note that the cap argument is not needed.
-save_seq(means, style="tsline", x="Year", y="Mean", id=id, col="blue", xlm=xlm, ylm=ylm)
+save_seq(means, style = "tsline", x = "Year", y = "Mean", id = id, col = "blue", xlm = xlm, ylm = ylm)
 ```
