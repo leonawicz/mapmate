@@ -102,6 +102,7 @@
     
 <div class="contents">
 <!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->
+<pre><code>## Warning: package 'dplyr' was built under R version 3.4.2</code></pre>
 <p>This tutorial covers the use of <code>ffmpeg</code> in <code>mapmate</code>. <code>ffmpeg</code> is a wrapper function around the popular <a href="https://www.ffmpeg.org/">FFmpeg command line multimedia framework</a>. It translates arguments provided by the user in familiar R syntax into a system call to the <code>ffmpeg</code> command line tool, which must be installed on the system.</p>
 <div id="context" class="section level1">
 <h1 class="hasAnchor">
@@ -127,13 +128,13 @@
 <span class="kw">set.seed</span>(<span class="dv">192</span>)
 <span class="kw">data</span>(network)
 
-distFun &lt;-<span class="st"> </span><span class="cf">function</span>(x) x<span class="op">/</span><span class="kw">max</span>(x)  <span class="co"># simple distance weighting</span>
-endpoints &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gc_endpoints.html">gc_endpoints</a></span>(network, <span class="st">"lon"</span>, <span class="st">"lat"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">Dist_wts =</span> <span class="kw">distFun</span>(Dist)) <span class="op">%&gt;%</span><span class="st"> </span>
+distFun &lt;-<span class="st"> </span>function(x) x/<span class="kw">max</span>(x)  <span class="co"># simple distance weighting</span>
+endpoints &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gc_endpoints.html">gc_endpoints</a></span>(network, <span class="st">"lon"</span>, <span class="st">"lat"</span>) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">Dist_wts =</span> <span class="kw">distFun</span>(Dist)) %&gt;%<span class="st"> </span>
 <span class="st">    </span><span class="kw">sample_n</span>(<span class="dv">1000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
 arcs &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gc_arcs.html">gc_arcs</a></span>(endpoints, <span class="st">"lon0"</span>, <span class="st">"lat0"</span>, <span class="st">"lon1"</span>, <span class="st">"lat1"</span>, <span class="dt">n =</span> <span class="dv">100</span>)
 paths &lt;-<span class="st"> </span><span class="kw"><a href="../reference/gc_paths.html">gc_paths</a></span>(arcs, <span class="st">"group"</span>, <span class="dt">size =</span> <span class="dv">5</span>, <span class="dt">direction =</span> <span class="st">"random"</span>, <span class="dt">max.offset =</span> <span class="dv">100</span>)
 
-n &lt;-<span class="st"> </span><span class="kw">max</span>(paths<span class="op">$</span>id)
+n &lt;-<span class="st"> </span><span class="kw">max</span>(paths$id)
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"#FFFFFF"</span>, <span class="st">"#FF450050"</span>, <span class="st">"#FF4500"</span>, <span class="st">"#FFFFFF50"</span>)
 size &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>)
 args1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">width =</span> <span class="dv">600</span>, <span class="dt">height =</span> <span class="dv">600</span>, <span class="dt">res =</span> <span class="dv">72</span>)
@@ -150,7 +151,7 @@ file &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="s
 <h2 class="hasAnchor">
 <a href="#save-background-layers" class="anchor"></a>Save background layers</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(borders)
-borders &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="op">~</span><span class="kw">mutate</span>(borders, <span class="dt">id =</span> .x)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">bind_rows</span>()
+borders &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span>:n, ~<span class="kw">mutate</span>(borders, <span class="dt">id =</span> .x)) %&gt;%<span class="st"> </span><span class="kw">bind_rows</span>()
 file &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"borders_bg_"</span>, <span class="kw">c</span>(<span class="st">"transparent"</span>, <span class="st">"black"</span>))
 <span class="kw"><a href="../reference/save_seq.html">save_seq</a></span>(borders, <span class="dt">id =</span> <span class="st">"id"</span>, <span class="dt">n.frames =</span> n, <span class="dt">col =</span> <span class="st">"dodgerblue"</span>, <span class="dt">type =</span> <span class="st">"maplines"</span>, 
     <span class="dt">file =</span> file[<span class="dv">1</span>], <span class="dt">png.args =</span> args1)
@@ -166,7 +167,7 @@ out &lt;-<span class="st"> "ntwk_10fps.gif"</span>
 <span class="co"># 10 fps gif</span>
 <span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)
 <span class="co"># Same as above. Set overwrite=TRUE if output exists.</span>
-<span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span>/<span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p align="center">
 <img src="ntwk_10fps.gif"></p>
 <p><br></p>
@@ -175,7 +176,7 @@ out &lt;-<span class="st"> "brdr_10fps.gif"</span>
 <span class="co"># 10 fps gif</span>
 <span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">rate =</span> <span class="dv">10</span>)
 <span class="co"># Same as above</span>
-<span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out, <span class="dt">delay =</span> <span class="dv">1</span>/<span class="dv">10</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p align="center">
 <img src="brdr_10fps.gif"></p>
 <p><br></p>
@@ -214,7 +215,7 @@ out &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"br
 <span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">2</span>], <span class="dt">size =</span> <span class="st">"ntsc"</span>)</code></pre></div>
 <p>Here are some more examples generating mp4 file outputs. See the help documentation for <code>ffmpeg</code> and experiment with the arguments. Other available output file types include <code>.mov</code>, <code>.mkv</code> and <code>.webm</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> "network_bg_transparent_%04d.png"</span>
-out &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"ntwk_example_"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="st">".mp4"</span>)
+out &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">"ntwk_example_"</span>, <span class="dv">1</span>:<span class="dv">4</span>, <span class="st">".mp4"</span>)
 <span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">1</span>], <span class="dt">rate =</span> <span class="st">"ntsc"</span>, <span class="dt">size =</span> <span class="st">"ntsc"</span>, <span class="dt">preset =</span> <span class="st">"ultrafast"</span>, 
     <span class="dt">lossless =</span> <span class="ot">TRUE</span>)
 <span class="kw"><a href="../reference/ffmpeg.html">ffmpeg</a></span>(<span class="dt">pattern =</span> p, <span class="dt">output =</span> out[<span class="dv">2</span>], <span class="dt">rate =</span> <span class="dv">5</span>, <span class="dt">size =</span> <span class="st">"source"</span>, <span class="dt">preset =</span> <span class="st">"veryslow"</span>, 

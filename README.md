@@ -12,15 +12,36 @@ Here is the complete online [documentation and tutorials with code examples](htt
 Installation and bug reporting
 ------------------------------
 
-Install the latest development version (0.3.0) from github:
+You can install snapverse from github with:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("leonawicz/rvtable")
+# install.packages('devtools')
+devtools::install_github("leonawicz/mapmate")
 ```
 
-Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/rvtable/issues).
+Please file a minimal reproducible example of any clear bug at [github](https://github.com/leonawicz/mapmate/issues).
 
+Example videos based on mapmate
+-------------------------------
+
+### Historical and projected global temperature anomalies
+
+<p align="center">
+<iframe src="https://www.youtube.com/embed/xhqEkyJDBho?ecver=2" width="640" height="360" frameborder="0" allowfullscreen>
+</iframe>
+</p>
+### Global UAF/SNAP Shiny Apps web traffic
+
+<p align="center">
+<iframe src="https://www.youtube.com/embed/uQYR91qixgo?ecver=2" width="640" height="360" frameborder="0" allowfullscreen>
+</iframe>
+</p>
+### Flat map great circle animation example
+
+<p align="center">
+<iframe src="https://www.youtube.com/embed/yoyIUMvIP3Q?ecver=2" width="640" height="360" allowfullscreen>
+</iframe>
+</p>
 Introduction and basic example
 ------------------------------
 

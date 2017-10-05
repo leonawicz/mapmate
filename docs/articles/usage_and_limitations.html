@@ -103,7 +103,7 @@
 <div class="contents">
 <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
 <p>To install the package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"leonawicz/mapmate"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"leonawicz/mapmate"</span>)</code></pre></div>
 <div id="introduction-and-motivation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction-and-motivation" class="anchor"></a>Introduction and motivation</h1>
@@ -129,7 +129,7 @@ pal &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">b
 <span class="kw">data</span>(bathymetry)
 
 id &lt;-<span class="st"> "frameID"</span>
-temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, <span class="dt">frameID =</span> Year <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(Year) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(frameID <span class="op">==</span><span class="st"> </span>
+temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, <span class="dt">frameID =</span> Year -<span class="st"> </span><span class="kw">min</span>(Year) +<span class="st"> </span><span class="dv">1</span>) %&gt;%<span class="st"> </span><span class="kw">filter</span>(frameID ==<span class="st"> </span>
 <span class="st">    </span><span class="dv">1</span>)  <span class="co"># subset to first frame</span>
 brdrs &lt;-<span class="st"> </span><span class="kw">mutate</span>(borders, <span class="dt">frameID =</span> <span class="dv">1</span>)
 bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <span class="dt">frameID =</span> <span class="dv">1</span>)</code></pre></div>
@@ -161,7 +161,7 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">type =</span> <span class="st">"maplines"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-maplines1-1.png" width="672"></p>
 <p>While we’re here, let’s also change the view using <code>lon</code>, <code>lat</code>, and <code>rotation.axis</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">40</span>, <span class="dt">rotation.axis =</span> <span class="dv">0</span>, <span class="dt">type =</span> <span class="st">"maplines"</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">40</span>, <span class="dt">rotation.axis =</span> <span class="dv">0</span>, <span class="dt">type =</span> <span class="st">"maplines"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-maplines2-1.png" width="672"></p>
 </div>
@@ -216,7 +216,7 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-density_2Dvs3D-2.png" width="672"></p>
 <p>Of course, this would not be interesting to do when the data frame contains gridded data at all lon/lat locations on the world grid like in <code>bathymetry</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-density_2D_boring-1.png" width="672"></p>
 </div>
@@ -261,24 +261,24 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <span class="co"># also recommend installing rgeos</span>
 
 spdf &lt;-<span class="st"> </span><span class="kw">joinCountryData2Map</span>(countryExData, <span class="dt">mapResolution =</span> <span class="st">"high"</span>)
-spdf<span class="op">@</span>data<span class="op">$</span>id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf<span class="op">@</span>data)
-bio &lt;-<span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/fortify">fortify</a></span>(spdf, <span class="dt">region =</span> <span class="st">"id"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf<span class="op">@</span>data, 
-    <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">"id"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long)
+spdf@data$id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf@data)
+bio &lt;-<span class="st"> </span>ggplot2::<span class="kw">fortify</span>(spdf, <span class="dt">region =</span> <span class="st">"id"</span>) %&gt;%<span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf@data, 
+    <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">"id"</span>) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>) %&gt;%<span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long)
 
 <span class="co"># raster layer</span>
 <span class="kw">library</span>(raster)
 proj4 &lt;-<span class="st"> "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"</span>
 z &lt;-<span class="st"> "BIODIVERSITY"</span>
 <span class="co"># 1-degree resolution, still somewhat coarse</span>
-r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="op">-</span><span class="dv">180</span>, <span class="dv">180</span>, <span class="op">-</span><span class="dv">90</span>, <span class="dv">90</span>), <span class="dt">nrow =</span> <span class="dv">180</span>, <span class="dt">ncol =</span> <span class="dv">360</span>, proj4)
-bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> z) <span class="op">%&gt;%</span><span class="st"> </span>rasterToPoints <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tbl_df</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">"lon"</span>, 
-    <span class="st">"lat"</span>, z)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>)
+r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(-<span class="dv">180</span>, <span class="dv">180</span>, -<span class="dv">90</span>, <span class="dv">90</span>), <span class="dt">nrow =</span> <span class="dv">180</span>, <span class="dt">ncol =</span> <span class="dv">360</span>, proj4)
+bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> z) %&gt;%<span class="st"> </span>rasterToPoints %&gt;%<span class="st"> </span><span class="kw">tbl_df</span>() %&gt;%<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">"lon"</span>, 
+    <span class="st">"lat"</span>, z)) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>)
 
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"royalblue"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>)
-<span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"polygons"</span>, 
+<span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"polygons"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-polygons_tiles_scratch-1.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio2, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"maptiles"</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio2, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"maptiles"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p><img src="README-Examples-polygons_tiles_scratch-2.png" width="672"></p>
 <p>In conclusion, there are a variety of methods available to draw different types of data on the globe from any arbitrary perspective. Flat maps are also an option but this is not as interesting so it is not focused on. The primary uses of <code>save_map</code> among what is shown here are for plotting points, polygon borders and tiles. The rest are interesting options and can work well enough for specific use cases but are included here mainly to highlight their current limitations.</p>
