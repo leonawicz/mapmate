@@ -11,9 +11,9 @@ vignette: >
 
 <!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->
 
-```{r knitr_setup, cache=FALSE, echo=FALSE, message=FALSE, results="hide"}
+```{r knitr_setup, cache=FALSE, echo=FALSE, message=FALSE, results="hide", include=FALSE}
 knitr::opts_chunk$set(cache=FALSE, collapse=TRUE, comment=">", fig.path="README-ffmpeg-",
-  message=F, warning=F, error=F, eval=T, tidy=T, results="hide")
+  message=FALSE, warning=FALSE, error=FALSE, tidy=TRUE, results="hide")
 
 # move image sequences from storage directory to knitr directory, to be moved back upon completion of knitting
 imgDir <- "test-images"
@@ -77,11 +77,15 @@ Be sure to check the [introduction vignette](mapmate.html) first if you are not 
 
 ## Simulate network paths
 
-```{r network, cache=TRUE}
+Load R packages.
+
+```{r pkgs, eval=FALSE}
 library(mapmate)
 library(dplyr)
 library(purrr)
+```
 
+```{r network, cache=TRUE}
 set.seed(192)
 data(network)
 
