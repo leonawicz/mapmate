@@ -102,7 +102,6 @@
     
 <div class="contents">
 <!-- ffmpeg.md is generated from ffmpeg.Rmd. Please edit that file -->
-<pre><code>## Warning: package 'dplyr' was built under R version 3.4.2</code></pre>
 <p>This tutorial covers the use of <code>ffmpeg</code> in <code>mapmate</code>. <code>ffmpeg</code> is a wrapper function around the popular <a href="https://www.ffmpeg.org/">FFmpeg command line multimedia framework</a>. It translates arguments provided by the user in familiar R syntax into a system call to the <code>ffmpeg</code> command line tool, which must be installed on the system.</p>
 <div id="context" class="section level1">
 <h1 class="hasAnchor">
@@ -121,11 +120,11 @@
 <div id="simulate-network-paths" class="section level2">
 <h2 class="hasAnchor">
 <a href="#simulate-network-paths" class="anchor"></a>Simulate network paths</h2>
+<p>Load R packages.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mapmate)
 <span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(purrr)
-
-<span class="kw">set.seed</span>(<span class="dv">192</span>)
+<span class="kw">library</span>(purrr)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">192</span>)
 <span class="kw">data</span>(network)
 
 distFun &lt;-<span class="st"> </span>function(x) x/<span class="kw">max</span>(x)  <span class="co"># simple distance weighting</span>
