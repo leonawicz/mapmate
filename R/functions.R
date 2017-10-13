@@ -231,6 +231,10 @@ get_lonlat_seq <- function(lon, lat, n.period=360, n.frames=n.period){
 #' @export
 #'
 #' @examples
+#' \dontshow{
+#' library(dplyr)
+#' library(purrr)
+#' }
 #' library(dplyr)
 #' library(purrr)
 #' data(annualtemps)
