@@ -10,7 +10,7 @@ Description: mapmate is an R package for generating and saving a sequence of
     map- and globe-based plots to disk as a still image sequence intended for later use in data animation
     production.
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.4.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
