@@ -14,5 +14,11 @@
 ^vignettes/ffmpeg\.Rmd$
 ^vignettes/networks\.Rmd$
 ^vignettes/usage_and_limitations\.Rmd$
+^vignettes/.*_cache/
+^vignettes/test-images/
+^vignettes/.*.gif
+^vignettes/brdr.*
+^vignettes/ntwk.*
+^vignettes/README.*
 ^LICENSE.md$
 ^clone_notes.md$

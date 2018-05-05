@@ -10,3 +10,9 @@ docs/articles/test-images/
 docs/*.mp4
 docs/*.md
 inst/doc
+vignettes/*_cache/
+vignettes/test-images/
+vignettes/*.gif
+vignettes/brdr*
+vignettes/ntwk*
+vignettes/README*
