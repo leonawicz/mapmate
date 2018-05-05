@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pad the end of list of data frames � pad_frames • mapmate</title>
+<title>Pad the end of list of data frames — pad_frames • mapmate</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Pad the end of list of data frames — pad_frames" />
+
+<meta property="og:description" content="Use recycling to pad the end of a list of data frames where data frame elements in the list repeat in a cyclical pattern." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,19 +129,23 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Pad the end of list of data frames</h1>
+    <small class="dont-index">Source: <a href='https://github.com/leonawicz/mapmate/blob/master/R/functions.R'><code>R/functions.R</code></a></small>
+    <div class="hidden name"><code>pad_frames.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Use recycling to pad the end of a list of data frames where data frame elements in the list repeat in a cyclical pattern.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>pad_frames</span>(<span class='no'>x</span>, <span class='no'>id</span>, <span class='kw'>n.period</span> <span class='kw'>=</span> <span class='fl'>360</span>, <span class='kw'>rotation</span> <span class='kw'>=</span> <span class='st'>"add"</span>, <span class='kw'>force</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -174,241 +194,241 @@ With <code>rotation="add"</code>, a full period is added to the end of the <code
 <span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>6</span>
 <span class='fu'>pad_frames</span>(<span class='no'>x</span>, <span class='kw'>id</span><span class='kw'>=</span><span class='st'>"idx"</span>, <span class='kw'>n.period</span><span class='kw'>=</span><span class='no'>n</span>, <span class='kw'>rotation</span><span class='kw'>=</span><span class='st'>"add"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2010  1.09     1
-#&gt;  2 -176.6667 66.99967  2010  3.21     1
-#&gt;  3 -176.6667 73.66633  2010  2.76     1
-#&gt;  4 -170.0000 53.66633  2010  0.91     1
-#&gt;  5 -170.0000 60.33300  2010  2.47     1
-#&gt;  6 -170.0000 66.99967  2010  2.73     1
-#&gt;  7 -163.3333 20.33300  2010  0.19     1
-#&gt;  8 -163.3333 53.66633  2010  0.79     1
-#&gt;  9 -163.3333 60.33300  2010  1.43     1
-#&gt; 10 -163.3333 66.99967  2010  1.28     1
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2010  1.09     1
+#&gt;  2 -177.  67.0  2010  3.21     1
+#&gt;  3 -177.  73.7  2010  2.76     1
+#&gt;  4 -170   53.7  2010  0.91     1
+#&gt;  5 -170   60.3  2010  2.47     1
+#&gt;  6 -170   67.0  2010  2.73     1
+#&gt;  7 -163.  20.3  2010  0.19     1
+#&gt;  8 -163.  53.7  2010  0.79     1
+#&gt;  9 -163.  60.3  2010  1.43     1
+#&gt; 10 -163.  67.0  2010  1.28     1
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[2]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2011  0.57     2
-#&gt;  2 -176.6667 66.99967  2011  2.52     2
-#&gt;  3 -176.6667 73.66633  2011  1.93     2
-#&gt;  4 -170.0000 53.66633  2011  0.67     2
-#&gt;  5 -170.0000 60.33300  2011  2.65     2
-#&gt;  6 -170.0000 66.99967  2011  2.73     2
-#&gt;  7 -163.3333 20.33300  2011  0.99     2
-#&gt;  8 -163.3333 53.66633  2011  1.37     2
-#&gt;  9 -163.3333 60.33300  2011  3.01     2
-#&gt; 10 -163.3333 66.99967  2011  2.78     2
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2011 0.570     2
+#&gt;  2 -177.  67.0  2011 2.52      2
+#&gt;  3 -177.  73.7  2011 1.93      2
+#&gt;  4 -170   53.7  2011 0.67      2
+#&gt;  5 -170   60.3  2011 2.65      2
+#&gt;  6 -170   67.0  2011 2.73      2
+#&gt;  7 -163.  20.3  2011 0.99      2
+#&gt;  8 -163.  53.7  2011 1.37      2
+#&gt;  9 -163.  60.3  2011 3.01      2
+#&gt; 10 -163.  67.0  2011 2.78      2
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[3]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2012 -0.25     3
-#&gt;  2 -176.6667 66.99967  2012  2.04     3
-#&gt;  3 -176.6667 73.66633  2012  2.00     3
-#&gt;  4 -170.0000 53.66633  2012  0.23     3
-#&gt;  5 -170.0000 60.33300  2012  1.02     3
-#&gt;  6 -170.0000 66.99967  2012  1.56     3
-#&gt;  7 -163.3333 20.33300  2012  0.79     3
-#&gt;  8 -163.3333 53.66633  2012  0.70     3
-#&gt;  9 -163.3333 60.33300  2012  1.47     3
-#&gt; 10 -163.3333 66.99967  2012  1.91     3
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2012 -0.25     3
+#&gt;  2 -177.  67.0  2012  2.04     3
+#&gt;  3 -177.  73.7  2012  2        3
+#&gt;  4 -170   53.7  2012  0.23     3
+#&gt;  5 -170   60.3  2012  1.02     3
+#&gt;  6 -170   67.0  2012  1.56     3
+#&gt;  7 -163.  20.3  2012  0.79     3
+#&gt;  8 -163.  53.7  2012  0.7      3
+#&gt;  9 -163.  60.3  2012  1.47     3
+#&gt; 10 -163.  67.0  2012  1.91     3
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[4]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     4
-#&gt;  2 -176.6667 66.99967  2013  2.46     4
-#&gt;  3 -176.6667 73.66633  2013  2.09     4
-#&gt;  4 -170.0000 53.66633  2013  1.38     4
-#&gt;  5 -170.0000 60.33300  2013  2.26     4
-#&gt;  6 -170.0000 66.99967  2013  2.44     4
-#&gt;  7 -163.3333 20.33300  2013  0.28     4
-#&gt;  8 -163.3333 53.66633  2013  1.64     4
-#&gt;  9 -163.3333 60.33300  2013  2.06     4
-#&gt; 10 -163.3333 66.99967  2013  2.09     4
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     4
+#&gt;  2 -177.  67.0  2013  2.46     4
+#&gt;  3 -177.  73.7  2013  2.09     4
+#&gt;  4 -170   53.7  2013  1.38     4
+#&gt;  5 -170   60.3  2013  2.26     4
+#&gt;  6 -170   67.0  2013  2.44     4
+#&gt;  7 -163.  20.3  2013  0.28     4
+#&gt;  8 -163.  53.7  2013  1.64     4
+#&gt;  9 -163.  60.3  2013  2.06     4
+#&gt; 10 -163.  67.0  2013  2.09     4
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[5]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     5
-#&gt;  2 -176.6667 66.99967  2013  2.46     5
-#&gt;  3 -176.6667 73.66633  2013  2.09     5
-#&gt;  4 -170.0000 53.66633  2013  1.38     5
-#&gt;  5 -170.0000 60.33300  2013  2.26     5
-#&gt;  6 -170.0000 66.99967  2013  2.44     5
-#&gt;  7 -163.3333 20.33300  2013  0.28     5
-#&gt;  8 -163.3333 53.66633  2013  1.64     5
-#&gt;  9 -163.3333 60.33300  2013  2.06     5
-#&gt; 10 -163.3333 66.99967  2013  2.09     5
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     5
+#&gt;  2 -177.  67.0  2013  2.46     5
+#&gt;  3 -177.  73.7  2013  2.09     5
+#&gt;  4 -170   53.7  2013  1.38     5
+#&gt;  5 -170   60.3  2013  2.26     5
+#&gt;  6 -170   67.0  2013  2.44     5
+#&gt;  7 -163.  20.3  2013  0.28     5
+#&gt;  8 -163.  53.7  2013  1.64     5
+#&gt;  9 -163.  60.3  2013  2.06     5
+#&gt; 10 -163.  67.0  2013  2.09     5
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[6]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     6
-#&gt;  2 -176.6667 66.99967  2013  2.46     6
-#&gt;  3 -176.6667 73.66633  2013  2.09     6
-#&gt;  4 -170.0000 53.66633  2013  1.38     6
-#&gt;  5 -170.0000 60.33300  2013  2.26     6
-#&gt;  6 -170.0000 66.99967  2013  2.44     6
-#&gt;  7 -163.3333 20.33300  2013  0.28     6
-#&gt;  8 -163.3333 53.66633  2013  1.64     6
-#&gt;  9 -163.3333 60.33300  2013  2.06     6
-#&gt; 10 -163.3333 66.99967  2013  2.09     6
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     6
+#&gt;  2 -177.  67.0  2013  2.46     6
+#&gt;  3 -177.  73.7  2013  2.09     6
+#&gt;  4 -170   53.7  2013  1.38     6
+#&gt;  5 -170   60.3  2013  2.26     6
+#&gt;  6 -170   67.0  2013  2.44     6
+#&gt;  7 -163.  20.3  2013  0.28     6
+#&gt;  8 -163.  53.7  2013  1.64     6
+#&gt;  9 -163.  60.3  2013  2.06     6
+#&gt; 10 -163.  67.0  2013  2.09     6
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[7]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     7
-#&gt;  2 -176.6667 66.99967  2013  2.46     7
-#&gt;  3 -176.6667 73.66633  2013  2.09     7
-#&gt;  4 -170.0000 53.66633  2013  1.38     7
-#&gt;  5 -170.0000 60.33300  2013  2.26     7
-#&gt;  6 -170.0000 66.99967  2013  2.44     7
-#&gt;  7 -163.3333 20.33300  2013  0.28     7
-#&gt;  8 -163.3333 53.66633  2013  1.64     7
-#&gt;  9 -163.3333 60.33300  2013  2.06     7
-#&gt; 10 -163.3333 66.99967  2013  2.09     7
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     7
+#&gt;  2 -177.  67.0  2013  2.46     7
+#&gt;  3 -177.  73.7  2013  2.09     7
+#&gt;  4 -170   53.7  2013  1.38     7
+#&gt;  5 -170   60.3  2013  2.26     7
+#&gt;  6 -170   67.0  2013  2.44     7
+#&gt;  7 -163.  20.3  2013  0.28     7
+#&gt;  8 -163.  53.7  2013  1.64     7
+#&gt;  9 -163.  60.3  2013  2.06     7
+#&gt; 10 -163.  67.0  2013  2.09     7
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[8]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     8
-#&gt;  2 -176.6667 66.99967  2013  2.46     8
-#&gt;  3 -176.6667 73.66633  2013  2.09     8
-#&gt;  4 -170.0000 53.66633  2013  1.38     8
-#&gt;  5 -170.0000 60.33300  2013  2.26     8
-#&gt;  6 -170.0000 66.99967  2013  2.44     8
-#&gt;  7 -163.3333 20.33300  2013  0.28     8
-#&gt;  8 -163.3333 53.66633  2013  1.64     8
-#&gt;  9 -163.3333 60.33300  2013  2.06     8
-#&gt; 10 -163.3333 66.99967  2013  2.09     8
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     8
+#&gt;  2 -177.  67.0  2013  2.46     8
+#&gt;  3 -177.  73.7  2013  2.09     8
+#&gt;  4 -170   53.7  2013  1.38     8
+#&gt;  5 -170   60.3  2013  2.26     8
+#&gt;  6 -170   67.0  2013  2.44     8
+#&gt;  7 -163.  20.3  2013  0.28     8
+#&gt;  8 -163.  53.7  2013  1.64     8
+#&gt;  9 -163.  60.3  2013  2.06     8
+#&gt; 10 -163.  67.0  2013  2.09     8
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[9]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     9
-#&gt;  2 -176.6667 66.99967  2013  2.46     9
-#&gt;  3 -176.6667 73.66633  2013  2.09     9
-#&gt;  4 -170.0000 53.66633  2013  1.38     9
-#&gt;  5 -170.0000 60.33300  2013  2.26     9
-#&gt;  6 -170.0000 66.99967  2013  2.44     9
-#&gt;  7 -163.3333 20.33300  2013  0.28     9
-#&gt;  8 -163.3333 53.66633  2013  1.64     9
-#&gt;  9 -163.3333 60.33300  2013  2.06     9
-#&gt; 10 -163.3333 66.99967  2013  2.09     9
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     9
+#&gt;  2 -177.  67.0  2013  2.46     9
+#&gt;  3 -177.  73.7  2013  2.09     9
+#&gt;  4 -170   53.7  2013  1.38     9
+#&gt;  5 -170   60.3  2013  2.26     9
+#&gt;  6 -170   67.0  2013  2.44     9
+#&gt;  7 -163.  20.3  2013  0.28     9
+#&gt;  8 -163.  53.7  2013  1.64     9
+#&gt;  9 -163.  60.3  2013  2.06     9
+#&gt; 10 -163.  67.0  2013  2.09     9
 #&gt; # ... with 602 more rows
 #&gt; </div><div class='input'><span class='fu'>pad_frames</span>(<span class='no'>x</span>, <span class='kw'>id</span><span class='kw'>=</span><span class='st'>"idx"</span>, <span class='kw'>n.period</span><span class='kw'>=</span><span class='no'>n</span>, <span class='kw'>rotation</span><span class='kw'>=</span><span class='st'>"pad"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2010  1.09     1
-#&gt;  2 -176.6667 66.99967  2010  3.21     1
-#&gt;  3 -176.6667 73.66633  2010  2.76     1
-#&gt;  4 -170.0000 53.66633  2010  0.91     1
-#&gt;  5 -170.0000 60.33300  2010  2.47     1
-#&gt;  6 -170.0000 66.99967  2010  2.73     1
-#&gt;  7 -163.3333 20.33300  2010  0.19     1
-#&gt;  8 -163.3333 53.66633  2010  0.79     1
-#&gt;  9 -163.3333 60.33300  2010  1.43     1
-#&gt; 10 -163.3333 66.99967  2010  1.28     1
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2010  1.09     1
+#&gt;  2 -177.  67.0  2010  3.21     1
+#&gt;  3 -177.  73.7  2010  2.76     1
+#&gt;  4 -170   53.7  2010  0.91     1
+#&gt;  5 -170   60.3  2010  2.47     1
+#&gt;  6 -170   67.0  2010  2.73     1
+#&gt;  7 -163.  20.3  2010  0.19     1
+#&gt;  8 -163.  53.7  2010  0.79     1
+#&gt;  9 -163.  60.3  2010  1.43     1
+#&gt; 10 -163.  67.0  2010  1.28     1
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[2]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2011  0.57     2
-#&gt;  2 -176.6667 66.99967  2011  2.52     2
-#&gt;  3 -176.6667 73.66633  2011  1.93     2
-#&gt;  4 -170.0000 53.66633  2011  0.67     2
-#&gt;  5 -170.0000 60.33300  2011  2.65     2
-#&gt;  6 -170.0000 66.99967  2011  2.73     2
-#&gt;  7 -163.3333 20.33300  2011  0.99     2
-#&gt;  8 -163.3333 53.66633  2011  1.37     2
-#&gt;  9 -163.3333 60.33300  2011  3.01     2
-#&gt; 10 -163.3333 66.99967  2011  2.78     2
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2011 0.570     2
+#&gt;  2 -177.  67.0  2011 2.52      2
+#&gt;  3 -177.  73.7  2011 1.93      2
+#&gt;  4 -170   53.7  2011 0.67      2
+#&gt;  5 -170   60.3  2011 2.65      2
+#&gt;  6 -170   67.0  2011 2.73      2
+#&gt;  7 -163.  20.3  2011 0.99      2
+#&gt;  8 -163.  53.7  2011 1.37      2
+#&gt;  9 -163.  60.3  2011 3.01      2
+#&gt; 10 -163.  67.0  2011 2.78      2
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[3]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2012 -0.25     3
-#&gt;  2 -176.6667 66.99967  2012  2.04     3
-#&gt;  3 -176.6667 73.66633  2012  2.00     3
-#&gt;  4 -170.0000 53.66633  2012  0.23     3
-#&gt;  5 -170.0000 60.33300  2012  1.02     3
-#&gt;  6 -170.0000 66.99967  2012  1.56     3
-#&gt;  7 -163.3333 20.33300  2012  0.79     3
-#&gt;  8 -163.3333 53.66633  2012  0.70     3
-#&gt;  9 -163.3333 60.33300  2012  1.47     3
-#&gt; 10 -163.3333 66.99967  2012  1.91     3
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2012 -0.25     3
+#&gt;  2 -177.  67.0  2012  2.04     3
+#&gt;  3 -177.  73.7  2012  2        3
+#&gt;  4 -170   53.7  2012  0.23     3
+#&gt;  5 -170   60.3  2012  1.02     3
+#&gt;  6 -170   67.0  2012  1.56     3
+#&gt;  7 -163.  20.3  2012  0.79     3
+#&gt;  8 -163.  53.7  2012  0.7      3
+#&gt;  9 -163.  60.3  2012  1.47     3
+#&gt; 10 -163.  67.0  2012  1.91     3
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[4]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     4
-#&gt;  2 -176.6667 66.99967  2013  2.46     4
-#&gt;  3 -176.6667 73.66633  2013  2.09     4
-#&gt;  4 -170.0000 53.66633  2013  1.38     4
-#&gt;  5 -170.0000 60.33300  2013  2.26     4
-#&gt;  6 -170.0000 66.99967  2013  2.44     4
-#&gt;  7 -163.3333 20.33300  2013  0.28     4
-#&gt;  8 -163.3333 53.66633  2013  1.64     4
-#&gt;  9 -163.3333 60.33300  2013  2.06     4
-#&gt; 10 -163.3333 66.99967  2013  2.09     4
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     4
+#&gt;  2 -177.  67.0  2013  2.46     4
+#&gt;  3 -177.  73.7  2013  2.09     4
+#&gt;  4 -170   53.7  2013  1.38     4
+#&gt;  5 -170   60.3  2013  2.26     4
+#&gt;  6 -170   67.0  2013  2.44     4
+#&gt;  7 -163.  20.3  2013  0.28     4
+#&gt;  8 -163.  53.7  2013  1.64     4
+#&gt;  9 -163.  60.3  2013  2.06     4
+#&gt; 10 -163.  67.0  2013  2.09     4
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[5]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     5
-#&gt;  2 -176.6667 66.99967  2013  2.46     5
-#&gt;  3 -176.6667 73.66633  2013  2.09     5
-#&gt;  4 -170.0000 53.66633  2013  1.38     5
-#&gt;  5 -170.0000 60.33300  2013  2.26     5
-#&gt;  6 -170.0000 66.99967  2013  2.44     5
-#&gt;  7 -163.3333 20.33300  2013  0.28     5
-#&gt;  8 -163.3333 53.66633  2013  1.64     5
-#&gt;  9 -163.3333 60.33300  2013  2.06     5
-#&gt; 10 -163.3333 66.99967  2013  2.09     5
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     5
+#&gt;  2 -177.  67.0  2013  2.46     5
+#&gt;  3 -177.  73.7  2013  2.09     5
+#&gt;  4 -170   53.7  2013  1.38     5
+#&gt;  5 -170   60.3  2013  2.26     5
+#&gt;  6 -170   67.0  2013  2.44     5
+#&gt;  7 -163.  20.3  2013  0.28     5
+#&gt;  8 -163.  53.7  2013  1.64     5
+#&gt;  9 -163.  60.3  2013  2.06     5
+#&gt; 10 -163.  67.0  2013  2.09     5
 #&gt; # ... with 602 more rows
 #&gt; 
 #&gt; [[6]]
 #&gt; # A tibble: 612 x 5
-#&gt;          lon      lat  Year     z   idx
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
-#&gt;  1 -176.6667 53.66633  2013  0.85     6
-#&gt;  2 -176.6667 66.99967  2013  2.46     6
-#&gt;  3 -176.6667 73.66633  2013  2.09     6
-#&gt;  4 -170.0000 53.66633  2013  1.38     6
-#&gt;  5 -170.0000 60.33300  2013  2.26     6
-#&gt;  6 -170.0000 66.99967  2013  2.44     6
-#&gt;  7 -163.3333 20.33300  2013  0.28     6
-#&gt;  8 -163.3333 53.66633  2013  1.64     6
-#&gt;  9 -163.3333 60.33300  2013  2.06     6
-#&gt; 10 -163.3333 66.99967  2013  2.09     6
+#&gt;      lon   lat  Year     z   idx
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;
+#&gt;  1 -177.  53.7  2013  0.85     6
+#&gt;  2 -177.  67.0  2013  2.46     6
+#&gt;  3 -177.  73.7  2013  2.09     6
+#&gt;  4 -170   53.7  2013  1.38     6
+#&gt;  5 -170   60.3  2013  2.26     6
+#&gt;  6 -170   67.0  2013  2.44     6
+#&gt;  7 -163.  20.3  2013  0.28     6
+#&gt;  8 -163.  53.7  2013  1.64     6
+#&gt;  9 -163.  60.3  2013  2.06     6
+#&gt; 10 -163.  67.0  2013  2.09     6
 #&gt; # ... with 602 more rows
 #&gt; </div></pre>
   </div>
@@ -433,11 +453,14 @@ With <code>rotation="add"</code>, a full period is added to the end of the <code
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

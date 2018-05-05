@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Project points onto globe � do_projection • mapmate</title>
+<title>Project points onto globe — do_projection • mapmate</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Project points onto globe — do_projection" />
+
+<meta property="og:description" content="Project points in data onto the globe and filter data to points within the current field of view." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,20 +129,24 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Project points onto globe</h1>
+    <small class="dont-index">Source: <a href='https://github.com/leonawicz/mapmate/blob/master/R/functions.R'><code>R/functions.R</code></a></small>
+    <div class="hidden name"><code>do_projection.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Project points in <code>data</code> onto the globe and filter <code>data</code> to points within the current field of view.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>do_projection</span>(<span class='no'>data</span>, <span class='no'>id</span>, <span class='kw'>lon</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>n.period</span> <span class='kw'>=</span> <span class='fl'>360</span>,
   <span class='kw'>n.frames</span> <span class='kw'>=</span> <span class='no'>n.period</span>, <span class='kw'>keep</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -181,31 +201,31 @@ for each subset of <code>data</code> grouped by the `id` variable.</p>
 <span class='fu'>data</span>(<span class='no'>annualtemps</span>)
 <span class='no'>temps</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='no'>annualtemps</span>, <span class='kw'>frameID</span> <span class='kw'>=</span> <span class='no'>Year</span> - <span class='fu'>min</span>(<span class='no'>Year</span>) + <span class='fl'>1</span>)
 <span class='fu'>do_projection</span>(<span class='no'>temps</span>, <span class='kw'>id</span><span class='kw'>=</span><span class='st'>"frameID"</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("lon", "lat", "frameID")</span></div><div class='output co'>#&gt; # A tibble: 28,641 x 5
-#&gt;      lon      lat  Year     z frameID
-#&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
-#&gt;  1   -90  0.33300  2010  0.33       1
-#&gt;  2   -90 13.66633  2010  0.69       1
-#&gt;  3   -90 20.33300  2010  0.54       1
-#&gt;  4   -90 26.99967  2010  1.10       1
-#&gt;  5   -90 33.66633  2010  1.35       1
-#&gt;  6   -90 40.33300  2010  1.49       1
-#&gt;  7   -90 46.99967  2010  1.24       1
-#&gt;  8   -90 53.66633  2010  0.79       1
-#&gt;  9   -90 60.33300  2010  1.40       1
-#&gt; 10   -90 66.99967  2010  1.96       1
+#&gt;      lon    lat  Year     z frameID
+#&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;
+#&gt;  1   -90  0.333  2010  0.33       1
+#&gt;  2   -90 13.7    2010  0.69       1
+#&gt;  3   -90 20.3    2010  0.54       1
+#&gt;  4   -90 27.0    2010  1.1        1
+#&gt;  5   -90 33.7    2010  1.35       1
+#&gt;  6   -90 40.3    2010  1.49       1
+#&gt;  7   -90 47.0    2010  1.24       1
+#&gt;  8   -90 53.7    2010  0.79       1
+#&gt;  9   -90 60.3    2010  1.4        1
+#&gt; 10   -90 67.0    2010  1.96       1
 #&gt; # ... with 28,631 more rows</div><div class='input'><span class='fu'>do_projection</span>(<span class='no'>temps</span>, <span class='kw'>id</span><span class='kw'>=</span><span class='st'>"frameID"</span>, <span class='kw'>keep</span><span class='kw'>=</span><span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Joining, by = c("lon", "lat", "frameID")</span></div><div class='output co'>#&gt; # A tibble: 55,080 x 6
-#&gt;          lon      lat  Year     z frameID inview
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;lgl&gt;
-#&gt;  1 -176.6667 53.66633  2010  1.09       1  FALSE
-#&gt;  2 -176.6667 66.99967  2010  3.21       1  FALSE
-#&gt;  3 -176.6667 73.66633  2010  2.76       1  FALSE
-#&gt;  4 -170.0000 53.66633  2010  0.91       1  FALSE
-#&gt;  5 -170.0000 60.33300  2010  2.47       1  FALSE
-#&gt;  6 -170.0000 66.99967  2010  2.73       1  FALSE
-#&gt;  7 -163.3333 20.33300  2010  0.19       1  FALSE
-#&gt;  8 -163.3333 53.66633  2010  0.79       1  FALSE
-#&gt;  9 -163.3333 60.33300  2010  1.43       1  FALSE
-#&gt; 10 -163.3333 66.99967  2010  1.28       1  FALSE
+#&gt;      lon   lat  Year     z frameID inview
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt; 
+#&gt;  1 -177.  53.7  2010  1.09       1 FALSE 
+#&gt;  2 -177.  67.0  2010  3.21       1 FALSE 
+#&gt;  3 -177.  73.7  2010  2.76       1 FALSE 
+#&gt;  4 -170   53.7  2010  0.91       1 FALSE 
+#&gt;  5 -170   60.3  2010  2.47       1 FALSE 
+#&gt;  6 -170   67.0  2010  2.73       1 FALSE 
+#&gt;  7 -163.  20.3  2010  0.19       1 FALSE 
+#&gt;  8 -163.  53.7  2010  0.79       1 FALSE 
+#&gt;  9 -163.  60.3  2010  1.43       1 FALSE 
+#&gt; 10 -163.  67.0  2010  1.28       1 FALSE 
 #&gt; # ... with 55,070 more rows</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -229,11 +249,14 @@ for each subset of <code>data</code> grouped by the `id` variable.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

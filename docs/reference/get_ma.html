@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain moving average map series � get_ma • mapmate</title>
+<title>Obtain moving average map series — get_ma • mapmate</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Obtain moving average map series — get_ma" />
+
+<meta property="og:description" content="Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,20 +129,24 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Obtain moving average map series</h1>
+    <small class="dont-index">Source: <a href='https://github.com/leonawicz/mapmate/blob/master/R/functions.R'><code>R/functions.R</code></a></small>
+    <div class="hidden name"><code>get_ma.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Obtain a moving average for monthly, annual or seasonal resolution data from monthly map data.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>get_ma</span>(<span class='no'>x</span>, <span class='no'>type</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>format</span> <span class='kw'>=</span> <span class='st'>"table"</span>,
   <span class='kw'>use_mclapply</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>mc.cores</span> <span class='kw'>=</span> <span class='fl'>32</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -185,510 +205,510 @@ Most other users will probably not be using parallel processing at all, in which
 <span class='no'>idx</span> <span class='kw'>&lt;-</span> <span class='fu'>switch</span>(<span class='no'>season</span>, <span class='kw'>winter</span><span class='kw'>=</span><span class='fu'>c</span>(<span class='fl'>12</span>,<span class='fl'>1</span>,<span class='fl'>2</span>), <span class='kw'>spring</span><span class='kw'>=</span><span class='fl'>3</span>:<span class='fl'>5</span>, <span class='kw'>summer</span><span class='kw'>=</span><span class='fl'>6</span>:<span class='fl'>8</span>, <span class='kw'>autumn</span><span class='kw'>=</span><span class='fl'>9</span>:<span class='fl'>11</span>)
 <span class='kw'>if</span>(<span class='no'>res</span><span class='kw'>==</span><span class='st'>"seasonal"</span>) <span class='no'>monthlytemps</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>monthlytemps</span>, <span class='no'>Month</span> <span class='kw'>%in%</span> <span class='no'>idx</span>)
 <span class='fu'>get_ma</span>(<span class='no'>monthlytemps</span>, <span class='no'>res</span>, <span class='no'>season</span>)</div><div class='output co'>#&gt; # A tibble: 80 x 4
-#&gt;          lon      lat  Year         z
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt;  1 -176.6667 53.66633  2015 0.5263333
-#&gt;  2 -176.6667 53.66633  2016 0.4096667
-#&gt;  3 -176.6667 53.66633  2017 0.5216667
-#&gt;  4 -176.6667 53.66633  2018 0.4596667
-#&gt;  5 -176.6667 53.66633  2019 0.5473333
-#&gt;  6 -176.6667 53.66633  2020 0.4766667
-#&gt;  7 -176.6667 53.66633  2021 0.5983333
-#&gt;  8 -176.6667 53.66633  2022 0.7020000
-#&gt;  9 -176.6667 53.66633  2023 0.6650000
-#&gt; 10 -176.6667 53.66633  2024 0.7126667
+#&gt;      lon   lat  Year     z
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1 -177.  53.7  2015 0.526
+#&gt;  2 -177.  53.7  2016 0.410
+#&gt;  3 -177.  53.7  2017 0.522
+#&gt;  4 -177.  53.7  2018 0.460
+#&gt;  5 -177.  53.7  2019 0.547
+#&gt;  6 -177.  53.7  2020 0.477
+#&gt;  7 -177.  53.7  2021 0.598
+#&gt;  8 -177.  53.7  2022 0.702
+#&gt;  9 -177.  53.7  2023 0.665
+#&gt; 10 -177.  53.7  2024 0.713
 #&gt; # ... with 70 more rows</div><div class='input'><span class='fu'>get_ma</span>(<span class='fu'>list</span>(<span class='no'>monthlytemps</span>, <span class='no'>monthlytemps</span>), <span class='no'>res</span>, <span class='no'>season</span>)</div><div class='output co'>#&gt; # A tibble: 160 x 4
-#&gt;          lon      lat  Year         z
-#&gt;        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt;  1 -176.6667 53.66633  2015 0.5263333
-#&gt;  2 -176.6667 53.66633  2016 0.4096667
-#&gt;  3 -176.6667 53.66633  2017 0.5216667
-#&gt;  4 -176.6667 53.66633  2018 0.4596667
-#&gt;  5 -176.6667 53.66633  2019 0.5473333
-#&gt;  6 -176.6667 53.66633  2020 0.4766667
-#&gt;  7 -176.6667 53.66633  2021 0.5983333
-#&gt;  8 -176.6667 53.66633  2022 0.7020000
-#&gt;  9 -176.6667 53.66633  2023 0.6650000
-#&gt; 10 -176.6667 53.66633  2024 0.7126667
+#&gt;      lon   lat  Year     z
+#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt;  1 -177.  53.7  2015 0.526
+#&gt;  2 -177.  53.7  2016 0.410
+#&gt;  3 -177.  53.7  2017 0.522
+#&gt;  4 -177.  53.7  2018 0.460
+#&gt;  5 -177.  53.7  2019 0.547
+#&gt;  6 -177.  53.7  2020 0.477
+#&gt;  7 -177.  53.7  2021 0.598
+#&gt;  8 -177.  53.7  2022 0.702
+#&gt;  9 -177.  53.7  2023 0.665
+#&gt; 10 -177.  53.7  2024 0.713
 #&gt; # ... with 150 more rows</div><div class='input'><span class='fu'>get_ma</span>(<span class='no'>monthlytemps</span>, <span class='no'>res</span>, <span class='no'>season</span>, <span class='kw'>format</span><span class='kw'>=</span><span class='st'>"list"</span>)</div><div class='output co'>#&gt; $`2015`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2015 0.5263333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2015 0.526
 #&gt; 
 #&gt; $`2016`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2016 0.4096667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2016 0.410
 #&gt; 
 #&gt; $`2017`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2017 0.5216667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2017 0.522
 #&gt; 
 #&gt; $`2018`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2018 0.4596667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2018 0.460
 #&gt; 
 #&gt; $`2019`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2019 0.5473333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2019 0.547
 #&gt; 
 #&gt; $`2020`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2020 0.4766667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2020 0.477
 #&gt; 
 #&gt; $`2021`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2021 0.5983333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2021 0.598
 #&gt; 
 #&gt; $`2022`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2022 0.702
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2022 0.702
 #&gt; 
 #&gt; $`2023`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2023 0.665
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2023 0.665
 #&gt; 
 #&gt; $`2024`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2024 0.7126667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2024 0.713
 #&gt; 
 #&gt; $`2025`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2025 0.6676667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2025 0.668
 #&gt; 
 #&gt; $`2026`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2026 0.826
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2026 0.826
 #&gt; 
 #&gt; $`2027`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2027 0.8686667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2027 0.869
 #&gt; 
 #&gt; $`2028`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2028 0.9366667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2028 0.937
 #&gt; 
 #&gt; $`2029`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2029 0.9626667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2029 0.963
 #&gt; 
 #&gt; $`2030`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2030 1.038667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2030  1.04
 #&gt; 
 #&gt; $`2031`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2031 1.067
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2031  1.07
 #&gt; 
 #&gt; $`2032`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2032 0.9796667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2032 0.980
 #&gt; 
 #&gt; $`2033`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2033 0.9923333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2033 0.992
 #&gt; 
 #&gt; $`2034`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2034 0.9416667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2034 0.942
 #&gt; 
 #&gt; $`2035`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2035 1.086667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2035  1.09
 #&gt; 
 #&gt; $`2036`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2036 0.995
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2036 0.995
 #&gt; 
 #&gt; $`2037`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2037 0.9916667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2037 0.992
 #&gt; 
 #&gt; $`2038`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2038 0.9893333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2038 0.989
 #&gt; 
 #&gt; $`2039`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2039 0.9363333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2039 0.936
 #&gt; 
 #&gt; $`2040`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2040 0.886
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2040 0.886
 #&gt; 
 #&gt; $`2041`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2041 0.8516667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2041 0.852
 #&gt; 
 #&gt; $`2042`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year         z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2042 0.9603333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2042 0.960
 #&gt; 
 #&gt; $`2043`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2043  1.01
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2043  1.01
 #&gt; 
 #&gt; $`2044`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2044 1.026
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2044  1.03
 #&gt; 
 #&gt; $`2045`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2045  0.98
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2045  0.98
 #&gt; 
 #&gt; $`2046`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2046 1.041
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2046  1.04
 #&gt; 
 #&gt; $`2047`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2047 1.182333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2047  1.18
 #&gt; 
 #&gt; $`2048`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2048 1.183
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2048  1.18
 #&gt; 
 #&gt; $`2049`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2049 1.279
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2049  1.28
 #&gt; 
 #&gt; $`2050`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2050  1.24
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2050  1.24
 #&gt; 
 #&gt; $`2051`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2051 1.250667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2051  1.25
 #&gt; 
 #&gt; $`2052`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2052 1.279
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2052  1.28
 #&gt; 
 #&gt; $`2053`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2053 1.432333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2053  1.43
 #&gt; 
 #&gt; $`2054`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2054 1.544333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2054  1.54
 #&gt; 
 #&gt; $`2055`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2055  1.52
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2055  1.52
 #&gt; 
 #&gt; $`2056`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2056 1.549333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2056  1.55
 #&gt; 
 #&gt; $`2057`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2057 1.454667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2057  1.45
 #&gt; 
 #&gt; $`2058`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2058 1.518333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2058  1.52
 #&gt; 
 #&gt; $`2059`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2059 1.500333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2059  1.50
 #&gt; 
 #&gt; $`2060`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2060 1.652333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2060  1.65
 #&gt; 
 #&gt; $`2061`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2061 1.716667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2061  1.72
 #&gt; 
 #&gt; $`2062`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2062  1.79
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2062  1.79
 #&gt; 
 #&gt; $`2063`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2063 1.744
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2063  1.74
 #&gt; 
 #&gt; $`2064`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2064 1.819667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2064  1.82
 #&gt; 
 #&gt; $`2065`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2065 1.935667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2065  1.94
 #&gt; 
 #&gt; $`2066`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2066 2.077667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2066  2.08
 #&gt; 
 #&gt; $`2067`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2067 2.139667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2067  2.14
 #&gt; 
 #&gt; $`2068`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2068 2.161667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2068  2.16
 #&gt; 
 #&gt; $`2069`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2069 2.137333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2069  2.14
 #&gt; 
 #&gt; $`2070`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2070 2.094667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2070  2.09
 #&gt; 
 #&gt; $`2071`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2071 2.011333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2071  2.01
 #&gt; 
 #&gt; $`2072`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2072 1.983333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2072  1.98
 #&gt; 
 #&gt; $`2073`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2073 2.010333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2073  2.01
 #&gt; 
 #&gt; $`2074`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2074 1.894333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2074  1.89
 #&gt; 
 #&gt; $`2075`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2075 1.767
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2075  1.77
 #&gt; 
 #&gt; $`2076`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2076 1.649
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2076  1.65
 #&gt; 
 #&gt; $`2077`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2077 1.600667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2077  1.60
 #&gt; 
 #&gt; $`2078`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2078 1.574333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2078  1.57
 #&gt; 
 #&gt; $`2079`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2079 1.712333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2079  1.71
 #&gt; 
 #&gt; $`2080`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2080 1.772667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2080  1.77
 #&gt; 
 #&gt; $`2081`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2081 1.834667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2081  1.83
 #&gt; 
 #&gt; $`2082`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2082 1.798333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2082  1.80
 #&gt; 
 #&gt; $`2083`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2083 1.793667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2083  1.79
 #&gt; 
 #&gt; $`2084`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2084 1.840667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2084  1.84
 #&gt; 
 #&gt; $`2085`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2085 1.949
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2085  1.95
 #&gt; 
 #&gt; $`2086`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2086 1.977333
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2086  1.98
 #&gt; 
 #&gt; $`2087`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2087 1.951
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2087  1.95
 #&gt; 
 #&gt; $`2088`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2088 1.966
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2088  1.97
 #&gt; 
 #&gt; $`2089`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year        z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2089 1.824667
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2089  1.82
 #&gt; 
 #&gt; $`2090`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2090 1.763
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2090  1.76
 #&gt; 
 #&gt; $`2091`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2091 1.774
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2091  1.77
 #&gt; 
 #&gt; $`2092`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2092  1.84
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2092  1.84
 #&gt; 
 #&gt; $`2093`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2093 1.787
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2093  1.79
 #&gt; 
 #&gt; $`2094`
 #&gt; # A tibble: 1 x 4
-#&gt;         lon      lat  Year     z
-#&gt;       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-#&gt; 1 -176.6667 53.66633  2094 1.815
+#&gt;     lon   lat  Year     z
+#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 -177.  53.7  2094  1.82
 #&gt; </div><span class='co'># NOT RUN {</span>
 <span class='fu'>get_ma</span>(<span class='fu'>list</span>(<span class='no'>monthlytemps</span>, <span class='no'>monthlytemps</span>), <span class='no'>res</span>, <span class='no'>season</span>, <span class='kw'>use_mclapply</span><span class='kw'>=</span><span class='no'>T</span>, <span class='kw'>mc.cores</span><span class='kw'>=</span><span class='fl'>2</span>)
 <span class='co'># }</span></pre>
@@ -714,11 +734,14 @@ Most other users will probably not be using parallel processing at all, in which
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

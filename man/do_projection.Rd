@@ -39,6 +39,10 @@ These values are used to determine position in the user-defined lon/lat sequence
 for each subset of \code{data} grouped by the `id` variable.
 }
 \examples{
+\dontshow{
+library(dplyr)
+library(purrr)
+}
 library(dplyr)
 library(purrr)
 data(annualtemps)

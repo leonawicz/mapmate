@@ -8,15 +8,18 @@
 <title>Usage examples and limitations • mapmate</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/sandstone/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<meta property="og:title" content="Usage examples and limitations">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -25,8 +28,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -92,18 +99,21 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Usage examples and limitations</h1>
             
-          </div>
+      
+      <small class="dont-index">Source: <a href="https://github.com/leonawicz/mapmate/blob/master/vignettes/usage_and_limitations.Rmd"><code>vignettes/usage_and_limitations.Rmd</code></a></small>
+      <div class="hidden name"><code>usage_and_limitations.Rmd</code></div>
+
+    </div>
 
     
     
-<div class="contents">
 <!-- usage_and_limitations.md is generated from usage_and_limitations.Rmd. Please edit that file -->
 <p>To install the package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">"leonawicz/mapmate"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"leonawicz/mapmate"</span>)</code></pre></div>
 <div id="introduction-and-motivation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction-and-motivation" class="anchor"></a>Introduction and motivation</h1>
@@ -129,7 +139,7 @@ pal &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">b
 <span class="kw">data</span>(bathymetry)
 
 id &lt;-<span class="st"> "frameID"</span>
-temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, <span class="dt">frameID =</span> Year -<span class="st"> </span><span class="kw">min</span>(Year) +<span class="st"> </span><span class="dv">1</span>) %&gt;%<span class="st"> </span><span class="kw">filter</span>(frameID ==<span class="st"> </span>
+temps &lt;-<span class="st"> </span><span class="kw">mutate</span>(annualtemps, <span class="dt">frameID =</span> Year <span class="op">-</span><span class="st"> </span><span class="kw">min</span>(Year) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(frameID <span class="op">==</span><span class="st"> </span>
 <span class="st">    </span><span class="dv">1</span>)  <span class="co"># subset to first frame</span>
 brdrs &lt;-<span class="st"> </span><span class="kw">mutate</span>(borders, <span class="dt">frameID =</span> <span class="dv">1</span>)
 bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <span class="dt">frameID =</span> <span class="dv">1</span>)</code></pre></div>
@@ -141,17 +151,17 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p>Use <code>ortho=TRUE</code> (default) or <code>ortho=FALSE</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="st">"dodgerblue"</span>, <span class="dt">type =</span> <span class="st">"points"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-flat_vs_globe-1.png" width="672"></p>
+<p><img src="README-Examples-flat_vs_globe-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> <span class="st">"#FF4500"</span>, <span class="dt">type =</span> <span class="st">"points"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-flat_vs_globe-2.png" width="672"></p>
+<p><img src="README-Examples-flat_vs_globe-2.png" width="700"></p>
 </div>
 <div id="simple-points" class="section level1">
 <h1 class="hasAnchor">
 <a href="#simple-points" class="anchor"></a>Simple points</h1>
 <p>The previous examples use point data. To confirm this works with points everywhere, depending on the resolution of the source data, here is another example using the bathymetry surface with <code>type="points"</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">id =</span> id, <span class="dt">type =</span> <span class="st">"points"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-points-1.png" width="672"></p>
+<p><img src="README-Examples-points-1.png" width="700"></p>
 </div>
 <div id="spatialpolygon-boundary-lines" class="section level1">
 <h1 class="hasAnchor">
@@ -159,11 +169,11 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p><code>type="maplines"</code> relies on <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">ggplot2::geom_path</a></code> internally, which is why it is suited to drawing ordered polygon border lines and why the original <code>borders</code> data frame contains the necessary additional variables for grouping and plotting order. While the prepared data frames used in this set of examples are provided by the package, typically you would generate these yourself from your data which were originally in another form such as <code>SpatialPolygonsDataFrame</code> or <code>RasterLayer</code> objects.</p>
 <p>A common way to do this is by using <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/fortify">ggplot2::fortify</a></code> or, alternatively, duplicated functionality in the <code>broom</code> package. See those packages for examples or documentation. Further below I include one example “from scratch” that shows an instance of using <code>fortify</code> to make the transition from a <code>SpatialPolygonsDataFrame</code> to a “fortified” data frame that is ready to be ingested by <code>ggplot</code> inside <code>save_map</code> like the already fortified example data frames provided by <code>mapmate</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">type =</span> <span class="st">"maplines"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-maplines1-1.png" width="672"></p>
+<p><img src="README-Examples-maplines1-1.png" width="700"></p>
 <p>While we’re here, let’s also change the view using <code>lon</code>, <code>lat</code>, and <code>rotation.axis</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">40</span>, <span class="dt">rotation.axis =</span> <span class="dv">0</span>, <span class="dt">type =</span> <span class="st">"maplines"</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(brdrs, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">40</span>, <span class="dt">rotation.axis =</span> <span class="dv">0</span>, <span class="dt">type =</span> <span class="st">"maplines"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-maplines2-1.png" width="672"></p>
+<p><img src="README-Examples-maplines2-1.png" width="700"></p>
 </div>
 <div id="rasterized-tiles" class="section level1">
 <h1 class="hasAnchor">
@@ -171,7 +181,7 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p>In the previous examples there was no need to provide a third variable, a data variable. The plots are based on spatial locations only, whether points or paths. For gridded data, a <code>z</code> variable is needed and is specified with the <code>z.name</code> argument.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"maptiles"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-maptiles-1.png" width="672"></p>
+<p><img src="README-Examples-maptiles-1.png" width="700"></p>
 </div>
 <div id="density-maps-and-contour-lines" class="section level1">
 <h1 class="hasAnchor">
@@ -183,25 +193,25 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p>Default arguments include <code>contour="none"</code> and <code>density.geom="tile"</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_default-1.png" width="672"></p>
+<p><img src="README-Examples-density_default-1.png" width="700"></p>
 <p>Explicit contour lines can also be overlaid with the base map type.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_contour1-1.png" width="672"></p>
+<p><img src="README-Examples-density_contour1-1.png" width="700"></p>
 <p>Contour lines can also be drawn without including the base layer indicated by <code>type</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"only"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_contour2-1.png" width="672"></p>
+<p><img src="README-Examples-density_contour2-1.png" width="700"></p>
 <div id="contour-lines-with-points" class="section level3">
 <h3 class="hasAnchor">
 <a href="#contour-lines-with-points" class="anchor"></a>Contour lines with points</h3>
 <p>As a brief aside, these options also work for <code>type="points"</code>. Remember that these contour lines are based on the spatial density of lon/lat coordinates, unlike the previous contour lines examples that make use of the data variable.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">type =</span> <span class="st">"points"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-points_contour-1.png" width="672"></p>
+<p><img src="README-Examples-points_contour-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> <span class="st">"blue"</span>, <span class="dt">type =</span> <span class="st">"points"</span>, <span class="dt">contour =</span> <span class="st">"only"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-points_contour-2.png" width="672"></p>
+<p><img src="README-Examples-points_contour-2.png" width="700"></p>
 <p>For <code>type="points"</code>, the color <code>col</code> applies to both points and contour lines, but for <code>type="density"</code> <code>col</code> applies to the density map. Contour line overlays will remain as black lines. The exception is when <code>contour="only"</code>, in which case <code>col</code> may still be a vector defining a color palette that will be applied to the contour lines in place of the underlying filled density map.</p>
 </div>
 </div>
@@ -211,14 +221,14 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p>True density maps based on lon/lat locations rather than filled contours based on three variables can also be plotted by excluding <code>z.name</code>. The first call below includes <code>z.name="z"</code> and the second does not. As expected, these are completely different maps because they use fundamentally different data in different ways.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_2Dvs3D-1.png" width="672"></p>
+<p><img src="README-Examples-density_2Dvs3D-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, 
     <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_2Dvs3D-2.png" width="672"></p>
+<p><img src="README-Examples-density_2Dvs3D-2.png" width="700"></p>
 <p>Of course, this would not be interesting to do when the data frame contains gridded data at all lon/lat locations on the world grid like in <code>bathymetry</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">70</span>, <span class="dt">lat =</span> <span class="dv">50</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-density_2D_boring-1.png" width="672"></p>
+<p><img src="README-Examples-density_2D_boring-1.png" width="700"></p>
 </div>
 <div id="tiles-vs-polygons" class="section level2">
 <h2 class="hasAnchor">
@@ -226,29 +236,29 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <p>Relying internally on <code><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_polygon">ggplot2::geom_polygon</a></code> inside <code>save_map</code> can be much faster than <code>ggplot::geom_tile</code> to process the data and make maps. This is an important consideration for generating long sequences of many high-resolution maps. However, the trade off is that polygons may be drawn very poorly with much clipping, the degree of the problem depending on the given data. Of course, if tiles are drawn at an extremely coarse resolution based on the input data, they still won’t look good, and also won’t take as long to draw. It is what you decide to make of it with the data you choose to map. The below examples compare the use of tiles to polygons.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"tile"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons1-1.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons1-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"polygon"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons1-2.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons1-2.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"tile"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons1-3.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons1-3.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bath, <span class="dt">z.name =</span> <span class="st">"z"</span>, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"polygon"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons1-4.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons1-4.png" width="700"></p>
 <p>Tiles may also interpolate where possible, but not extrapolate, which may not be desired behavior for a map; e.g., when drawing the continents and interpolating between them but still excluding the poles. It can lead to confusion about what is the underlying data. Yet polygons may still perform much worse, even in flat maps, as shown below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, <span class="dt">density.geom =</span> <span class="st">"tile"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons2-1.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons2-1.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, <span class="dt">density.geom =</span> <span class="st">"polygon"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons2-2.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons2-2.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"tile"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons2-3.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons2-3.png" width="700"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(temps, <span class="dt">id =</span> id, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"density"</span>, <span class="dt">ortho =</span> <span class="ot">FALSE</span>, <span class="dt">contour =</span> <span class="st">"overlay"</span>, 
     <span class="dt">density.geom =</span> <span class="st">"polygon"</span>, <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-tiles_polygons2-4.png" width="672"></p>
+<p><img src="README-Examples-tiles_polygons2-4.png" width="700"></p>
 </div>
 <div id="an-example-from-scratch" class="section level2">
 <h2 class="hasAnchor">
@@ -261,29 +271,28 @@ bath &lt;-<span class="st"> </span><span class="kw">mutate</span>(bathymetry, <s
 <span class="co"># also recommend installing rgeos</span>
 
 spdf &lt;-<span class="st"> </span><span class="kw">joinCountryData2Map</span>(countryExData, <span class="dt">mapResolution =</span> <span class="st">"high"</span>)
-spdf@data$id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf@data)
-bio &lt;-<span class="st"> </span>ggplot2::<span class="kw">fortify</span>(spdf, <span class="dt">region =</span> <span class="st">"id"</span>) %&gt;%<span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf@data, 
-    <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">"id"</span>) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>) %&gt;%<span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long)
+spdf<span class="op">@</span>data<span class="op">$</span>id &lt;-<span class="st"> </span><span class="kw">rownames</span>(spdf<span class="op">@</span>data)
+bio &lt;-<span class="st"> </span>ggplot2<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/fortify">fortify</a></span>(spdf, <span class="dt">region =</span> <span class="st">"id"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(<span class="kw">subset</span>(spdf<span class="op">@</span>data, 
+    <span class="dt">select =</span> <span class="kw">c</span>(id, BIODIVERSITY)), <span class="dt">by =</span> <span class="st">"id"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">lon =</span> long)
 
 <span class="co"># raster layer</span>
 <span class="kw">library</span>(raster)
 proj4 &lt;-<span class="st"> "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +to wgs84=0,0,0"</span>
 z &lt;-<span class="st"> "BIODIVERSITY"</span>
 <span class="co"># 1-degree resolution, still somewhat coarse</span>
-r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(-<span class="dv">180</span>, <span class="dv">180</span>, -<span class="dv">90</span>, <span class="dv">90</span>), <span class="dt">nrow =</span> <span class="dv">180</span>, <span class="dt">ncol =</span> <span class="dv">360</span>, proj4)
-bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> z) %&gt;%<span class="st"> </span>rasterToPoints %&gt;%<span class="st"> </span><span class="kw">tbl_df</span>() %&gt;%<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">"lon"</span>, 
-    <span class="st">"lat"</span>, z)) %&gt;%<span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>)
+r &lt;-<span class="st"> </span><span class="kw">raster</span>(<span class="kw">extent</span>(<span class="op">-</span><span class="dv">180</span>, <span class="dv">180</span>, <span class="op">-</span><span class="dv">90</span>, <span class="dv">90</span>), <span class="dt">nrow =</span> <span class="dv">180</span>, <span class="dt">ncol =</span> <span class="dv">360</span>, proj4)
+bio2 &lt;-<span class="st"> </span><span class="kw">rasterize</span>(spdf, r, <span class="dt">field =</span> z) <span class="op">%&gt;%</span><span class="st"> </span>rasterToPoints <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tbl_df</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">setNames</span>(<span class="kw">c</span>(<span class="st">"lon"</span>, 
+    <span class="st">"lat"</span>, z)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frameID =</span> <span class="dv">1</span>)
 
 clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"royalblue"</span>, <span class="st">"purple"</span>, <span class="st">"orange"</span>, <span class="st">"yellow"</span>)
-<span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"polygons"</span>, 
+<span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"polygons"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-polygons_tiles_scratch-1.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio2, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> -<span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"maptiles"</span>, 
+<p><img src="README-Examples-polygons_tiles_scratch-1.png" width="700"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/save_map.html">save_map</a></span>(bio2, <span class="dt">z.name =</span> z, <span class="dt">id =</span> id, <span class="dt">lon =</span> <span class="op">-</span><span class="dv">10</span>, <span class="dt">lat =</span> <span class="dv">20</span>, <span class="dt">col =</span> pal, <span class="dt">type =</span> <span class="st">"maptiles"</span>, 
     <span class="dt">save.plot =</span> <span class="ot">FALSE</span>, <span class="dt">return.plot =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-Examples-polygons_tiles_scratch-2.png" width="672"></p>
+<p><img src="README-Examples-polygons_tiles_scratch-2.png" width="700"></p>
 <p>In conclusion, there are a variety of methods available to draw different types of data on the globe from any arbitrary perspective. Flat maps are also an option but this is not as interesting so it is not focused on. The primary uses of <code>save_map</code> among what is shown here are for plotting points, polygon borders and tiles. The rest are interesting options and can work well enough for specific use cases but are included here mainly to highlight their current limitations.</p>
 <p>The one option not covered here (I will add this in a future update) is the <code>type="network"</code> option, which is used for plotting a time series of maps/globes showing moving great circle arcs. This is my personal favorite use case, but it is also the most complex so I am yet to fold code for that into this package and incorporate great circle arc network examples into the various help documentation, vignettes and tutorials. Something more to look forward to.</p>
-</div>
 </div>
 </div>
   </div>
@@ -319,11 +328,13 @@ clrs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"r
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

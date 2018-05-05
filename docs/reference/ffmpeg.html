@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make video from still image sequence � ffmpeg • mapmate</title>
+<title>Make video from still image sequence — ffmpeg • mapmate</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Make video from still image sequence — ffmpeg" />
+
+<meta property="og:description" content="Make a video file from a sequence of still images using FFmpeg." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,15 +129,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Make video from still image sequence</h1>
+    <small class="dont-index">Source: <a href='https://github.com/leonawicz/mapmate/blob/master/R/ffmpeg.R'><code>R/ffmpeg.R</code></a></small>
+    <div class="hidden name"><code>ffmpeg.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Make a video file from a sequence of still images using FFmpeg.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>ffmpeg</span>(<span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='no'>pattern</span>, <span class='no'>output</span>, <span class='kw'>output_dir</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>rate</span> <span class='kw'>=</span> <span class='st'>"ntsc"</span>,
   <span class='kw'>delay</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>start</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='st'>"source"</span>, <span class='kw'>preset</span> <span class='kw'>=</span> <span class='st'>"ultrafast"</span>,
@@ -129,7 +149,7 @@
   <span class='kw'>min.rate</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>fps.out</span> <span class='kw'>=</span> <span class='no'>rate</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>glob</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>details</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -215,8 +235,8 @@ Defaults to <code>1.0</code> (non-transparent) since <code>mapmate</code> produc
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>ffmpeg</code> is a wrapper function around the popular <a href='https://www.ffmpeg.org/'>FFmpeg command line multimedia framework</a>.
-It translates arguments provided by the user in familiar R syntax into a system call to the <code>ffmpeg</code> command line tool, which must be installed on the system.
-    <code>ffmpeg</code> does not provide complete flexibility to allow making every possible valid call to FFmpeg,
+It translates arguments provided by the user in familiar R syntax into a system call to the <code>ffmpeg</code> command line tool, which must be installed on the system.</p>
+<p><code>ffmpeg</code> does not provide complete flexibility to allow making every possible valid call to FFmpeg,
 but users who are that well versed in the use of FFmpeg can use the command line utility directly or pass their custom calls directly to <code>system</code> from within R.
 The <code>ffmpeg</code> R function is primarily useful to users not well versed in the use of the FFmpeg multimedia framework who will be satisfied with the level of flexibility provided.
 Since this function is provided in the context of the <code>mapmate</code> package, it is aimed at assisting with converting still image sequences to video.
@@ -233,7 +253,8 @@ If you are not an FFmpeg expert, use other video editing software.</p>
 <p>There always comes a point where it makes the most sense to transition from one application to another.
 When external solutions exist, it does not make sense to port the solution to every problem into R.
 Future package versions may provide more and more functionality and control over video production directly from R through <code>ffmpeg</code> or other functions,
-but at this time this should not be a primary development goal for <code>mapmate</code>.</p><h3>Input Files</h3>
+but at this time this should not be a primary development goal for <code>mapmate</code>.</p>
+<h3>Input Files</h3>
     A common way to specify a set of input image files when using FFmpeg directy is to provide something like <code>myimages%04d.png</code>,
 which requires specifying the entire, non-changing file name with the only substitution being for the unique, order, consecutive integer file numbering component of the file name.
 The pattern used indicates how may places are occupied by the file indices, which should be constant. In this example, <code>%04d</code> represents the file numbering <code>0000, 0001, 0002, ..., 9999</code>.
@@ -338,11 +359,14 @@ This matching can be overridden by specifying <code>fps.out</code> as something 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

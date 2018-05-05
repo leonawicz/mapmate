@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Save maps to disk � save_map • mapmate</title>
+<title>Save maps to disk — save_map • mapmate</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -18,13 +18,24 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
   <link href="../extra.css" rel="stylesheet">
   
+<meta property="og:title" content="Save maps to disk — save_map" />
+
+<meta property="og:description" content="Save a map to disk intended to be part of a as a still image sequence of one of four types: networks, tiles, lines, or polygons." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -47,8 +58,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">mapmate</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">mapmate</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.3.1</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +121,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,15 +129,19 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Save maps to disk</h1>
+    <small class="dont-index">Source: <a href='https://github.com/leonawicz/mapmate/blob/master/R/save_map.R'><code>R/save_map.R</code></a></small>
+    <div class="hidden name"><code>save_map.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Save a map to disk intended to be part of a as a still image sequence of one of four types: networks, tiles, lines, or polygons.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>save_map</span>(<span class='no'>data</span>, <span class='kw'>z.name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>z.range</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>id</span>, <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='kw'>lon</span> <span class='kw'>=</span> <span class='fl'>0</span>,
   <span class='kw'>lat</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>n.period</span> <span class='kw'>=</span> <span class='fl'>360</span>, <span class='kw'>n.frames</span> <span class='kw'>=</span> <span class='no'>n.period</span>, <span class='kw'>ortho</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -131,7 +151,7 @@
   <span class='kw'>height</span> <span class='kw'>=</span> <span class='fl'>1080</span>, <span class='kw'>res</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>bg</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>), <span class='kw'>save.plot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>return.plot</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>num.format</span> <span class='kw'>=</span> <span class='fl'>4</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -246,7 +266,8 @@ For flat maps, <code>lon</code>, <code>lat</code>, <code>n.period</code>, <code>
 For plotting on a globe, <code>lon</code> and <code>lat</code> are used to describe the field of view or the visible hemisphere.
 <code>n.period</code> relates is eithe the period of rotation of the globe or the length of the non-repeating, arbitrary coordinates sequence.
 <code>n.frames</code> is always the explicit number of frames that will make up an animation
-regardless of the length of the series of data frames <code>data</code> to be plotted or the length of the rotational period or coordinates sequence.</p><h3>Map Type Options</h3>
+regardless of the length of the series of data frames <code>data</code> to be plotted or the length of the rotational period or coordinates sequence.</p>
+<h3>Map Type Options</h3>
     If you are familiar with <code>ggplot2</code>, it may help to think of <code>points</code> as making use of <code>geom_point</code>;
 <code>maplines</code> uses <code>geom_path</code>; <code>polygons</code> uses <code>geom_polygon</code> and <code>geom_path</code>;
 <code>maptiles</code> uses <code>geom_tile</code>; <code>density</code> uses <code>stat_density2d</code> or <code>stat_contour</code>; and <code>"network"</code> combines <code>geom_path</code> and <code>geom_point</code>.
@@ -357,11 +378,14 @@ For globe plots it is best to rasterize polygons and use <code>type="maptiles"</
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

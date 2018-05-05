@@ -1,9 +1,12 @@
-urls:
-  reference: https://leonawicz.github.io//reference
-  article: https://leonawicz.github.io//articles
+pandoc: 1.19.2.1
+pkgdown: 1.0.0
+pkgdown_sha: ~
 articles:
   ffmpeg: ffmpeg.html
   mapmate: mapmate.html
   networks: networks.html
   usage_and_limitations: usage_and_limitations.html
+urls:
+  reference: https://leonawicz.github.io//reference
+  article: https://leonawicz.github.io//articles
 
