@@ -2,8 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-data-raw/*
-!data-raw/*.R
 rsconnect/
 docs/articles/*_cache/
 docs/articles/test-images/
