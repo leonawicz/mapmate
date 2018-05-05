@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-mapmate
-=======
+mapmate <a hef="https://github.com/leonawicz/mapmate/blob/master/data-raw/mapmate.png?raw=true" _target="blank"><img src="https://github.com/leonawicz/mapmate/blob/master/inst/mapmate.png?raw=true" style="margin-bottom:5px;" width="120" align="right"></a>
+===============================================================================================================================================================================================================================================================
 
 [![Travis-CI Build Status](https://travis-ci.org/leonawicz/mapmate.svg?branch=master)](https://travis-ci.org/leonawicz/mapmate) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/leonawicz/mapmate?branch=master&svg=true)](https://ci.appveyor.com/project/leonawicz/mapmate) [![Coverage Status](https://img.shields.io/codecov/c/github/leonawicz/mapmate/master.svg)](https://codecov.io/github/leonawicz/mapmate?branch=master) [![Rdoc](http://www.rdocumentation.org/badges/version/mapmate)](http://www.rdocumentation.org/packages/mapmate)
 
@@ -32,18 +32,18 @@ library(dplyr)
 data(annualtemps)
 annualtemps
 #> # A tibble: 55,080 x 4
-#>          lon      lat  Year     z
-#>        <dbl>    <dbl> <int> <dbl>
-#>  1 -176.6667 53.66633  2010  1.09
-#>  2 -176.6667 66.99967  2010  3.21
-#>  3 -176.6667 73.66633  2010  2.76
-#>  4 -170.0000 53.66633  2010  0.91
-#>  5 -170.0000 60.33300  2010  2.47
-#>  6 -170.0000 66.99967  2010  2.73
-#>  7 -163.3333 20.33300  2010  0.19
-#>  8 -163.3333 53.66633  2010  0.79
-#>  9 -163.3333 60.33300  2010  1.43
-#> 10 -163.3333 66.99967  2010  1.28
+#>      lon   lat  Year     z
+#>    <dbl> <dbl> <int> <dbl>
+#>  1 -177.  53.7  2010  1.09
+#>  2 -177.  67.0  2010  3.21
+#>  3 -177.  73.7  2010  2.76
+#>  4 -170   53.7  2010  0.91
+#>  5 -170   60.3  2010  2.47
+#>  6 -170   67.0  2010  2.73
+#>  7 -163.  20.3  2010  0.19
+#>  8 -163.  53.7  2010  0.79
+#>  9 -163.  60.3  2010  1.43
+#> 10 -163.  67.0  2010  1.28
 #> # ... with 55,070 more rows
 
 library(RColorBrewer)

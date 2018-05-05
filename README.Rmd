@@ -10,7 +10,8 @@ knitr::opts_chunk$set(
   message = FALSE, warning = FALSE, error = FALSE, tidy = TRUE)
 ```
 
-# mapmate
+# mapmate <a hef="https://github.com/leonawicz/mapmate/blob/master/data-raw/mapmate.png?raw=true" _target="blank"><img src="https://github.com/leonawicz/mapmate/blob/master/inst/mapmate.png?raw=true" style="margin-bottom:5px;" width="120" align="right"></a>
+
 
 [![Travis-CI Build Status](https://travis-ci.org/leonawicz/mapmate.svg?branch=master)](https://travis-ci.org/leonawicz/mapmate)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/leonawicz/mapmate?branch=master&svg=true)](https://ci.appveyor.com/project/leonawicz/mapmate)
